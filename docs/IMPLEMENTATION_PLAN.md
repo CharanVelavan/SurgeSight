@@ -747,11 +747,11 @@ Each WP: **Goal · Files · Tasks · Acceptance · Marker · Fallback · Estimat
 
 **Estimate:** 2 h. **Depends on:** WP0.8 key, WP4.
 
-- [ ] **WP8.1 Places.** `nearby_places(lat, lon, type, radius_m)` and `enrich_asset(osm_id)` (phone, address, business status). Store `place_id` only per ToS; do not bulk-cache Places content beyond what terms allow.
-- [ ] **WP8.2 Routes.** `route_access(origin, destination, avoid_polygons=HIGH footprint)` — compute alternative routes, intersect polylines with v2 HIGH+ footprint, return km exposed per route. Use: fire station → hospital, depot → substation. Label "lower modelled exposure", never "safe".
-- [ ] **WP8.3 Geocoding.** Resolve bulletin landfall text / district names to coordinates.
-- [ ] **WP8.4 Weather API.** `current_conditions(lat, lon)` / `forecast(lat, lon)` per district centroid for Command overview.
-- [ ] Register all as tools. Marker `SURGESIGHT_MAPS_TOOLS_OK`.
+- [x] **WP8.1 Places.** `nearby_places(lat, lon, type, radius_m)` and `enrich_asset(osm_id)` (phone, address, business status). Store `place_id` only per ToS; do not bulk-cache Places content beyond what terms allow. **Done 2026-09-29:** `services/maps.py` `nearby_places` and `enrich_asset`; Places content is returned but never stored (only `place_id` may be).
+- [x] **WP8.2 Routes.** `route_access(origin, destination, avoid_polygons=HIGH footprint)` — compute alternative routes, intersect polylines with v2 HIGH+ footprint, return km exposed per route. Use: fire station → hospital, depot → substation. Label "lower modelled exposure", never "safe". **Done 2026-09-29:** `route_access` compares Google Routes alternatives by km inside the footprint of triage tiers 1-2 (3 km radius). Because the whole corridor is high-risk, the footprint covers almost every route (about 99% of a Chennai route), so the ranking separates routes only slightly; stated in the label.
+- [x] **WP8.3 Geocoding.** Resolve bulletin landfall text / district names to coordinates. **Done 2026-09-29:** `geocode_place` tool and `resolve_point` (coordinates, exact asset name, or geocoding).
+- [x] **WP8.4 Weather API.** `current_conditions(lat, lon)` / `forecast(lat, lon)` per district centroid for Command overview. **Done 2026-09-29:** `district_weather` tool and tab 'Maps & access' show LIVE conditions per district centroid; the Weather API has no 2023 history, so it is labelled not-the-event.
+- [x] Register all as tools. Marker `SURGESIGHT_MAPS_TOOLS_OK`. **Done 2026-09-29.** `SURGESIGHT_MAPS_TOOLS_OK`.
 
 ---
 

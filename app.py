@@ -12,6 +12,7 @@ from services.advisory import AUDIENCES, LANGUAGES, RoleAdvisory, generate_role_
 from services.config import load_region
 from ui.agent_console import render as render_agent_console
 from ui.dispatch_tab import render as render_dispatch
+from ui.maps_tab import render as render_maps
 from ui.hazard_layers import render as render_hazard_layers
 from ui.satellite_validation import render as render_satellite_validation
 from ui.bulletin_scoring import render as render_bulletin_scoring
@@ -281,10 +282,10 @@ with st.expander("Track data"):
     )
 
 st.divider()
-intelligence_tab, advisory_tab, simulator_tab, track_forecast_tab, agent_tab, satellite_tab, hazard_tab, dispatch_tab = st.tabs(
+intelligence_tab, advisory_tab, simulator_tab, track_forecast_tab, agent_tab, satellite_tab, hazard_tab, dispatch_tab, maps_tab = st.tabs(
     [
         "Bulletin Intelligence", "Role-specific advisories", "Forecast Simulator",
-        "Experimental Track Forecast", "Agent console", "Satellite validation", "Hazard layers", "Dispatch & CAP",
+        "Experimental Track Forecast", "Agent console", "Satellite validation", "Hazard layers", "Dispatch & CAP", "Maps & access",
     ],
     on_change="rerun",
     key="intelligence_tabs",
@@ -1022,3 +1023,7 @@ if hazard_tab.open:
 if dispatch_tab.open:
     with dispatch_tab:
         render_dispatch()
+
+if maps_tab.open:
+    with maps_tab:
+        render_maps()
