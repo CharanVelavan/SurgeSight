@@ -1,0 +1,238 @@
+asset_type,name,osm_element,osm_id,lat,lon,operator,ref,source_tile,amenity,website,phone,distance_to_track_km
+fire_station,Chennai International Airport Fire Station 2,way,620705901,12.992503,80.16602220041403,,,corridor_r01_c02,fire_station,,,97.446
+fire_station,Egmore fire and Rescue station,way,1107911283,13.0686023,80.26133346266568,Tamilnadu government,,corridor_r02_c02,fire_station,,,84.131
+fire_station,Esplanade Fire Station,way,1122111815,13.086478249999999,80.28606345,,,corridor_r02_c02,fire_station,,,80.797
+fire_station,Fire Station,node,11993365461,15.9074407,80.4730133,,,corridor_r07_c02,fire_station,,,30.95
+fire_station,Fire and Rescue station,way,217731034,13.0352105,80.23072519006496,,,corridor_r02_c02,fire_station,,,88.981
+fire_station,Fire service station;Fire Force Service center,node,5354315736,12.976852800000001,80.2276341,Government,,corridor_r01_c02,fire_station,,,93.168
+fire_station,Moolakothalam Fire Station,way,1105414357,13.105507750000001,80.27821403720773,,,corridor_r02_c02,fire_station,,,80.32
+fire_station,NCTPS Fire Station,way,1074457140,13.251204600000001,80.32728749495476,,,corridor_r02_c02,fire_station,,,64.146
+fire_station,Tamil Nadu Fire and Rescue Services,node,3029313653,12.9436361,80.1335964,,,corridor_r01_c02,fire_station,,"+91-44-22380206, 22382204",103.488
+fire_station,Teynampet FS,node,302899362,13.0474469,80.24911900000001,,,corridor_r02_c02,fire_station,,,86.569
+fire_station,Thiruvallur fire station,node,12181440340,13.137824700000001,79.907707,,,corridor_r02_c01,fire_station,,,106.071
+fire_station,Unnamed fire station,way,211274291,13.04300705,80.27777258011884,,,corridor_r02_c02,fire_station,,,84.362
+fire_station,Unnamed fire station,node,264480826,13.063776500000001,80.2356816,,,corridor_r02_c02,fire_station,,,86.726
+fire_station,Unnamed fire station,way,711095156,16.0245645,80.91524579913172,,,corridor_r08_c03,fire_station,,,76.495
+fire_station,Unnamed fire station,way,1075921840,13.113333650000001,80.29637373248778,,,corridor_r02_c02,fire_station,,,78.199
+fire_station,Unnamed fire station,way,1096512891,12.98847405,80.17167939802872,,,corridor_r01_c02,fire_station,,,97.209
+fire_station,Unnamed fire station,node,2427727851,13.035131300000002,80.23069220000001,,,corridor_r02_c02,fire_station,,,88.989
+fire_station,Unnamed fire station,node,5304198425,12.831017300000001,80.22243110000001,,,corridor_r01_c02,fire_station,,,104.477
+fire_station,Unnamed fire station,node,13341600672,15.509314700000001,80.04744430000001,,,corridor_r07_c02,fire_station,,,19.203
+fire_station,Unnamed fire station,node,13617387174,13.705016400000002,80.01654210000001,,,corridor_r03_c02,fire_station,,,68.86
+fire_station,Washermanpet Fire & Rescue Station,way,1172399106,13.1024371,80.274406449261,,,corridor_r02_c02,fire_station,,,80.835
+fishing_harbour,Chennai Port,relation,2882852,13.096423000000001,80.30362304175375,,,corridor_r02_c02,,https://www.chennaiport.gov.in/,,78.605
+fishing_harbour,Chennai Port Trust,node,3732737166,13.101658800000001,80.30219240000001,,,corridor_r02_c02,,,,78.401
+fishing_harbour,Kasimedu Fishing Harbour,relation,2889839,13.12836755,80.29722675455531,,,corridor_r02_c02,,,,77.059
+fishing_harbour,Kasimedu Fishing Harbour,node,7083947986,13.1119772,80.3025269,,,corridor_r02_c02,,,,77.727
+fishing_harbour,Krishnapatnam Port,way,136146085,14.2630625,80.12055199037701,,,corridor_r04_c02,,https://www.krishnapatnamport.com/,,24.609
+fishing_harbour,Krishnapatnam Port,node,3732668135,14.249584100000002,80.14802110000001,Krishnapatnam Port Company Limited,KPCL,corridor_r04_c02,,http://www.krishnapatnamport.com/,+91 861 2377 999 / +91 970 4123 987,23.406
+fishing_harbour,Tiruvottiyur Harbour,way,1395430759,13.163610349999999,80.3120922765625,,,corridor_r02_c02,,,,72.921
+fishing_harbour,Unnamed fishing harbour,way,554919771,13.27634145,80.34260227987707,,,corridor_r02_c02,,,,60.931
+fishing_harbour,Unnamed fishing harbour,node,3732737171,13.1285933,80.30072770000001,,,corridor_r02_c02,,,,76.825
+police_station,2 Town Police Station,node,5446059921,16.2385179,80.045045,,,corridor_r08_c02,police,,086472 22333,31.264
+police_station,Abhiramapuram,way,241007895,13.0332562,80.25596712290529,,,corridor_r02_c02,police,,,86.902
+police_station,Adyar J2,node,312025133,12.997814,80.25571760000001,,,corridor_r01_c02,police,,,89.336
+police_station,All Women's Police Station,way,1184563415,12.674181149999999,79.97842841328536,,,corridor_r01_c01,police,,,135.627
+police_station,Ambattur T1 Police Station,way,835251736,13.10730715,80.15255373366887,,,corridor_r02_c02,police,,,88.599
+police_station,Amruthalur Police Station,node,11117899794,16.119645600000002,80.66243130000001,,,corridor_r08_c03,police,,,49.685
+police_station,Arakkonam Town Police Station,node,4748988045,13.0838611,79.66996540000001,,,corridor_r02_c01,police,,,130.798
+police_station,Arundalpet Police Station,node,5030744829,16.3039416,80.4377261,,,corridor_r08_c02,police,,,18.167
+police_station,B1 North Beach Police Station,way,1076586613,13.089921499999999,80.29045779438171,,,corridor_r02_c02,police,,,80.188
+police_station,B1 North Beach Police Station,way,1116154383,13.09662175,80.2915124975262,,,corridor_r02_c02,police,,,79.672
+police_station,B1 Saint Thomas Mount PS,node,339282419,12.999121200000001,80.20026200000001,,,corridor_r01_c02,police,,,94.01
+police_station,C1 Flower Bazaar Police Booth,way,1090653956,13.0883701,80.28239464599622,,,corridor_r02_c02,police,,,81.005
+police_station,C1 Flower Bazaar Police Station,way,1090653955,13.088391900000001,80.28170323622751,,,corridor_r02_c02,police,,,81.065
+police_station,C2 Elephant Gate Police Station,way,1105971900,13.09263065,80.27501242488236,,,corridor_r02_c02,police,,,81.4
+police_station,C3 Seven Wells Police Station,way,1089835073,13.09888785,80.2816945,,,corridor_r02_c02,police,,,80.412
+police_station,C5 Kothavalchavadi Police Station,way,1089863482,13.094034650000001,80.28546015,,,corridor_r02_c02,police,,,80.375
+police_station,C5 Kothavalchavadi Police Station,way,1176848837,13.0953206,80.28071967017462,,,corridor_r02_c02,police,,,80.72
+police_station,Central Station PS,node,320968223,13.0818276,80.2755071,,,corridor_r02_c02,police,,,82.032
+police_station,Chebrole Police Station,node,5030747432,16.2025985,80.5245854,,,corridor_r08_c03,police,,,32.501
+police_station,Chengalpatu AwPolice Station,node,4445352945,12.697139700000001,79.9771626,,,corridor_r01_c01,police,,+91(044)– 27432101,134.01
+police_station,Chennai Central RPF,node,320968578,13.0830613,80.2732996,,,corridor_r02_c02,police,,,82.151
+police_station,Chetpet,node,3195423909,13.0706907,80.2421194,,,corridor_r02_c02,police,,,85.718
+police_station,Chintadripet,node,966556101,13.074908800000001,80.2725042,,,corridor_r02_c02,police,,,82.738
+police_station,Coastal Police Station Pazhaverkadu,way,1065857124,13.42016905,80.31759604142894,,,corridor_r02_c02,police,,,51.738
+police_station,Control Room,node,12169790434,13.0848694,80.2182466,,,corridor_r02_c02,police,,,85.989
+police_station,Crime Investigation Department,node,12993650565,16.4915075,80.67809700000001,,,corridor_r08_c03,police,,,41.586
+police_station,D1 Chengalpattu Police Station,way,1182101834,12.6965471,79.97734051522883,,,corridor_r01_c01,police,,,134.04
+police_station,D1 Triplicane Police Station,way,217960575,13.0672195,80.27364039479482,,D1,corridor_r02_c02,police,,,83.13
+police_station,D2 Anna Salai (Mount Road) Poice Station,way,1123051523,13.06106205,80.26223194230909,,,corridor_r02_c02,police,,,84.534
+police_station,D3 Guduvancheri Police Station,way,355104205,12.843999700000001,80.06035465,,,corridor_r01_c02,police,,044 – 27465331,116.555
+police_station,D5 Marina Police Station,way,1112851437,13.03914555,80.27932070572676,,,corridor_r02_c02,police,,,84.489
+police_station,D6 Police Station,node,4449998376,12.7890654,80.0309867,,,corridor_r01_c02,police,,044 2745 272,122.897
+police_station,Darsi police station,node,7008025337,15.769930800000001,79.6803751,,,corridor_r07_c01,police,,,55.701
+police_station,E-3 Teynampet Police Help Station,node,14121893948,13.0412543,80.2503552,,,corridor_r02_c02,police,,,86.864
+police_station,E3 Teynampet Police Assistance Booth,way,1095915240,13.0313111,80.23977431580326,,,corridor_r02_c02,police,,,88.441
+police_station,E5 Foreshore Estate Police Station,way,354469200,13.02455535,80.2748154264728,,,corridor_r02_c02,police,,,85.868
+police_station,E6,node,951833229,13.271806300000001,80.26250920000001,,,corridor_r02_c02,police,,,67.118
+police_station,Elliots Beach Police Outpost,way,1132145713,13.00071395,80.2712201,,,corridor_r02_c02,police,,,87.828
+police_station,Esplanade PS,way,217637688,13.08649125,80.28538684920892,,,corridor_r02_c02,police,,,80.857
+police_station,F R O,node,5151649321,16.297631600000003,80.4272358,,,corridor_r08_c02,police,,,17.717
+police_station,F2 Egmore Police Station,way,241027985,13.07507245,80.2570140276689,,,corridor_r02_c02,police,,044 2345 2678,84.109
+police_station,F4 Greams Road PS,way,217767201,13.05983195,80.25479851309107,,,corridor_r02_c02,police,,,85.27
+police_station,G7 Chetpet Police Station,way,1122926992,13.07253635,80.25206672497492,,,corridor_r02_c02,police,,,84.71
+police_station,Guduvancherry Police Station,node,4445363957,12.8439226,80.06158640000001,,,corridor_r01_c02,police,,+91 (044 )– 27465331,116.456
+police_station,Guindy J3 Police station,way,1038741390,13.0093642,80.21069399877149,,,corridor_r02_c02,police,,,92.425
+police_station,H1 Washermanpet Police Station,way,1090950056,13.10866135,80.28091989512927,,,corridor_r02_c02,police,,,79.865
+police_station,HVF,node,1896342668,13.129145600000001,80.1073794,,,corridor_r02_c02,police,,,90.21
+police_station,Highway Patrol,node,5923323714,13.645568200000001,79.5217956,,,corridor_r03_c01,police,,,113.068
+police_station,J-10 Semmenchery Police Station,node,5226262920,12.9008558,80.2280156,,,corridor_r01_c02,police,,,98.644
+police_station,J.J Nagar Police Booth (V3),node,4449967759,13.0876952,80.1878894,,,corridor_r02_c02,police,tnpolice.gov.in,N/A,87.774
+police_station,J1 Police Station,node,4446385554,13.4393831,79.55218210000001,,,corridor_r02_c01,police,,+91 8577222333,124.633
+police_station,J6 Police Station,node,2587520257,12.987459900000001,80.2559315,,,corridor_r01_c02,police,,,90.044
+police_station,J9 Police Station,node,2061123092,12.947613,80.24162510000001,,,corridor_r01_c02,police,,,94.083
+police_station,K11 CMBT Police Station,node,1948632616,13.068701200000001,80.2046669,,,corridor_r02_c02,police,,,88.31
+police_station,"K2 Police Station, Ayanavaram",node,14066727702,13.093795,80.24096820000001,,,corridor_r02_c02,police,http://tnpolice.gov.in,044 2345 2714,83.72
+police_station,K4 Police Station,way,231052535,13.0925413,80.21797115766147,,,corridor_r02_c02,police,,,85.33
+police_station,KK Nagar PS,node,389948945,13.041510800000001,80.2054415,,,corridor_r02_c02,police,,,90.685
+police_station,Kalpakkam Police Station,node,353073504,12.5037687,80.1533696,,,corridor_r01_c02,police,,,135.521
+police_station,Kilambakkam Bus Terminus Police Booth,node,14100068902,12.8744391,80.0781668,,,corridor_r01_c02,police,,,112.937
+police_station,Kothapatnam police station,node,5002329546,15.447018300000002,80.15974750000001,,,corridor_r06_c02,police,,,17.549
+police_station,Koyambedu Police Station,node,366075241,13.0696407,80.2004587,,,corridor_r02_c02,police,,,88.505
+police_station,M5 Ennore Police Booth,node,12459049285,13.1864179,80.30760570000001,,,corridor_r02_c02,police,,,71.149
+police_station,Madipakkam Police Station,node,2086712180,12.9559858,80.18530720000001,,,corridor_r01_c02,police,,,98.204
+police_station,Mambalam Police Station,node,250363729,13.0349573,80.22946,,,corridor_r02_c02,police,,,89.109
+police_station,Manavala Nagar Police Station,way,1486069895,13.0839014,79.89910785274495,,,corridor_r02_c01,police,,,110.447
+police_station,Mylapore E1 PS,way,208569725,13.03598985,80.27017698436177,,,corridor_r02_c02,police,,,85.489
+police_station,N3 Muthialpet Police Station,way,1110191293,13.09984525,80.28702635811065,,,corridor_r02_c02,police,,,79.873
+police_station,N4 PS,node,390852677,13.134540800000002,80.29745960000001,,,corridor_r02_c02,police,,,76.479
+police_station,Nagiri Police Station,node,4446371449,13.320715900000001,79.58543660000001,,,corridor_r02_c01,police,,+91 8577235333,127.671
+police_station,Nallapadu Police Stataion,way,1390757212,16.3422327,80.41841451038796,,,corridor_r08_c02,police,,,14.173
+police_station,Narayanavanam Police Station,node,4446378147,13.4235342,79.5884195,,,corridor_r02_c01,police,,+91 8577221333,123.021
+police_station,New Police Station,node,11993424980,15.9061307,80.471182,,,corridor_r07_c02,police,,,30.814
+police_station,Office Of Assistant Superintendent Of Police,way,1184563416,12.67433295,79.97829477081686,,,corridor_r01_c01,police,,,135.626
+police_station,"Office of the Deputy Commissioner of Police, Pudupet",way,1107911282,13.06863865,80.26205817510697,,,corridor_r02_c02,police,,,84.065
+police_station,Office of the Director General of Police Civil Supplies CID Chennai,way,1095915254,13.0300516,80.2432354,,,corridor_r02_c02,police,,,88.222
+police_station,"Office, Police Commissioner",node,370481197,13.010086500000002,80.1990931,,,corridor_r02_c02,police,,,93.394
+police_station,Otteri Police Station,node,4445488162,13.0874523,80.24587860000001,,,corridor_r02_c02,police,,044 – 22750987,83.978
+police_station,P2 Otteri Police Station,way,1091003580,13.1003296,80.25156324006721,,,corridor_r02_c02,police,,,82.457
+police_station,POLICE STATION,way,711095157,16.0246866,80.9153475038787,GOVT,,corridor_r08_c03,police,,,76.506
+police_station,Palur Police station,node,4445825097,12.767664400000001,79.90349140000001,,,corridor_r01_c01,police,,044-27437100,134.836
+police_station,Pamarru Police Station,node,6829393635,16.323140900000002,80.95791940000001,,,corridor_r08_c03,police,,,70.713
+police_station,Pattabhipuram police station,node,5308735969,16.305223700000003,80.42381900000001,,,corridor_r08_c02,police,,,16.9
+police_station,Peravallur Police Station,way,217920494,13.1113801,80.2263786318008,,,corridor_r02_c02,police,,,83.116
+police_station,Periamet PS,way,211435479,13.083113449999999,80.27091205766065,,,corridor_r02_c02,police,,,82.361
+police_station,Police,node,2375997491,12.621488900000001,80.19427370000001,,,corridor_r01_c02,police,,,123.794
+police_station,Police Area,way,1390758000,16.34261675,80.41887180244632,,,corridor_r08_c02,police,,,14.197
+police_station,Police Assistance Booth,node,5079397364,13.0699263,80.2714181,,,corridor_r02_c02,police,,,83.152
+police_station,Police Assistance Booth Mugalivakam,node,2221603034,13.0207162,80.16632390000001,,,corridor_r02_c02,police,,,95.072
+police_station,Police Booth,node,687175330,13.073748400000001,80.1923421,,,corridor_r02_c02,police,,,88.684
+police_station,Police Booth,node,687177364,13.065690700000001,80.1935705,,,corridor_r02_c02,police,,,89.308
+police_station,Police Booth,node,934859086,13.0447322,80.1862162,,,corridor_r02_c02,police,,,91.642
+police_station,Police Booth,node,2210021510,12.8975662,80.18232090000001,,,corridor_r01_c02,police,,,102.585
+police_station,Police Booth,node,5226071789,13.1037724,80.0585425,,,corridor_r02_c02,police,,,95.966
+police_station,Police Booth,node,5367536437,13.0149758,80.18164270000001,Chennai Police,,corridor_r02_c02,police,,,94.588
+police_station,Police Outpost,node,1865961947,13.215617300000002,80.16943880000001,,,corridor_r02_c02,police,,,78.695
+police_station,Police Parade Ground,way,398175831,15.513788850000001,80.03432261882841,,,corridor_r07_c02,police,,,20.171
+police_station,Police Recruit School Thiruvallur,way,1231867886,13.146636350000001,79.83865257875587,,,corridor_r02_c01,police,,,111.647
+police_station,Police Station,node,2352141024,14.446560300000002,79.98191650000001,,,corridor_r04_c01,police,,,29.02
+police_station,Police Station,node,6248331357,16.0732095,80.32926350000001,,,corridor_r08_c02,police,,,16.034
+police_station,Police Station,node,9886961525,16.4338093,79.7119596,,,corridor_r08_c01,police,,,62.834
+police_station,Police Station,node,11993365462,15.9066468,80.4712283,,,corridor_r07_c02,police,,,30.8
+police_station,Police Station - J1 - Saidapet,way,343141650,13.02245285,80.22607358037429,,,corridor_r02_c02,police,,,90.221
+police_station,"Police Station, Nagalapuram",node,13436982229,13.387736100000001,79.79476190000001,,,corridor_r02_c01,police,,,103.836
+police_station,Police booth,node,1315141190,12.965163500000001,80.2060352,,,corridor_r01_c02,police,,,95.809
+police_station,Police parade ground,way,893621473,16.29620655,80.43279009801034,,,corridor_r08_c02,police,,,18.274
+police_station,Ponnur police station,node,13518962992,16.0726263,80.549673,,,corridor_r08_c03,police,,,38.232
+police_station,Porur Police Station,node,1451946829,13.034307400000001,80.1601292,,,corridor_r02_c02,police,,,94.288
+police_station,Prathipadu Police Station,way,888163799,16.1823989,80.3335615284224,AP Police,,corridor_r08_c02,police,,0863-2280233,24.46
+police_station,R-5 Virugambakkam Police Station,node,14067751968,13.057182300000001,80.19952380000001,,,corridor_r02_c02,police,,,89.667
+police_station,R1 Police Station,way,214356712,13.03474505,80.22949102424637,,,corridor_r02_c02,police,,044 2345 2608,89.12
+police_station,R10 MGR Nagar Police Station,node,8096280337,13.0310886,80.2017034,,,corridor_r02_c02,police,tnpolice.gov.in,,91.816
+police_station,R3 Ashok Nagar Police Station,way,240511203,13.04406925,80.21730174472455,,,corridor_r02_c02,police,tnpolice.gov.in,044 2345 2617,89.606
+police_station,R6 KUMARAN NAGAR POLICE STATION ,node,4308319495,13.0283677,80.2163105,,,corridor_r02_c02,police,tnpolice.gov.in,044 2345 2629,90.694
+police_station,R6 Police Booth,node,8108600154,13.026501000000001,80.2116238,,,corridor_r02_c02,police,,,91.229
+police_station,Railway Police,node,6780251054,13.034136700000001,80.2664405,,,corridor_r02_c02,police,,,85.936
+police_station,Ramapuram Police Station,node,1015569835,13.0317737,80.1790069,,,corridor_r02_c02,police,,,93.262
+police_station,Rompicherlal Police Station,node,4446402757,16.2096542,79.90875030000001,,,corridor_r08_c01,police,,+91 8584288233,38.879
+police_station,Royapettah PS,node,259773441,13.052010600000001,80.26373480000001,,,corridor_r02_c02,police,,,84.988
+police_station,S-10 Police Station (Pallikaranai),node,3097014588,12.9173825,80.1950805,,,corridor_r01_c02,police,,,100.101
+police_station,S-8 Adambakkam Police Station,node,300468066,12.989395700000001,80.2019683,,,corridor_r01_c02,police,,,94.508
+police_station,S6 Shankar Nagar Police Station,node,983961147,12.969279700000001,80.1257959,,,corridor_r01_c02,police,,,102.282
+police_station,Sadras Police Station,node,354890203,12.5251654,80.1626667,,,corridor_r01_c02,police,,,133.206
+police_station,Selaiyur Beat Post,node,14057634446,12.933913400000002,80.12956790000001,,T12,corridor_r01_c02,police,,,104.487
+police_station,Selaiyur Police Station,way,297495780,12.92295405,80.13522958449292,,,corridor_r01_c02,police,,,104.742
+police_station,Shastri Nagar Police Station,node,1711627907,13.000611600000001,80.2659307,,,corridor_r02_c02,police,,,88.28
+police_station,Somangalam police station,node,4446987278,12.9459306,80.0355638,,,corridor_r01_c02,police,,044 – 27178126,110.45
+police_station,Sri City Police,node,5922802620,13.559786800000001,80.0230418,,,corridor_r03_c02,police,,,74.797
+police_station,Srinagar colony police booth,node,13127975757,13.0125062,80.2272456,,,corridor_r02_c02,police,,,90.775
+police_station,Sriperumbudur Police Station,node,4446999051,12.963799300000002,79.94917410000001,,,corridor_r01_c01,police,,+(91)4427162224,115.33
+police_station,Sulurpeta Police Station,way,627118120,13.7006492,80.01471925957262,,,corridor_r03_c02,police,,,69.367
+police_station,Suryalanka Marine Coastal Security Police Station,node,12078199191,15.841720800000001,80.50858480000001,,,corridor_r07_c03,police,,,33.338
+police_station,T-1 Police Station,way,1330398918,13.13066015,80.1587021687069,,,corridor_r02_c02,police,,,86.23
+police_station,T-11 Tiruninravur Police Station,node,6354550885,13.1251137,80.0286037,,,corridor_r02_c02,police,,,96.747
+police_station,T-13 Chitlapakkam Police Station,way,1531132888,12.93953555,80.13799876909853,,T13;S12,corridor_r01_c02,police,,,103.381
+police_station,T13 Kundrathur Police Station,way,1236765220,12.99740315,80.0918509264065,,,corridor_r01_c02,police,,,102.14
+police_station,T15 SRMC PS,node,370969674,13.034199300000001,80.1602489,,,corridor_r02_c02,police,,,94.29
+police_station,T9 Police Station Pattabiram,node,5226197960,13.122251100000002,80.0624155,,,corridor_r02_c02,police,,,94.25
+police_station,Tadepalli Police station,way,875770005,16.481534449999998,80.60355440000001,,,corridor_r08_c03,police,,,33.619
+police_station,Tamil Nadu Police Computer Communication Centre,way,1131693908,13.02251745,80.27138795620947,,,corridor_r02_c02,police,,,86.3
+police_station,Tamil Nadu State Crime Records Bureau,way,1131693910,13.02280605,80.27163394776736,,,corridor_r02_c02,police,,,86.259
+police_station,Teynampet E3 PS,node,301949978,13.048651000000001,80.24948810000001,,,corridor_r02_c02,police,,,86.459
+police_station,Thalambur Police Station,node,4450010503,12.846900600000001,80.2271771,,,corridor_r01_c02,police,,044-27437100,102.861
+police_station,Three Town police station,node,936693251,16.2381436,80.6429327,,,corridor_r08_c03,police,,,40.782
+police_station,Traffic Police Station,node,2154131305,12.6212684,80.1955516,,,corridor_r01_c02,police,,,123.699
+police_station,Traffic Police Station,node,11653010010,16.4854707,80.62067900000001,,,corridor_r08_c03,police,,,35.496
+police_station,Ulavapadu Railway Police Station,node,3391989378,15.160891200000002,80.0125345,,,corridor_r06_c02,police,,,10.345
+police_station,Unnamed police station,way,211864592,13.05906695,80.27065227063466,,,corridor_r02_c02,police,,,83.921
+police_station,Unnamed police station,way,217864794,13.1232292,80.28733374316084,,,corridor_r02_c02,police,,,78.137
+police_station,Unnamed police station,way,217878794,13.10006195,80.2601427671375,,,corridor_r02_c02,police,,,81.939
+police_station,Unnamed police station,way,217921152,13.09345235,80.24340677452184,,,corridor_r02_c02,police,,,83.595
+police_station,Unnamed police station,node,264481213,13.059617300000001,80.2427681,,,corridor_r02_c02,police,,,86.353
+police_station,Unnamed police station,node,313951548,12.9814685,80.192063,,,corridor_r01_c02,police,,,95.896
+police_station,Unnamed police station,node,416412274,13.036940000000001,80.26741770000001,,,corridor_r02_c02,police,,,85.664
+police_station,Unnamed police station,way,677255714,12.9845817,80.26114626674396,,,corridor_r01_c02,police,,,89.812
+police_station,Unnamed police station,node,1391252125,13.124493200000002,80.2771688,,,corridor_r02_c02,police,,,78.656
+police_station,Unnamed police station,node,1597178645,13.057685500000002,80.20415480000001,,,corridor_r02_c02,police,,,89.321
+police_station,Unnamed police station,node,2139742510,13.0229741,80.1999165,,,corridor_r02_c02,police,,,92.491
+police_station,Unnamed police station,node,6854765885,12.993185700000002,80.2674928,,,corridor_r01_c02,police,,,88.672
+police_station,Unnamed police station,node,7060019586,13.118822900000001,80.2974617,,,corridor_r02_c02,police,,,77.766
+police_station,Unnamed police station,node,7060026186,13.075737700000001,80.2775929,,,corridor_r02_c02,police,,,82.233
+police_station,Unnamed police station,node,7246549556,16.2929791,80.4544831,,,corridor_r08_c02,police,,,20.33
+police_station,Unnamed police station,node,7994867411,12.9738305,80.186835,,,corridor_r01_c02,police,,,96.86
+police_station,Unnamed police station,node,8495842126,13.0504496,80.1828617,,,corridor_r02_c02,police,,,91.358
+police_station,Unnamed police station,node,9994034342,13.0414828,80.1331364,,,corridor_r02_c02,police,,,95.511
+police_station,Vadapalani Police station,node,984217571,13.049673,80.2117315,,,corridor_r02_c02,police,,,89.55
+police_station,Velachery,node,747616884,12.985012600000001,80.2208713,,,corridor_r01_c02,police,,,93.18
+police_station,Velachery Police Station,node,8645780209,12.9809435,80.22092330000001,,,corridor_r01_c02,police,,+91 44 2345 2605;+91 44 2345 2606,93.455
+police_station,Vetapalem Police Station,node,2040972160,15.7823656,80.3026372,,,corridor_r07_c02,police,,,11.156
+police_station,Virugambakkam Police Station,node,411318042,13.0491123,80.19925620000001,,,corridor_r02_c02,police,,,90.402
+police_station,Walajabad police station,node,4445183306,12.793747100000001,79.81621630000001,,,corridor_r01_c01,police,,+(91)4427256044,138.942
+police_station,c3 police station Manimangalam,node,4445204054,12.9163861,80.0398418,,,corridor_r01_c02,police,,+(91)4427178131,112.673
+police_station,mangadu police station,node,10741550765,13.0352881,80.11452100000001,,,corridor_r02_c02,police,,44 – 27178126,97.339
+police_station,police Area,way,1390758096,16.34221385,80.4187840707502,,,corridor_r08_c02,police,,,14.209
+police_station,police station,node,2333109139,16.2924294,80.453525,,,corridor_r08_c02,police,,,20.283
+police_station,police station,node,14038475342,16.1156848,80.9331001,,,corridor_r08_c03,police,,,74.611
+police_station,police station s11,node,4446984572,12.9254171,80.1128984,,,corridor_r01_c02,police,,044 2345 2769,106.498
+police_station,police vehicle parking,way,1390757851,16.34301445,80.41860286272487,,,corridor_r08_c02,police,,,14.151
+police_station,police vehicle parking,way,1390757902,16.34295675,80.41897789821977,,,corridor_r08_c02,police,,,14.19
+police_station,police vehicle parking,way,1390757918,16.3426172,80.41850188829181,,,corridor_r08_c02,police,,,14.161
+police_station,thiroporur police station,node,4446991785,12.7236799,80.18872920000001,,,corridor_r01_c02,police,,044 – 27446221,115.693
+police_station,எஸ்4 நந்தம்பாக்கம் காவல் நிலையம்,way,1545967238,13.01817395,80.18662818356177,,,corridor_r02_c02,police,,+914423452765,93.977
+police_station,டி-16 செம்மஞ்சேரி காவல் நிலையம்,way,1544073582,12.8997496,80.22756995140884,,,corridor_r01_c02,police,,,98.762
+police_station,டி-3 பல்லாவரம் காவல் நிலையம்,way,1544916625,12.9715726,80.14857013391132,,,corridor_r01_c02,police,,,100.339
+water_facility,Budavada LIS,node,6869616426,15.977400000000001,80.2766,,,corridor_r07_c02,,,,8.565
+water_facility,Guindy sewage pumping station,node,13039283370,13.015444100000002,80.2298605,,,corridor_r02_c02,,,,90.353
+water_facility,Kazhivu Neeretrum Nisha am,node,12458763849,13.1844599,80.3132513,Cmwssb,,corridor_r02_c02,,,,70.962
+water_facility,Kodavalivari palem Lift Irrigation Scheme,node,6868922337,15.894204,80.31502830000001,,,corridor_r07_c02,,,,16.159
+water_facility,Komaranenivaripalem LIS,node,6869616427,15.946700000000002,80.37010000000001,,,corridor_r07_c02,,,,19.125
+water_facility,Koneru,node,3392053551,15.164644800000001,80.00641870000001,,,corridor_r06_c02,,,,10.785
+water_facility,Koneru Backside,node,3392060456,15.1648069,80.0057491,,,corridor_r06_c02,,,,10.845
+water_facility,Madras Fertilizers Pond,way,625564658,13.170086,80.28290541635104,,,corridor_r02_c02,,,,74.208
+water_facility,Nagulapadu Lift Irrigation Scheme,node,6868929568,16.0632142,80.3271677,,,corridor_r08_c02,,,,15.301
+water_facility,Nemmeli Seawater Desalination Plant,way,554919776,12.70336335,80.22528685108372,,,corridor_r01_c02,,,,114.831
+water_facility,Peddivaripalem Kollavaripalem LIS,node,6869544553,15.975607,80.2508375,,,corridor_r07_c02,,,,6.074
+water_facility,Perungudi Sewage Treatment Plant,way,131425286,12.956951100000001,80.23340436817972,,,corridor_r01_c02,,,,94.088
+water_facility,Perur Desalination Plant,way,98366324,12.71343145,80.22824212354021,,,corridor_r01_c02,,,,113.764
+water_facility,Pothukatla LIS(Vinayaka),node,6869586180,15.965300000000001,80.35180000000001,,,corridor_r07_c02,,,,16.679
+water_facility,Pump Room,node,5318580030,13.082841400000001,80.19730440000001,,,corridor_r02_c02,,,,87.557
+water_facility,Purunadhareswari (Upputur) LIS,node,6869626494,15.951730000000001,80.28437000000001,,,corridor_r07_c02,,,,10.495
+water_facility,STW,node,3917186157,12.9888036,80.11691830000001,,,corridor_r01_c02,,,,101.161
+water_facility,Sewage treatment plant,node,14099420444,12.8154427,80.0813171,Shriram Shankari  Association,,corridor_r01_c02,,,,116.841
+water_facility,Sri Dwarakamaya Li Scheme,node,6869626493,15.9509857,80.2752124,,,corridor_r07_c02,,,,9.713
+water_facility,Sri Venkateswara LIS,node,6869545088,15.980180500000001,80.2740711,,,corridor_r07_c02,,,,8.219
+water_facility,Sri Venkateswara Manchineeti Padhakam,node,6862259220,15.958220400000002,80.33087040000001,,,corridor_r07_c02,,,,14.741
+water_facility,Unnamed water facility,way,1236156274,13.04332835,80.069864,,,corridor_r02_c02,,,,99.893
+water_facility,Unnamed water facility,node,11365507628,15.475634500000002,80.0136021,,,corridor_r06_c02,,,,24.29
+water_facility,Unnamed water facility,node,13935471967,15.417400700000002,79.9237423,,,corridor_r06_c01,water_point,,,30.687

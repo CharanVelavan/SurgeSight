@@ -22,6 +22,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from services.assets import load_all_assets
 from services.config import load_region
 from services.hazards.rainfall import FORECAST_NOTE, forecast_rainfall, imd_category, observed_rainfall
 
@@ -37,7 +38,7 @@ def main() -> None:
     region = load_region(args.region)
     cutoff = pd.Timestamp(args.cutoff or region.demo_cutoff)
     end = cutoff + pd.Timedelta(hours=args.hours)
-    assets = pd.read_csv(region.path("scored_assets"))
+    assets = load_all_assets(region.id)
 
     print(f"forecast rainfall (init {cutoff}, {args.hours} h)...")
     forecast, fc_meta = forecast_rainfall(str(cutoff), args.hours, assets, cutoff_utc=str(cutoff))

@@ -17,7 +17,7 @@ from ui.bulletin_scoring import render as render_bulletin_scoring
 from services.bulletin_parser import parse_bulletin_file, parse_bulletin_text
 from services.scenario_engine import run_scenario
 from services.scenario_explainer import explain_scenario
-from services.tts import synthesize_advisory
+from services.tts import TEXT_ONLY_LANGUAGES, audio_supported, synthesize_advisory
 from services.track_forecast_explainer import explain_forecast_difference
 from services.track_forecaster import (
     DEFAULT_DEMO_CUTOFF,
@@ -418,7 +418,11 @@ if advisory_tab.open:
         if advisory_data:
             st.metric("Screening severity", advisory_data["severity"], border=True)
             st.markdown(f"**Audience:** {advisory_data['audience']}")
+            if advisory_data.get("headline"):
+                st.markdown(f"#### {advisory_data['headline']}")
             st.markdown(advisory_data["situation_summary"])
+            if advisory_data.get("instruction"):
+                st.markdown(f"**Instruction:** {advisory_data['instruction']}")
             st.markdown("**Priority actions**")
             for action in advisory_data.get("priority_actions", []):
                 st.markdown(f"- {action}")
@@ -433,7 +437,10 @@ if advisory_tab.open:
                 st.markdown(f"- {priority}")
             st.info(advisory_data["disclaimer"], icon=":material/info:")
 
-            if st.button("Play community alert", icon=":material/volume_up:"):
+            advisory_language = st.session_state.get("role_advisory_language", "English")
+            if not audio_supported(advisory_language):
+                st.caption(TEXT_ONLY_LANGUAGES[advisory_language])
+            elif st.button("Play community alert", icon=":material/volume_up:"):
                 try:
                     with st.spinner("Synthesizing community alert…"):
                         advisory_object = RoleAdvisory.model_validate(advisory_data)

@@ -13,7 +13,7 @@ from services.agent.adk_app import run_adk_agent
 from services.store import get_store
 
 SAMPLE_BULLETIN = Path("data/raw/sample_michaung_bulletin.txt")
-LANGUAGES = ["English", "Tamil", "Telugu"]
+LANGUAGES = ["English", "Tamil", "Telugu", "Hindi", "Odia", "Bengali"]
 EXAMPLES = {
     "What if it shifts 30 km north?": "If Michaung shifts 30 km north, which hospitals become newly high risk? Top 5 only.",
     "Experimental forecast check": "How well would the experimental track forecast issued at 2023-12-03 12:00 have done, and does it change hospital impact?",

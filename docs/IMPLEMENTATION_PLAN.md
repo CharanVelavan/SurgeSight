@@ -691,7 +691,7 @@ Each WP: **Goal · Files · Tasks · Acceptance · Marker · Fallback · Estimat
 
 **Goal:** seven department views with their own assets, agents, advisories, languages. **Estimate:** 2.5 h. **Depends on:** WP1, WP2.4.
 
-- [ ] **WP4.1 `config/departments.toml` + `services/departments.py`.** Per department: `id`, `display_name`, `asset_types`, `criticality_weights`, `key_questions`, `default_channels`, `recipients` (test allow-list), `advisory_focus`.
+- [x] **WP4.1 `config/departments.toml` + `services/departments.py`.** Per department: `id`, `display_name`, `asset_types`, `criticality_weights`, `key_questions`, `default_channels`, `recipients` (test allow-list), `advisory_focus`. **Done 2026-09-29:** `config/departments.toml` (7 departments, weights for the new asset types) and `services/departments.py` (`load_departments`, `department_priority`, `score_all_assets`); tool `department_priority`. Recipients are empty (test allow-list to be filled in WP5.3).
 
   | Department | Asset types | Focus |
   |---|---|---|
@@ -703,9 +703,9 @@ Each WP: **Goal · Files · Tasks · Acceptance · Marker · Fallback · Estimat
   | Water / Sewage | water works, pumping stations, treatment plants | pump readiness, overflow risk |
   | Fisheries | fishing harbours, landing centres | boats at sea recall, harbour protection |
 
-- [ ] **WP4.2 New asset layers.** Extend `scripts/fetch_osm_infrastructure.py` (same tiling/caching) to fetch: `amenity=fire_station`, `amenity=police`, `man_made=water_works|pumping_station|wastewater_plant`, `landuse=harbour|industrial=port` + `seamark`/`leisure=marina` fishing harbours (best effort). Score with v1 (for consistency) and v2. Update counts.
-- [ ] **WP4.3 Advisory extension.** `advisory.py`: audiences from config; context builder per department uses its asset types and v2 + ensemble fields; keep deterministic re-enforcement. Add CAP-ready fields (`headline`, `instruction`).
-- [ ] **WP4.4 Languages.** Add Hindi, Odia (for Fani), Bengali (for Amphan-style expansion). Check Cloud TTS voice availability per language; if a voice is missing, show text only with a label. Marker `SURGESIGHT_DEPARTMENTS_OK`.
+- [x] **WP4.2 New asset layers.** Extend `scripts/fetch_osm_infrastructure.py` (same tiling/caching) to fetch: `amenity=fire_station`, `amenity=police`, `man_made=water_works|pumping_station|wastewater_plant`, `landuse=harbour|industrial=port` + `seamark`/`leisure=marina` fishing harbours (best effort). Score with v1 (for consistency) and v2. Update counts. **Done 2026-09-29:** `scripts/fetch_extra_assets.py` reads the cached state PBFs (no Overpass); `scripts/score_extra_assets.py` scores with v1. Found in the corridor: 183 police stations, 21 fire stations, 24 water facilities, 9 harbours (OSM coverage of the last three is thin; fishing harbours are best effort). Kept in `scored_assets_extra.csv` so the frozen core baseline (3,977) and its tests are untouched; `services/assets.py::load_all_assets` joins them; coast, rainfall and river caches now cover all 4,214 assets. Roads stay unscored.
+- [x] **WP4.3 Advisory extension.** `advisory.py`: audiences from config; context builder per department uses its asset types and v2 + ensemble fields; keep deterministic re-enforcement. Add CAP-ready fields (`headline`, `instruction`). **Done 2026-09-29:** `services/advisory.py` rewritten: audiences from config, context from v2 scores of the department's own asset types (plus ensemble `p_high_plus` for core assets), new `headline` and `instruction` fields, severity/assets/disclaimer re-imposed from data.
+- [x] **WP4.4 Languages.** Add Hindi, Odia (for Fani), Bengali (for Amphan-style expansion). Check Cloud TTS voice availability per language; if a voice is missing, show text only with a label. Marker `SURGESIGHT_DEPARTMENTS_OK`. **Done 2026-09-29:** Hindi, Odia and Bengali added (disclaimers, UI, agent tools). Cloud TTS voices checked: hi-IN 46, bn-IN 38, or-IN none, so Odia is text only with a label. `SURGESIGHT_DEPARTMENTS_OK`.
 
 ---
 

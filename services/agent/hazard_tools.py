@@ -361,3 +361,27 @@ def river_flood_tool(args: RiverFloodArgs) -> Any:
     data = jsonable({"summary": summarise(frame), "top_by_type": top, "rain_source": rain_meta.get("source", "GFS forecast"), "label": LABEL,
                      "hospital_note": "Hospital ranking excludes OSM records that are clinics, dental or eye-care sites."})
     return ok_result("river_flood", data, source="merit_hydro+gfs:earth_engine", run_id=run_id, model_version="river-v1")
+
+
+# ---------------------------------------------------------------- departments
+
+class DepartmentPriorityArgs(BaseModel):
+    department: Literal[
+        "District Collector / Disaster Management", "Health Department", "Fire & Rescue Services", "Electricity Board",
+        "Police / Traffic", "Water & Sewage Board", "Fisheries Department",
+    ] = Field(description="Department whose asset view to rank.")
+    top_n: int = Field(default=10, ge=1, le=15, description="How many top assets to list.")
+
+
+@tool("department_priority", agent_scopes={"department", "impact"})
+def department_priority_tool(args: DepartmentPriorityArgs) -> Any:
+    """Rank one department's own assets (hospitals for Health, fire stations for Fire & Rescue, substations
+    for Electricity, police stations, water facilities, fishing harbours, or all types for the Collector) by
+    the v2 multi-hazard screening score. Returns class counts, triage tier 1 count, dominant hazards and the
+    top assets. Screening indices, not damage probabilities. Roads are not scored."""
+    from services.departments import department_priority
+
+    result = department_priority(args.department, n=args.top_n)
+    run_id = new_run_id("dept")
+    get_store().put(run_id, "department_priority", jsonable(result))
+    return ok_result("department_priority", jsonable(result), source="departments:risk_v2", run_id=run_id, model_version="v2")

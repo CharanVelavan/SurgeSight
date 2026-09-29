@@ -23,6 +23,8 @@ north = 16.6
 [paths]
 track = "data/processed/michaung_track.csv"
 scored_assets = "data/processed/scored_assets.csv"
+extra_assets_raw = "data/processed/osm/extra_assets.csv"
+scored_assets_extra = "data/processed/scored_assets_extra.csv"
 risk_summary = "data/processed/risk_summary.json"
 scenario_assets_csv = "data/processed/scenario_assets.csv"
 scenario_assets_geojson = "data/processed/scenario_assets.geojson"

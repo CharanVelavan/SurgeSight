@@ -60,7 +60,9 @@ def test_rainfall() -> None:
         raise AssertionError("a run issued after the cutoff must be refused")
 
     table = load_rainfall_assets()
-    assert len(table) == len(ASSETS) and table[["fc_accum_mm", "fc_peak_24h_mm", "obs_accum_mm"]].notna().all().all()
+    covered = ASSETS[["osm_element", "osm_id"]].merge(table, on=["osm_element", "osm_id"], how="left")
+    assert len(table) >= len(ASSETS) and len(covered) == len(ASSETS)  # the cache also covers the department layers (WP4.2)
+    assert covered[["fc_accum_mm", "fc_peak_24h_mm", "obs_accum_mm"]].notna().all().all()
     both = table.dropna(subset=["fc_accum_mm", "obs_accum_mm"])
     assert np.corrcoef(both["fc_accum_mm"], both["obs_accum_mm"])[0, 1] > 0.5, "forecast should track observed pattern"
     assert (table["fc_peak_24h_mm"] <= table["fc_accum_mm"] + 0.01).all()

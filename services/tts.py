@@ -15,7 +15,13 @@ from dotenv import load_dotenv
 from services.advisory import RoleAdvisory
 
 
-LANGUAGE_CODES = {"English": "en-IN", "Tamil": "ta-IN", "Telugu": "te-IN"}
+LANGUAGE_CODES = {"English": "en-IN", "Tamil": "ta-IN", "Telugu": "te-IN", "Hindi": "hi-IN", "Bengali": "bn-IN"}
+# Checked against the Cloud TTS voice list on 2026-09-29: Odia (or-IN) has no voice, so it is text only.
+TEXT_ONLY_LANGUAGES = {"Odia": "Odia audio is not available: Google Cloud Text-to-Speech has no Odia voice. Text only."}
+
+
+def audio_supported(language: str) -> bool:
+    return language in LANGUAGE_CODES
 MAX_TTS_BYTES = 4800  # Cloud TTS limit is 5,000 bytes of input text
 _SENTENCE_ENDINGS = ".!?।॥"
 
@@ -107,6 +113,8 @@ def _rest_synthesize(text: str, language_code: str) -> bytes:
 
 
 def synthesize_advisory(advisory: RoleAdvisory, language: str) -> bytes:
+    if language in TEXT_ONLY_LANGUAGES:
+        raise ValueError(TEXT_ONLY_LANGUAGES[language])
     if language not in LANGUAGE_CODES:
         raise ValueError(f"Unsupported TTS language: {language}")
     text = advisory_to_speech_text(advisory).strip()

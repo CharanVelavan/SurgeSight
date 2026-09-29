@@ -24,6 +24,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import ee
 
+from services.assets import load_all_assets
 from services.config import load_region
 from services.earth_engine import country_geometry, init_ee
 
@@ -55,7 +56,7 @@ def main() -> None:
     boundary = land_utm.boundary
 
     # 2. per-asset distance to (and nearest point on) the coast
-    assets = pd.read_csv(region.path("scored_assets"))
+    assets = load_all_assets(region.id)
     x, y = to_utm(assets["lon"].to_numpy(), assets["lat"].to_numpy())
     points = shapely.points(x, y)
     lines = shapely.shortest_line(points, boundary)

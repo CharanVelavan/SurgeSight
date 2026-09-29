@@ -301,16 +301,17 @@ def explain_scenario_tool(args: ExplainScenarioArgs) -> Any:
 
 class DraftAdvisoryArgs(BaseModel):
     audience: Literal[
-        "District Collector / Disaster Management", "Electricity Board", "Health Department"
+        "District Collector / Disaster Management", "Health Department", "Fire & Rescue Services", "Electricity Board",
+        "Police / Traffic", "Water & Sewage Board", "Fisheries Department",
     ] = Field(description="Which department the advisory is for.")
-    language: Literal["English", "Tamil", "Telugu"] = "English"
+    language: Literal["English", "Tamil", "Telugu", "Hindi", "Odia", "Bengali"] = "English"
 
 
 @tool("draft_advisory", agent_scopes={"department"})
 def draft_advisory_tool(args: DraftAdvisoryArgs) -> Any:
-    """Draft a role-specific advisory (severity, situation summary, priority actions, critical
-    assets, disclaimer) for a department in English, Tamil or Telugu from the deterministic
-    baseline risk data. Severity, asset list and disclaimer are set from data, not by the model."""
+    """Draft a department advisory (severity, headline, situation summary, instruction, priority actions,
+    critical assets, disclaimer) for one of seven departments in English, Tamil, Telugu, Hindi, Odia or
+    Bengali from the deterministic v2 risk data for that department's own asset types. Severity, asset list and disclaimer are set from data, not by the model."""
     from services.advisory import generate_role_advisory
 
     advisory = generate_role_advisory(args.audience, args.language)
@@ -323,13 +324,13 @@ def draft_advisory_tool(args: DraftAdvisoryArgs) -> Any:
 
 class SynthesizeSpeechArgs(BaseModel):
     advisory_run_id: str = Field(description="run_id returned by draft_advisory.")
-    language: Literal["English", "Tamil", "Telugu"] = "English"
+    language: Literal["English", "Tamil", "Telugu", "Hindi", "Bengali"] = "English"
 
 
 @tool("synthesize_speech", agent_scopes={"comms"})
 def synthesize_speech_tool(args: SynthesizeSpeechArgs) -> Any:
     """Turn a drafted advisory into spoken MP3 audio (Google Cloud Text-to-Speech) in English,
-    Tamil or Telugu. Returns an audio run_id the UI can play; audio is not sent to Gemini."""
+    Tamil, Telugu, Hindi or Bengali (no Odia voice exists). Returns an audio run_id the UI can play; audio is not sent to Gemini."""
     from services.advisory import RoleAdvisory
     from services.tts import synthesize_advisory
 

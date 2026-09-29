@@ -1,8 +1,99 @@
-# Department configuration. WP2.1 only needs the criticality weights; WP4.1 adds the departments.
-# Weights are prototype judgement values used to rank assets for attention, not measured quantities.
+# Department configuration (WP4.1). Weights are prototype judgement values used to rank assets for attention,
+# not measured quantities. Recipients are a test allow-list: nothing is sent anywhere else (see WP5.3).
 [criticality_weights]
 hospital = 1.0
 substation = 0.9
 shelter = 0.8
+water_facility = 0.8
+fire_station = 0.8
+police_station = 0.6
 school = 0.5
+fishing_harbour = 0.5
 default = 0.5
+
+[departments.collector]
+display_name = "District Collector / Disaster Management"
+short_name = "Collector"
+asset_types = ["shelter", "hospital", "substation", "school", "fire_station", "police_station", "water_facility", "fishing_harbour"]
+key_questions = [
+  "Which districts need evacuation first and are the shelters safe?",
+  "Where are the biggest exposed populations?",
+  "What should each department prepare?",
+]
+default_channels = ["chat", "email"]
+recipients = []
+advisory_focus = "overall picture, evacuation and shelter readiness across all sectors"
+
+[departments.health]
+display_name = "Health Department"
+short_name = "Health"
+asset_types = ["hospital"]
+facility_quality = ["hospital", "clinic_or_other"]
+key_questions = [
+  "Which hospitals are most likely to be hit, and which need generator fuel or patient transfer?",
+  "Which facilities risk losing dialysis or ICU continuity?",
+]
+default_channels = ["chat", "email"]
+recipients = []
+advisory_focus = "generator fuel, patient transfer, dialysis and ICU continuity, access to facilities"
+
+[departments.fire_rescue]
+display_name = "Fire & Rescue Services"
+short_name = "Fire & Rescue"
+asset_types = ["fire_station", "hospital"]
+facility_quality = ["hospital"]
+key_questions = [
+  "Which fire stations are exposed and where should boats and pumps be pre-positioned?",
+  "Where is tree-fall clearance and rescue most likely to be needed?",
+]
+default_channels = ["chat"]
+recipients = []
+advisory_focus = "boat and pump pre-positioning, tree-fall clearance, access routes to hospitals"
+
+[departments.electricity]
+display_name = "Electricity Board"
+short_name = "Electricity"
+asset_types = ["substation"]
+key_questions = [
+  "Which substations are flood-prone or in the strongest wind?",
+  "Where should crews be staged and where is pre-emptive shutdown needed?",
+]
+default_channels = ["chat", "email"]
+recipients = []
+advisory_focus = "pre-emptive shutdown, crew staging, flood-prone substations"
+
+[departments.police]
+display_name = "Police / Traffic"
+short_name = "Police"
+asset_types = ["police_station"]
+key_questions = [
+  "Which police stations are exposed and which areas need traffic control?",
+  "Which evacuation corridors need to be held open?",
+]
+default_channels = ["chat"]
+recipients = []
+advisory_focus = "closures, evacuation corridors and traffic control (roads are not scored)"
+
+[departments.water]
+display_name = "Water & Sewage Board"
+short_name = "Water"
+asset_types = ["water_facility"]
+key_questions = [
+  "Which water works, pumping stations and treatment plants are at risk?",
+  "Where is overflow or loss of pumping most likely?",
+]
+default_channels = ["chat"]
+recipients = []
+advisory_focus = "pump readiness, backup power and overflow risk"
+
+[departments.fisheries]
+display_name = "Fisheries Department"
+short_name = "Fisheries"
+asset_types = ["fishing_harbour"]
+key_questions = [
+  "Which harbours and landing centres face the strongest wind and surge?",
+  "Which boats at sea should be recalled?",
+]
+default_channels = ["chat"]
+recipients = []
+advisory_focus = "recall of boats at sea and harbour protection (OSM harbour coverage is partial)"

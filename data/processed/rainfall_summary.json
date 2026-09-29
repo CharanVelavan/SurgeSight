@@ -17,23 +17,23 @@
     "2023-12-01 00:00",
     "2023-12-07 00:00"
   ],
-  "assets": 3977,
-  "assets_with_observed": 3977,
+  "assets": 4214,
+  "assets_with_observed": 4214,
   "forecast_vs_observed": {
-    "correlation": 0.702,
-    "mean_forecast_mm": 297.7,
-    "mean_observed_mm": 222.1
+    "correlation": 0.708,
+    "mean_forecast_mm": 300.0,
+    "mean_observed_mm": 222.7
   },
   "imd_peak_24h_forecast_counts": {
-    "extremely heavy": 2396,
-    "very heavy": 1150,
-    "heavy": 407,
-    "below heavy": 24
+    "extremely heavy": 2578,
+    "very heavy": 1195,
+    "heavy": 416,
+    "below heavy": 25
   },
   "imd_peak_24h_observed_counts": {
-    "very heavy": 2054,
-    "extremely heavy": 1154,
-    "heavy": 769
+    "very heavy": 2154,
+    "extremely heavy": 1259,
+    "heavy": 801
   },
   "note": "NOAA GFS 0.25 degree forecast run issued at the cutoff time (Earth Engine archive); 6-hour accumulation buckets. Rainfall is not shifted when a what-if moves the track."
 }
