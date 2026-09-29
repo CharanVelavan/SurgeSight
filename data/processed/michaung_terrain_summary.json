@@ -1,0 +1,50 @@
+{
+  "project": "gen-lang-client-0679887739",
+  "scenario": {
+    "name": "Cyclone Michaung",
+    "year": 2023,
+    "country": "India"
+  },
+  "region": {
+    "west": 79.0,
+    "south": 11.5,
+    "east": 82.0,
+    "north": 15.0
+  },
+  "datasets": {
+    "elevation": {
+      "id": "USGS/SRTMGL1_003"
+    },
+    "surface_water": {
+      "id": "JRC/GSW1_4/GlobalSurfaceWater",
+      "band": "occurrence"
+    },
+    "population": {
+      "id": "WorldPop/GP/100m/pop",
+      "country": "IND",
+      "year": 2020
+    }
+  },
+  "summary": {
+    "mean_elevation_m": 78.59769978632102,
+    "low_lying_percentage": 45.87589213244355,
+    "very_low_percentage": 43.095000197055334,
+    "water_presence_percentage": 14.593639358788765,
+    "mean_surface_water_occurrence_pct": 12.682173032082586,
+    "mean_flood_screen": 0.40487964254180453,
+    "expected_mean_flood_screen": 0.40488331232548275,
+    "population_estimate": 27876776
+  },
+  "screening_model": {
+    "low_lying_threshold_m": 10,
+    "very_low_threshold_m": 5,
+    "water_occurrence_threshold_pct": 10,
+    "weights": {
+      "low_lying": 0.6,
+      "very_low": 0.25,
+      "surface_water": 0.15
+    },
+    "description": "Screening-level flood vulnerability indicator combining terrain elevation and historical surface-water occurrence.",
+    "warning": "This prototype does not replace operational hydrodynamic flood or storm-surge modelling."
+  }
+}

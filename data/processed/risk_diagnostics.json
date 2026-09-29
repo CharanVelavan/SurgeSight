@@ -1,0 +1,158 @@
+{
+  "source": "data/processed/scored_assets.csv",
+  "asset_count": 3977,
+  "statistics": {
+    "combined_risk_score": {
+      "count": 3977,
+      "mean": 0.46256952476741264,
+      "min": 0.248,
+      "max": 0.781,
+      "p10": 0.313,
+      "p25": 0.358,
+      "p50": 0.482,
+      "p75": 0.549,
+      "p90": 0.589,
+      "p95": 0.633,
+      "p99": 0.7012399999999998
+    },
+    "wind_score": {
+      "count": 3977,
+      "mean": 0.545039979884335,
+      "min": 0.381,
+      "max": 0.825,
+      "p10": 0.456,
+      "p25": 0.491,
+      "p50": 0.526,
+      "p75": 0.554,
+      "p90": 0.717,
+      "p95": 0.744,
+      "p99": 0.77
+    },
+    "terrain_flood_score": {
+      "count": 3977,
+      "mean": 0.3094246919788785,
+      "min": 0.0,
+      "max": 0.973,
+      "p10": 0.0,
+      "p25": 0.0,
+      "p50": 0.364,
+      "p75": 0.532,
+      "p90": 0.616,
+      "p95": 0.672,
+      "p99": 0.7
+    },
+    "distance_to_track_km": {
+      "count": 3977,
+      "mean": 68.84446592909228,
+      "min": 0.277,
+      "max": 139.212,
+      "p10": 19.334400000000002,
+      "p25": 33.1,
+      "p50": 82.12,
+      "p75": 92.86,
+      "p90": 106.437,
+      "p95": 122.07239999999999,
+      "p99": 134.26536
+    },
+    "elevation_m": {
+      "count": 3977,
+      "mean": 26.814935881317577,
+      "min": -3.0,
+      "max": 512.0,
+      "p10": 8.0,
+      "p25": 11.0,
+      "p50": 17.0,
+      "p75": 32.0,
+      "p90": 61.0,
+      "p95": 78.0,
+      "p99": 122.47999999999956
+    },
+    "water_occurrence_pct": {
+      "count": 3977,
+      "mean": 0.054815187327131004,
+      "min": 0.0,
+      "max": 91.0,
+      "p10": 0.0,
+      "p25": 0.0,
+      "p50": 0.0,
+      "p75": 0.0,
+      "p90": 0.0,
+      "p95": 0.0,
+      "p99": 0.0
+    }
+  },
+  "risk_class_counts": {
+    "MODERATE": 2228,
+    "HIGH": 1737,
+    "CRITICAL": 8,
+    "LOW": 4
+  },
+  "counts_by_asset_type_and_risk_class": [
+    {
+      "asset_type": "hospital",
+      "risk_class": "CRITICAL",
+      "count": 2
+    },
+    {
+      "asset_type": "hospital",
+      "risk_class": "HIGH",
+      "count": 948
+    },
+    {
+      "asset_type": "hospital",
+      "risk_class": "LOW",
+      "count": 1
+    },
+    {
+      "asset_type": "hospital",
+      "risk_class": "MODERATE",
+      "count": 1249
+    },
+    {
+      "asset_type": "school",
+      "risk_class": "CRITICAL",
+      "count": 2
+    },
+    {
+      "asset_type": "school",
+      "risk_class": "HIGH",
+      "count": 568
+    },
+    {
+      "asset_type": "school",
+      "risk_class": "LOW",
+      "count": 3
+    },
+    {
+      "asset_type": "school",
+      "risk_class": "MODERATE",
+      "count": 638
+    },
+    {
+      "asset_type": "shelter",
+      "risk_class": "HIGH",
+      "count": 78
+    },
+    {
+      "asset_type": "shelter",
+      "risk_class": "MODERATE",
+      "count": 117
+    },
+    {
+      "asset_type": "substation",
+      "risk_class": "CRITICAL",
+      "count": 4
+    },
+    {
+      "asset_type": "substation",
+      "risk_class": "HIGH",
+      "count": 143
+    },
+    {
+      "asset_type": "substation",
+      "risk_class": "MODERATE",
+      "count": 224
+    }
+  ],
+  "note": "Diagnostics only; model weights and deterministic scores are unchanged."
+}

@@ -1,0 +1,26 @@
+# secrets
+.env
+token*.json
+*credentials*.json
+
+# environments / caches
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# raw data (bulk) — keep the sample bulletin the tests need
+data/raw/*
+!data/raw/sample_michaung_bulletin.txt
+
+# generated at runtime
+data/runs/
+*.mp3
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+
+# local agent tooling
+.arena/
+.claude/settings.local.json

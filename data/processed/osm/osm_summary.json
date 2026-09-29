@@ -1,0 +1,48 @@
+{
+  "scenario": "Cyclone Michaung 2023",
+  "source": "OpenStreetMap contributors via Overpass API and regional OSM PBF extracts",
+  "generated_at_utc": "2026-09-29T07:42:06.803815+00:00",
+  "screening_track_distance_km": 140.0,
+  "screening_warning": "Prototype screening distance; not an official wind-radius estimate.",
+  "overpass_endpoints": [
+    "https://overpass.private.coffee/api/interpreter",
+    "https://overpass-api.de/api/interpreter",
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    "https://overpass.nchc.org.tw/api/interpreter"
+  ],
+  "fallback_used": true,
+  "fallback_reason": "Public Overpass latency exceeded the hackathon time budget during validation.",
+  "fallback_sources": {
+    "tamil_nadu": "https://download.openstreetmap.fr/extracts/asia/india/tamil_nadu-latest.osm.pbf",
+    "andhra_pradesh": "https://download.openstreetmap.fr/extracts/asia/india/andhra_pradesh-latest.osm.pbf"
+  },
+  "grid": {
+    "south": 12.5,
+    "north": 16.5,
+    "west": 79.5,
+    "east": 81.0,
+    "step": 0.5
+  },
+  "tile_count": 24,
+  "query_count_planned": 120,
+  "overpass_queries_processed": 3,
+  "cache_hits": 3,
+  "downloads": 0,
+  "counts": {
+    "hospitals": 2200,
+    "shelters": 195,
+    "schools": 1211,
+    "substations": 371,
+    "arterial_roads": 8739,
+    "critical_assets": 3977,
+    "major_road_elements": 8739
+  },
+  "failed_query_count": 0,
+  "failures": [],
+  "notes": [
+    "OSM is community-maintained and coverage varies.",
+    "Schools remain schools and are not treated as official cyclone shelters.",
+    "Road ways use Overpass center points for reliability.",
+    "Objects are deduplicated by OSM element type plus OSM id."
+  ]
+}

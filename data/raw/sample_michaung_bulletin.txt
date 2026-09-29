@@ -1,0 +1,19 @@
+SYNTHETIC MICHAUNG PARSER TEST BULLETIN
+NOT AN OFFICIAL INDIA METEOROLOGICAL DEPARTMENT BULLETIN
+
+Bulletin time: 1200 UTC, 04 December 2023.
+
+The cyclonic storm MICHAUNG was observed near latitude 14.0 degrees North and
+longitude 80.6 degrees East at 1200 UTC on 04 December 2023. It moved generally
+north-northwestwards at approximately 12 kmph during the preceding three hours.
+
+Maximum sustained wind speed was 101.86 kmph. Central pressure was 986 hPa.
+No gust speed was provided in this synthetic test bulletin.
+
+Synthetic forecast points derived only from later NOAA IBTrACS track rows:
+- 1500 UTC, 04 December 2023: 14.2 N, 80.4 E; wind 101.86 kmph; pressure 986 hPa.
+- 1800 UTC, 04 December 2023: 14.4 N, 80.3 E; wind 101.86 kmph; pressure 986 hPa.
+- 0000 UTC, 05 December 2023: 14.9 N, 80.1 E; wind 92.60 kmph; pressure 988 hPa.
+
+This synthetic test bulletin does not provide a landfall location or expected
+landfall time. It contains no rainfall forecast and no district warnings.

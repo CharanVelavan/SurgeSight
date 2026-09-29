@@ -1,0 +1,5465 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08346755969839,
+          12.8790965
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "BOV Waiting Point",
+        "osm_element": "way",
+        "osm_id": 1548517209,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.165
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.62521176833019,
+          16.44208265
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Bus stand",
+        "osm_element": "way",
+        "osm_id": 1436666601,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 35.001
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          79.7785994,
+          13.483781800000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Cave",
+        "osm_element": "node",
+        "osm_id": 9031228813,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c01",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 102.447
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.159411,
+          13.093513900000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Public Food Shelter",
+        "osm_element": "node",
+        "osm_id": 13928250805,
+        "operator": "Amma Unavagam",
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 89.259
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.15942011594049,
+          13.0935167
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Publich Food Shelter",
+        "osm_element": "way",
+        "osm_id": 1528380353,
+        "operator": "Amma Unavagam",
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 89.258
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0800688649605,
+          12.87339965
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "relation",
+        "osm_id": 17477946,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.846
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07887982469249,
+          12.8727041
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "relation",
+        "osm_id": 17477947,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.995
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2838455749748,
+          13.0874451
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 28275720,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 80.934
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27396793962525,
+          13.0841456
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 214739125,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27398957280415,
+          13.0847878
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 215471614,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.981
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.238574232057,
+          13.09684185
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 217922862,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 83.602
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.29258047603719,
+          13.09269815
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 217960160,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 79.823
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27377270185369,
+          13.084569049999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 624157903,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.014
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08189294834801,
+          12.87127675
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815352,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "platform",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.837
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08127830954342,
+          12.871494599999998
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815353,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "platform",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.875
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08083282102575,
+          12.871964349999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815354,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "platform",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08255543362708,
+          12.8713197
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815355,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "platform",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.778
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08312498583423,
+          12.87165105
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815356,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "platform",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.707
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08070194089062,
+          12.87256865
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815357,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "platform",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.85
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07862760693962,
+          12.8730881
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815360,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.991
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07866575694354,
+          12.873194949999998
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815361,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.98
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07946717857129,
+          12.8728736
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815362,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.934
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07950525,
+          12.8729775
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815363,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.923
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07954495,
+          12.8730868
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815364,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.912
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07958930000001,
+          12.8731972
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815365,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.901
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07963135,
+          12.8733053
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815366,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.89
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07916659828007,
+          12.8726333
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815370,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.976
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07928515058649,
+          12.87385995
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815372,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.881
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07924990984571,
+          12.87375945
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815373,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "bus_stop",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.891
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08348168984591,
+          12.87215975
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815374,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "platform",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.641
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08075187903796,
+          12.87318265
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1065815375,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": "platform",
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.803
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.31711405,
+          13.18547575
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074246084,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 70.625
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0901714,
+          13.028982
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074791878,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 99.598
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08884885,
+          13.0326095
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074791887,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 99.391
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08703449999999,
+          13.0377403
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074791895,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 99.096
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08578202700855,
+          13.0419539
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074791899,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 98.839
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.09366080000001,
+          13.014547050000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074833588,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 100.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0912787,
+          13.00844435
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074833591,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 101.244
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08706505,
+          12.996281100000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074833602,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 102.57
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08925355061669,
+          12.98217485
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074833616,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 103.622
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0895896,
+          12.969297000000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074833628,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 104.707
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08993759991961,
+          12.96008735
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074843743,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 105.481
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08799465,
+          12.952543850000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074843751,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 106.268
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08304819258083,
+          12.9393763
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074843757,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 107.748
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08361273711208,
+          12.93869155
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074994242,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 107.771
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08865569273246,
+          12.9520691
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074994258,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 106.264
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.09072199991961,
+          12.960106750000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074994296,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 105.426
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0903724,
+          12.96926985
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074994336,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 104.656
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0900298,
+          12.98221415
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074994440,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 103.565
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08783274999999,
+          12.9963091
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1074994454,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 102.514
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0918197,
+          13.00769085
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075006690,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 101.269
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0945392,
+          13.01466215
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075006696,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 100.489
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.09117069999999,
+          13.02849
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075006709,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 99.567
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08958565,
+          13.0328241
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075006715,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 99.32
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08764110000001,
+          13.0383315
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075006727,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 99.003
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08597005,
+          13.044018900000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075006742,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 98.655
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07804945000001,
+          12.923681850000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075043277,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 109.457
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07731982135108,
+          12.92392245
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075043281,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 109.484
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0709098,
+          12.896862299999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075043346,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.044
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07015225,
+          12.8966223
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075043348,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.125
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0710866,
+          12.892245500000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075043350,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 112.337
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.26189354836386,
+          13.268949450000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075046288,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 67.39
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.24448273989523,
+          13.2579155
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075046289,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 69.589
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.23245348595157,
+          13.24893625
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075065012,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 71.216
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.21576385835655,
+          13.235822800000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075104385,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 73.525
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.19336899999999,
+          13.22229815
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075104439,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 76.31
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.183826025,
+          13.21824105
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075104441,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 77.366
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.16056166656978,
+          13.20244275
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075635993,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 80.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.1558563347159,
+          13.196302450000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075636009,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.24
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.152938,
+          13.19248305
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075636019,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.762
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.14778375,
+          13.182632850000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075636034,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.923
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.1455921,
+          13.18098435
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075636058,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 83.221
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.13633755000001,
+          13.178036200000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075636074,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 84.171
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.12976019999999,
+          13.179252550000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075636091,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 84.595
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.11647879879513,
+          13.18113475
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075657717,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 85.506
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.1014350523799,
+          13.179006000000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075657743,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 86.872
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07686978568464,
+          13.1756496
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075657783,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 89.113
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07261835,
+          13.1738918
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075657787,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 89.589
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.06775637147155,
+          13.167833349999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075657808,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 90.428
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0562661,
+          13.15222245
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075657841,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 92.507
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05302040000001,
+          13.1437348
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075672703,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 93.394
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05368645,
+          13.142371050000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075672705,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 93.441
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05262917378505,
+          13.13832155
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075672718,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 93.826
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05320795,
+          13.135125299999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075672728,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 94.017
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0529564,
+          13.12771115
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752689,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 94.591
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05218497544992,
+          13.127762950000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752695,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 94.649
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0528395,
+          13.12530325
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752702,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 94.781
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05204257175888,
+          13.1249674
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752704,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 94.869
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05191174930223,
+          13.110899499999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752753,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 95.943
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05278122636025,
+          13.107557450000002
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752767,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 96.129
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0520272,
+          13.10234805
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752771,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 96.586
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05286702587316,
+          13.103354450000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752773,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 96.443
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.0528573,
+          13.096219900000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752799,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 96.992
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05226244334341,
+          13.095562600000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752801,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 97.089
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05922826450964,
+          13.08750735
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752810,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 97.173
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.05770146551933,
+          13.08803975
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752821,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 97.25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.06736298934652,
+          13.07613225
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752844,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 97.445
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.06827671065348,
+          13.07612155
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752845,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 97.377
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07207133221394,
+          13.068604
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752859,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 97.689
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07553161838842,
+          13.064561
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075752876,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 97.754
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08125670000001,
+          13.05431755
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075761014,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 98.158
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.08268482037937,
+          13.05277075
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075761016,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 98.179
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.29776812795842,
+          13.11266265
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1075921837,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 78.114
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28932248233667,
+          13.0888714
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1076583946,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 80.356
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28745760085471,
+          13.0887371
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1076599890,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 80.53
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28171229528141,
+          13.1087223
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1090950059,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 79.808
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27782616256573,
+          13.11125045
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1090950119,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 79.819
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.24139115,
+          13.032000100000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1095915245,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 88.255
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.29161265662333,
+          13.0927528
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1103965659,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 79.906
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.29245989791502,
+          13.095904050000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1103976787,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 79.632
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.29011782385268,
+          13.09447745
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1105242339,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 79.931
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2664182,
+          13.06466265
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1110170920,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 83.932
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27418075222938,
+          13.0843994
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1115819902,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.988
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27921509514556,
+          13.0733385
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1124797371,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.244
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2792366670858,
+          13.07340045
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1124797372,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.238
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27926504999999,
+          13.07329375
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1124797373,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.242
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.25672283438834,
+          13.071347150000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1126975455,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 84.369
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.21337735,
+          13.00805495
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1128397328,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 92.277
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.25708480936147,
+          13.05913255
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1128463070,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 85.113
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28541565070078,
+          13.07352575
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1130557244,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.684
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28584685483212,
+          13.0738476
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1130557247,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.625
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28563521971698,
+          13.07388005
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1130557248,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.642
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2854763245213,
+          13.07313715
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1130557249,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.704
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2856745177524,
+          13.07310705
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1130557250,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.689
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28173527610912,
+          13.05482335
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1130782012,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 83.231
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.21612469820883,
+          13.008947299999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1131689103,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 91.979
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.22837483502039,
+          13.02391905
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1134245391,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 89.923
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.22802235833365,
+          13.02360925
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1134245392,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 89.974
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.22772773884448,
+          13.023358550000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1134245395,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 90.017
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.20444106216603,
+          13.00839965
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1136378755,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 93.035
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28460360975134,
+          13.06396615
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1137581561,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.378
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28506980974511,
+          13.064806749999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1137581563,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.282
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.29123775,
+          13.102362750000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1147283468,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 79.338
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28351162522155,
+          13.0876984
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1155132197,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 80.948
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28352049960881,
+          13.0872002
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1155132198,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 80.978
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.1186186048673,
+          12.927753599999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1173910090,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 105.847
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.11950612755403,
+          12.92864295
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1173910094,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 105.71
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27391985,
+          13.081876000000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874042,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.17
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27400435,
+          13.08189235
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874043,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.162
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27406239999999,
+          13.08190295
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874044,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.156
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27415522969389,
+          13.08191845
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874045,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.147
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27422426650904,
+          13.0819322
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874046,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.14
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27386823349096,
+          13.081972
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874048,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.169
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27408514999999,
+          13.0820161
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874049,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.147
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27412605,
+          13.0820233
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874050,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.143
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27438555,
+          13.0820775
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874051,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.116
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27442644618384,
+          13.0820847
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874052,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.112
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27428095381616,
+          13.0821036
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874053,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.124
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27432185,
+          13.082110799999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874054,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27418572969387,
+          13.08208665
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874055,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.133
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27422663349095,
+          13.082093799999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874056,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.129
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27398522967479,
+          13.0820455
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874057,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.154
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27402614618384,
+          13.0820527
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874058,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.15
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27377835,
+          13.0820014
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874059,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.175
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27373745381615,
+          13.0819942
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874060,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.179
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27363387422432,
+          13.081913400000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874061,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.194
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27577129292683,
+          13.0821517
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874070,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 81.988
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2755426,
+          13.08211465
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874071,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.011
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27558901382609,
+          13.082044100000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1188874072,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 82.011
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.22970590554245,
+          12.83843555
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1194925475,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 103.336
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2760843,
+          13.10388875
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1238278384,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 80.599
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.22453060343656,
+          13.0782128
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1314573335,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 86.172
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.5097554,
+          16.361982349999998
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1320131236,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 22.773
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          79.90133998172847,
+          13.14222465
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1323399484,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c01",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 106.341
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.03104556949174,
+          12.789439649999998
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1358390608,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 122.865
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.02508397590287,
+          12.7929803
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1358390609,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 123.108
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.02146206590476,
+          12.7953688
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1358390610,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 123.241
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.6404605926059,
+          16.24204425
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1361409084,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 40.355
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.64018806943744,
+          16.24236615
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1361409085,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 40.313
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.63993325578704,
+          16.243103050000002
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1361409092,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 40.253
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.63962277254709,
+          16.243400899999997
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1361409093,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 40.209
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.6402234277333,
+          16.2416694
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1361409094,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 40.35
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.64075229526847,
+          16.24076475
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1361409095,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 40.445
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.6406094246374,
+          16.2405566
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1361641131,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r08_c03",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 40.441
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.19935724786728,
+          12.821582849999999
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1419949731,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 106.984
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          79.9050212,
+          12.904731
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1426122479,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c01",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 123.37
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          79.9057585,
+          12.9010445
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1426122490,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c01",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 123.609
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.29231073603877,
+          13.09181955
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1504289142,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 79.903
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.04836449254807,
+          12.831347000000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "way",
+        "osm_id": 1553114384,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 118.45
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.23461950000001,
+          13.0094398
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 2339431246,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 90.342
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2345524,
+          13.008783800000002
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 2339431247,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 90.392
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27428850000001,
+          13.032532400000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 4119100489,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 85.369
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.23126040000001,
+          12.8214216
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 4163508190,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 104.576
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2321127,
+          12.822665200000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 4163531989,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 104.412
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2104803,
+          13.1032662
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 5672251523,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 84.891
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.23108,
+          12.8494512
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 6869551943,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 102.361
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.23106990000001,
+          12.8497167
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 6869551944,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 102.341
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.1019098,
+          13.0674834
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 11487190508,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 95.564
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.1018602,
+          13.0672052
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 11487190509,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 95.591
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2501228,
+          13.0149056
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 12309122500,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 88.639
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2497034,
+          13.015417900000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 12309127101,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 88.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.24934800000001,
+          13.015179400000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Unnamed shelter",
+        "osm_element": "node",
+        "osm_id": 12309127102,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r02_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 88.687
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.3066735,
+          15.7807653
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "Vetapalem Bus Shelter",
+        "osm_element": "node",
+        "osm_id": 2081337024,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r07_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 11.613
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07502557116142,
+          12.9137855
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "முடிச்சூர்",
+        "osm_element": "way",
+        "osm_id": 1075043320,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 110.527
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.07428907116142,
+          12.914031000000001
+        ]
+      },
+      "properties": {
+        "asset_type": "shelter",
+        "name": "முடிச்சூர்",
+        "osm_element": "way",
+        "osm_id": 1075043321,
+        "operator": null,
+        "ref": null,
+        "source_tile": "corridor_r01_c02",
+        "amenity": "shelter",
+        "power": null,
+        "highway": null,
+        "emergency": null,
+        "healthcare": null,
+        "voltage": null,
+        "website": null,
+        "phone": null,
+        "distance_to_track_km": 110.555
+      }
+    }
+  ]
+}

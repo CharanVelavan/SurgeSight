@@ -1,0 +1,337 @@
+{
+  "forecast_label": "SurgeSight Experimental Track Forecast",
+  "disclaimer": "Experimental forecast — not an official meteorological forecast. IMD bulletins remain authoritative.",
+  "scientific_notes": [
+    "Kalman extrapolation is a short-term statistical method; it cannot anticipate recurvature or motion changes that are not already visible in recent fixes.",
+    "Environmental wind steering (weighted 850/500/200 hPa annulus-mean GFS winds plus a fixed beta drift) is experimental; weights were set a priori, not tuned.",
+    "The steering field is frozen at the cutoff; the model does not use NWP forecast winds.",
+    "24-hour positions carry substantially more uncertainty than 6-hour positions.",
+    "This model is not a replacement for numerical weather prediction or operational cyclone forecasting. IMD remains authoritative."
+  ],
+  "cutoff_time": "2023-12-03T12:00:00",
+  "observations_used": 14,
+  "last_observation_time": "2023-12-03T12:00:00",
+  "reference_positions": [
+    {
+      "lead_hours": 6,
+      "timestamp": "2023-12-03T18:00:00",
+      "lat": 12.8,
+      "lon": 81.8
+    },
+    {
+      "lead_hours": 12,
+      "timestamp": "2023-12-04T00:00:00",
+      "lat": 13.1,
+      "lon": 81.4
+    },
+    {
+      "lead_hours": 24,
+      "timestamp": "2023-12-04T12:00:00",
+      "lat": 14.0,
+      "lon": 80.6
+    }
+  ],
+  "models": {
+    "position_only_kalman": {
+      "label": "Position-only Kalman",
+      "forecast": [
+        {
+          "lead_hours": 6,
+          "timestamp": "2023-12-03T18:00:00",
+          "lat": 12.7974,
+          "lon": 82.0212,
+          "uncertainty_radius_km": 75.8,
+          "ellipse90_semi_major_km": 75.8,
+          "ellipse90_semi_minor_km": 75.8,
+          "model": "position_only_kalman"
+        },
+        {
+          "lead_hours": 12,
+          "timestamp": "2023-12-04T00:00:00",
+          "lat": 13.2722,
+          "lon": 81.76,
+          "uncertainty_radius_km": 147.7,
+          "ellipse90_semi_major_km": 147.7,
+          "ellipse90_semi_minor_km": 147.7,
+          "model": "position_only_kalman"
+        },
+        {
+          "lead_hours": 24,
+          "timestamp": "2023-12-04T12:00:00",
+          "lat": 14.2209,
+          "lon": 81.2344,
+          "uncertainty_radius_km": 337.0,
+          "ellipse90_semi_major_km": 337.0,
+          "ellipse90_semi_minor_km": 337.0,
+          "model": "position_only_kalman"
+        }
+      ],
+      "verification_error_km": {
+        "6h": 24.0,
+        "12h": 43.4,
+        "24h": 72.7
+      },
+      "wind_data_valid_until": null,
+      "cutoff_steering": null,
+      "config": {
+        "kalman": {
+          "observation_sigma_km": 15.0,
+          "acceleration_psd_m2_s3": 7e-05,
+          "initial_velocity_sigma_ms": 8.0,
+          "max_step_hours": 3.0
+        }
+      }
+    },
+    "wind_informed_kalman": {
+      "label": "Wind-informed experimental",
+      "forecast": [
+        {
+          "lead_hours": 6,
+          "timestamp": "2023-12-03T18:00:00",
+          "lat": 12.858,
+          "lon": 81.8316,
+          "uncertainty_radius_km": 69.0,
+          "ellipse90_semi_major_km": 69.0,
+          "ellipse90_semi_minor_km": 69.0,
+          "model": "wind_informed_kalman"
+        },
+        {
+          "lead_hours": 12,
+          "timestamp": "2023-12-04T00:00:00",
+          "lat": 13.4172,
+          "lon": 81.3072,
+          "uncertainty_radius_km": 124.2,
+          "ellipse90_semi_major_km": 124.2,
+          "ellipse90_semi_minor_km": 124.2,
+          "model": "wind_informed_kalman"
+        },
+        {
+          "lead_hours": 24,
+          "timestamp": "2023-12-04T12:00:00",
+          "lat": 14.5814,
+          "lon": 79.9774,
+          "uncertainty_radius_km": 243.4,
+          "ellipse90_semi_major_km": 243.4,
+          "ellipse90_semi_minor_km": 243.4,
+          "model": "wind_informed_kalman"
+        }
+      ],
+      "verification_error_km": {
+        "6h": 7.3,
+        "12h": 36.7,
+        "24h": 93.2
+      },
+      "wind_data_valid_until": "2023-12-03T12:00:00",
+      "cutoff_steering": {
+        "u_ms": -3.225,
+        "v_ms": 2.457,
+        "speed_ms": 4.055,
+        "toward_bearing_deg": 307.3,
+        "levels": {
+          "850hPa": {
+            "u_ms": -3.844,
+            "v_ms": 1.368
+          },
+          "500hPa": {
+            "u_ms": -0.7,
+            "v_ms": 1.682
+          },
+          "200hPa": {
+            "u_ms": -6.251,
+            "v_ms": 6.265
+          }
+        },
+        "valid_time": "2023-12-03T12:00:00",
+        "window_start": "2023-12-03T06:00:00",
+        "samples": 7
+      },
+      "config": {
+        "kalman": {
+          "observation_sigma_km": 15.0,
+          "acceleration_psd_m2_s3": 7e-05,
+          "initial_velocity_sigma_ms": 8.0,
+          "max_step_hours": 3.0
+        },
+        "wind": {
+          "relaxation_hours": 24.0,
+          "beta_drift_speed_ms": 1.5,
+          "beta_drift_toward_bearing_deg": 315.0,
+          "steering_sigma_ms": 1.5
+        }
+      }
+    }
+  },
+  "wind_model_status": "ok",
+  "wind_source": {
+    "source": "Open-Meteo Historical Forecast API — archived NOAA GFS 0.25° (gfs_global) pressure-level u/v winds",
+    "api_url": "https://historical-forecast-api.open-meteo.com/v1/forecast",
+    "model": "gfs_global",
+    "levels_hpa": [
+      850,
+      500,
+      200
+    ],
+    "start_date": "2023-11-29",
+    "end_date": "2023-12-07",
+    "grid_lat_range": [
+      0.0,
+      26.0
+    ],
+    "grid_lon_range": [
+      72.0,
+      96.0
+    ],
+    "grid_spacing_deg": 1.0,
+    "fetched_at_utc": "2026-09-29T08:46:18.232397+00:00"
+  },
+  "infrastructure_impact": {
+    "cutoff_time": "2023-12-03T12:00:00",
+    "track_window": "storm start → 2023-12-04T12:00:00 (cutoff + 24 h)",
+    "intensity_mode": "reference",
+    "intensity_note": "Forecast points use the reference track's observed wind at each valid time, so differences isolate track position.",
+    "asset_count": 3977,
+    "tracks": {
+      "reference": {
+        "label": "Observed reference",
+        "high_plus_assets": 1295,
+        "critical_assets": 0,
+        "high_plus_hospitals": 588,
+        "high_plus_substations": 123
+      },
+      "position_only_kalman": {
+        "label": "Position-only Kalman",
+        "high_plus_assets": 86,
+        "critical_assets": 0,
+        "high_plus_hospitals": 24,
+        "high_plus_substations": 26,
+        "delta_vs_reference": {
+          "high_plus_assets": -1209,
+          "critical_assets": 0,
+          "high_plus_hospitals": -564,
+          "high_plus_substations": -97
+        },
+        "assets_class_raised_vs_reference": 0,
+        "assets_class_lowered_vs_reference": 1209,
+        "mean_abs_score_change_vs_reference": 0.0552
+      },
+      "wind_informed_kalman": {
+        "label": "Wind-informed experimental",
+        "high_plus_assets": 943,
+        "critical_assets": 3,
+        "high_plus_hospitals": 452,
+        "high_plus_substations": 108,
+        "delta_vs_reference": {
+          "high_plus_assets": -352,
+          "critical_assets": 3,
+          "high_plus_hospitals": -136,
+          "high_plus_substations": -15
+        },
+        "assets_class_raised_vs_reference": 226,
+        "assets_class_lowered_vs_reference": 575,
+        "mean_abs_score_change_vs_reference": 0.0388
+      }
+    }
+  },
+  "runtime_seconds": 0.17,
+  "backtest_reference": {
+    "valid_forecast_cases": {
+      "6h": 22,
+      "12h": 21,
+      "24h": 19
+    },
+    "summary": {
+      "position_only_kalman": {
+        "label": "Position-only Kalman",
+        "6h": {
+          "cases": 22,
+          "mean_km": 27.6,
+          "median_km": 25.4,
+          "rmse_km": 30.8,
+          "p90_km": 46.8,
+          "max_km": 55.5,
+          "inside_90pct_ellipse_pct": 100.0,
+          "mean_uncertainty_radius_km": 75.8
+        },
+        "12h": {
+          "cases": 21,
+          "mean_km": 48.2,
+          "median_km": 46.0,
+          "rmse_km": 51.5,
+          "p90_km": 70.3,
+          "max_km": 76.5,
+          "inside_90pct_ellipse_pct": 100.0,
+          "mean_uncertainty_radius_km": 147.7
+        },
+        "24h": {
+          "cases": 19,
+          "mean_km": 106.4,
+          "median_km": 109.7,
+          "rmse_km": 114.3,
+          "p90_km": 161.9,
+          "max_km": 177.8,
+          "inside_90pct_ellipse_pct": 100.0,
+          "mean_uncertainty_radius_km": 337.0
+        }
+      },
+      "wind_informed_kalman": {
+        "label": "Wind-informed experimental",
+        "6h": {
+          "cases": 22,
+          "mean_km": 27.9,
+          "median_km": 30.4,
+          "rmse_km": 31.0,
+          "p90_km": 42.7,
+          "max_km": 60.8,
+          "inside_90pct_ellipse_pct": 100.0,
+          "mean_uncertainty_radius_km": 69.0
+        },
+        "12h": {
+          "cases": 21,
+          "mean_km": 52.8,
+          "median_km": 52.1,
+          "rmse_km": 54.7,
+          "p90_km": 64.3,
+          "max_km": 90.8,
+          "inside_90pct_ellipse_pct": 100.0,
+          "mean_uncertainty_radius_km": 124.2
+        },
+        "24h": {
+          "cases": 19,
+          "mean_km": 127.4,
+          "median_km": 122.0,
+          "rmse_km": 132.3,
+          "p90_km": 180.3,
+          "max_km": 192.4,
+          "inside_90pct_ellipse_pct": 100.0,
+          "mean_uncertainty_radius_km": 243.4
+        }
+      }
+    },
+    "comparison": {
+      "6h": {
+        "paired_cases": 22,
+        "mean_error_difference_km_wind_minus_kalman": 0.4,
+        "median_error_difference_km_wind_minus_kalman": 3.1,
+        "wind_better_cases": 10,
+        "kalman_better_cases": 12,
+        "verdict": "wind-informed higher mean error"
+      },
+      "12h": {
+        "paired_cases": 21,
+        "mean_error_difference_km_wind_minus_kalman": 4.7,
+        "median_error_difference_km_wind_minus_kalman": 12.2,
+        "wind_better_cases": 10,
+        "kalman_better_cases": 11,
+        "verdict": "wind-informed higher mean error"
+      },
+      "24h": {
+        "paired_cases": 19,
+        "mean_error_difference_km_wind_minus_kalman": 21.0,
+        "median_error_difference_km_wind_minus_kalman": 24.8,
+        "wind_better_cases": 7,
+        "kalman_better_cases": 12,
+        "verdict": "wind-informed higher mean error"
+      }
+    }
+  }
+}

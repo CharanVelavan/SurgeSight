@@ -1,0 +1,47 @@
+{
+  "scenario": "Cyclone Michaung 2023",
+  "generated_at_utc": "2026-09-29T08:25:34.991827+00:00",
+  "asset_count": 3977,
+  "asset_type_counts": {
+    "hospital": 2200,
+    "school": 1211,
+    "substation": 371,
+    "shelter": 195
+  },
+  "risk_class_counts": {
+    "LOW": 4,
+    "MODERATE": 2228,
+    "HIGH": 1737,
+    "CRITICAL": 8
+  },
+  "high_risk_hospitals": 950,
+  "high_risk_substations": 147,
+  "population_exposed_screening_region": 27876776,
+  "earth_engine_sample_failures": [],
+  "datasets": {
+    "track": "NOAA IBTrACS Michaung observations",
+    "infrastructure": "OpenStreetMap contributors via Overpass API",
+    "elevation": "USGS/SRTMGL1_003",
+    "surface_water": "JRC/GSW1_4/GlobalSurfaceWater occurrence"
+  },
+  "prototype_model": {
+    "weights": {
+      "terrain_elevation": 0.7,
+      "terrain_water_occurrence": 0.3,
+      "combined_wind": 0.65,
+      "combined_terrain_flood": 0.35
+    },
+    "reference_wind_kmh": 120.0,
+    "screening_corridor_km": 140.0,
+    "wind_score": "Observed nearest-track wind divided by 120 km/h, capped at 1, then multiplied by a distance factor declining from 1.0 to 0.5 at 140 km.",
+    "terrain_flood_score": "70% elevation vulnerability (1 at <=5 m, declining linearly to 0 at >=30 m) plus 30% historical surface-water occurrence.",
+    "combined_risk_score": "65% wind score plus 35% terrain flood score.",
+    "risk_classes": {
+      "LOW": "0.00 <= score < 0.25",
+      "MODERATE": "0.25 <= score < 0.50",
+      "HIGH": "0.50 <= score < 0.75",
+      "CRITICAL": "0.75 <= score <= 1.00"
+    },
+    "warning": "Prototype screening index only; not an operational, physics-based cyclone, flood, storm-surge, or infrastructure damage model."
+  }
+}
