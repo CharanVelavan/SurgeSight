@@ -10,6 +10,8 @@ import streamlit as st
 
 from services.advisory import AUDIENCES, LANGUAGES, RoleAdvisory, generate_role_advisory
 from services.config import load_region
+from ui.agent_console import render as render_agent_console
+from ui.bulletin_scoring import render as render_bulletin_scoring
 from services.bulletin_parser import parse_bulletin_file, parse_bulletin_text
 from services.scenario_engine import run_scenario
 from services.scenario_explainer import explain_scenario
@@ -276,10 +278,10 @@ with st.expander("Track data"):
     )
 
 st.divider()
-intelligence_tab, advisory_tab, simulator_tab, track_forecast_tab = st.tabs(
+intelligence_tab, advisory_tab, simulator_tab, track_forecast_tab, agent_tab = st.tabs(
     [
         "Bulletin Intelligence", "Role-specific advisories", "Forecast Simulator",
-        "Experimental Track Forecast",
+        "Experimental Track Forecast", "Agent console",
     ],
     on_change="rerun",
     key="intelligence_tabs",
@@ -380,6 +382,7 @@ if intelligence_tab.open:
                 st.caption("No warnings were explicitly extracted from the bulletin.")
             with st.expander("Raw structured JSON"):
                 st.json(parsed_data)
+            render_bulletin_scoring(parsed_data)
 
 if advisory_tab.open:
     with advisory_tab:
@@ -993,3 +996,7 @@ st.caption(
     "Sources: NOAA IBTrACS, OpenStreetMap contributors, USGS SRTM, JRC Global Surface Water, "
     "WorldPop, and NOAA GFS via Open-Meteo. Screening prototype only—not an operational cyclone damage model."
 )
+
+if agent_tab.open:
+    with agent_tab:
+        render_agent_console()
