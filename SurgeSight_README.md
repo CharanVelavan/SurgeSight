@@ -529,16 +529,19 @@ Historical prototype:
 
 ## 10.2 Terrain / water / population
 
-Current Earth Engine analysis produced approximately:
+Current Earth Engine analysis (clipped to India land pixels via LSIB) produced approximately:
 
 | Metric | Current Michaung region result |
 |---|---:|
-| Mean elevation | 78.60 m |
-| Low-lying land ≤ 10 m | 45.88% |
-| Very-low land ≤ 5 m | 43.10% |
-| Historical water-prone land | 14.59% |
+| Mean elevation | 130.08 m |
+| Low-lying land ≤ 10 m | 10.44% |
+| Very-low land ≤ 5 m | 5.85% |
+| Historical water-prone land | 5.72% |
 | Population in analysis region | 27,876,776 |
-| Mean terrain/flood screening index | 0.4049 |
+| Mean terrain/flood screening index | 0.0858 |
+
+Earlier versions of this table (mean elevation 78.60 m, 45.88% ≤ 10 m, 43.10% ≤ 5 m) included open-water pixels
+that SRTM reports as 0 m. Those figures were corrected by the land mask (WP0.4). Asset-level terrain values are unaffected.
 
 Important:
 

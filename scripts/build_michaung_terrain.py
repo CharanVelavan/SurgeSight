@@ -1,16 +1,22 @@
 import json
+import sys
 from pathlib import Path
 
 import ee
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-PROJECT = "gen-lang-client-0679887739"
+from services.earth_engine import init_ee, land_mask as india_land_mask
+
+
 OUTPUT = Path("data/processed/michaung_terrain_summary.json")
 
 
 def main():
     print("Initializing Earth Engine...")
-    ee.Initialize(project=PROJECT)
+    init_ee()
 
     # =========================================================
     # MICHAUNG DEMO REGION
@@ -39,8 +45,10 @@ def main():
         .rename("elevation")
     )
 
-    # SRTM is naturally masked outside valid land terrain.
-    land_mask = elevation.mask()
+    # SRTM reports 0 m over open water, which inflated the low-lying share
+    # (K3). Restrict every statistic to India's land polygon (LSIB).
+    land_mask = india_land_mask("India")
+    elevation = elevation.updateMask(land_mask)
 
     # =========================================================
     # 2. JRC GLOBAL SURFACE WATER
@@ -425,8 +433,20 @@ def main():
     # 10. BUILD OUTPUT
     # =========================================================
 
+    previous_summary = None
+    if OUTPUT.exists():
+        previous = json.loads(OUTPUT.read_text(encoding="utf-8"))
+        previous_summary = previous.get("previous_unmasked_summary") or (
+            None if previous.get("land_mask") else previous.get("summary")
+        )
+
     result = {
-        "project": PROJECT,
+        "land_mask": {
+            "dataset": "USDOS/LSIB_SIMPLE/2017",
+            "country": "India",
+            "note": "All statistics are computed over India land pixels only.",
+        },
+        "previous_unmasked_summary": previous_summary,
 
         "scenario": {
             "name": "Cyclone Michaung",
@@ -547,6 +567,7 @@ def main():
     print(
         "SURGESIGHT_TERRAIN_OK"
     )
+
 
     print(
         "============================================"

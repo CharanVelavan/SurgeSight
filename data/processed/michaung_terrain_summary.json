@@ -1,5 +1,19 @@
 {
-  "project": "gen-lang-client-0679887739",
+  "land_mask": {
+    "dataset": "USDOS/LSIB_SIMPLE/2017",
+    "country": "India",
+    "note": "All statistics are computed over India land pixels only."
+  },
+  "previous_unmasked_summary": {
+    "mean_elevation_m": 78.59769978632102,
+    "low_lying_percentage": 45.87589213244355,
+    "very_low_percentage": 43.095000197055334,
+    "water_presence_percentage": 14.593639358788765,
+    "mean_surface_water_occurrence_pct": 12.682173032082586,
+    "mean_flood_screen": 0.40487964254180453,
+    "expected_mean_flood_screen": 0.40488331232548275,
+    "population_estimate": 27876776
+  },
   "scenario": {
     "name": "Cyclone Michaung",
     "year": 2023,
@@ -26,13 +40,13 @@
     }
   },
   "summary": {
-    "mean_elevation_m": 78.59769978632102,
-    "low_lying_percentage": 45.87589213244355,
-    "very_low_percentage": 43.095000197055334,
-    "water_presence_percentage": 14.593639358788765,
-    "mean_surface_water_occurrence_pct": 12.682173032082586,
-    "mean_flood_screen": 0.40487964254180453,
-    "expected_mean_flood_screen": 0.40488331232548275,
+    "mean_elevation_m": 130.0786760085504,
+    "low_lying_percentage": 10.441166562702833,
+    "very_low_percentage": 5.8466028730555575,
+    "water_presence_percentage": 5.717731620793846,
+    "mean_surface_water_occurrence_pct": 2.707169876938893,
+    "mean_flood_screen": 0.08582781035987615,
+    "expected_mean_flood_screen": 0.08584010399004666,
     "population_estimate": 27876776
   },
   "screening_model": {
