@@ -28,9 +28,11 @@ def is_configured() -> bool:
     return token_file().exists() or client_secret_file().exists()
 
 
-def build_message(sender: str, recipients: list[str], subject: str, body: str, attachments: list[dict[str, Any]] | None = None) -> EmailMessage:
+def build_message(sender: str | None, recipients: list[str], subject: str, body: str, attachments: list[dict[str, Any]] | None = None) -> EmailMessage:
     message = EmailMessage()
-    message["To"], message["From"], message["Subject"] = ", ".join(recipients), sender, subject
+    message["To"], message["Subject"] = ", ".join(recipients), subject
+    if sender:  # with the gmail.send scope only, Gmail sets From to the signed-in account
+        message["From"] = sender
     message.set_content(body)
     for item in attachments or []:
         maintype, _, subtype = item.get("mime", "text/plain").partition("/")
@@ -60,8 +62,7 @@ def send_email(recipients: list[str], subject: str, body: str, attachments: list
     from googleapiclient.discovery import build
 
     service = build("gmail", "v1", credentials=_credentials(), cache_discovery=False)
-    profile = service.users().getProfile(userId="me").execute()
-    message = build_message(profile["emailAddress"], recipients, subject, body, attachments)
+    message = build_message(None, recipients, subject, body, attachments)
     raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
     sent = service.users().messages().send(userId="me", body={"raw": raw}).execute()
     return {"message_id": sent.get("id")}
