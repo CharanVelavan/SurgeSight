@@ -783,8 +783,8 @@ POST /tasks/poll · POST /tasks/process     Scheduler / Pub/Sub (OIDC-authentica
 GET  /runs/{run_id}                        full stored payload
 ```
 
-- [ ] `api/main.py`, routers, CORS for the frontend origin, OIDC check on `/tasks/*`.
-- [ ] `scripts/test_api.py` using FastAPI TestClient for each route → `SURGESIGHT_API_OK`.
+- [x] `api/main.py`, routers, CORS for the frontend origin, OIDC check on `/tasks/*`. **Done 2026-09-29:** `api/main.py`, `api/deps.py`, `api/routes_analysis.py`, `api/routes_ops.py`; all endpoints in the list plus `POST /api/risk_v2` (produces the run_id the hazards, exposure and advisory routes need), `POST /api/dispatch/{id}/send` and `GET /healthz`. Agent route streams server-sent events (`step`, then `answer` or `error`) for both engines. `/tasks/*` verify a Google OIDC token in cloud mode and are open locally. Run: `uvicorn api.main:app`. Note: the `risk_v2` tool now scores all 4,214 assets (core plus department layers) so department advisories work on its runs.
+- [x] `scripts/test_api.py` using FastAPI TestClient for each route → `SURGESIGHT_API_OK`. **Done 2026-09-29.** `SURGESIGHT_API_OK`.
 
 ---
 

@@ -91,7 +91,9 @@ def risk_v2_tool(args: HazardScenarioArgs) -> Any:
 
     from services.config import load_region
 
-    assets = pd.read_csv(load_region().path("scored_assets"))
+    from services.assets import load_all_assets
+
+    assets = load_all_assets()  # core plus the department layers, so department advisories work on this run
     frame, meta = score_v2(_scenario_track(args), assets)
     run_id = new_run_id("riskv2")
     store = get_store()
