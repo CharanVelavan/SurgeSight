@@ -1,0 +1,30 @@
+# SurgeSight — Python 3.14
+# google-adk is intentionally omitted: current release pins google-genai<2 (see WP1.5).
+earthengine-api==1.7.46
+geopandas==1.2.0
+google-genai==2.25.0
+google-cloud-texttospeech==2.37.0
+streamlit==1.64.0
+pandas==3.0.6
+numpy==2.5.3
+shapely==2.1.2
+pyproj==3.8.0
+pydeck==0.9.3
+pydantic==2.13.5
+python-dotenv==1.2.3
+requests==2.34.2
+tenacity==9.1.4
+httpx==0.28.1
+fastapi==0.141.1
+uvicorn==0.54.0
+sse-starlette==3.5.0
+google-cloud-firestore==2.32.0
+google-cloud-bigquery==3.45.2
+google-cloud-pubsub==2.41.0
+google-cloud-secret-manager==2.30.0
+google-cloud-speech==2.40.0
+google-cloud-storage==3.15.0
+google-api-python-client==2.200.0
+google-auth==2.59.0
+google-auth-oauthlib==1.4.1
+lxml==6.1.3
