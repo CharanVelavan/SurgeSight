@@ -12,7 +12,7 @@ from services.store import get_store
 
 class QueueDispatchArgs(BaseModel):
     advisory_run_id: str = Field(description="run_id returned by draft_advisory.")
-    channel: Literal["chat", "email"] = Field(default="chat", description="Google Chat message or email.")
+    channel: Literal["chat", "email", "push"] = Field(default="chat", description="Google Chat message, email or phone/web push notification.")
     include_cap: bool = Field(default=True, description="Attach a CAP 1.2 exercise alert built from the advisory.")
 
 

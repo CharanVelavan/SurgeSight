@@ -17,7 +17,7 @@ def _draft_section() -> None:
         with st.container(horizontal=True):
             audience = st.selectbox("Department", AUDIENCES, key="dispatch_audience")
             language = st.selectbox("Language", list(LANGUAGES), key="dispatch_language")
-            channel = st.segmented_control("Channel", ["chat", "email"], default="chat", key="dispatch_channel")
+            channel = st.segmented_control("Channel", ["chat", "email", "push"], default="chat", key="dispatch_channel")
         submitted = st.form_submit_button("Draft advisory and CAP alert", type="primary", icon=":material/edit_note:")
     if submitted:
         try:

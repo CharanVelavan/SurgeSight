@@ -117,7 +117,7 @@ def parametric(run_id: str, body: ParametricBody) -> dict[str, Any]:
 
 class DispatchBody(BaseModel):
     advisory_run_id: str
-    channel: Literal["chat", "email"] = "chat"
+    channel: Literal["chat", "email", "push"] = "chat"
     include_cap: bool = True
 
 

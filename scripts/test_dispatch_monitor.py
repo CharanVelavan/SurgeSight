@@ -22,7 +22,7 @@ set_store(LocalStore(Path(tempfile.mkdtemp())))
 
 import services.agent  # noqa: F401
 from services.agent.tools import execute_tool
-from services.dispatch import chat, gmail, router
+from services.dispatch import chat, gmail, push, router
 from services.monitor import diff_runs, fingerprint, poll_once, process
 from services.store import get_store
 
@@ -56,6 +56,20 @@ def test_dispatch() -> None:
     assert card["cardsV2"][0]["card"]["header"]["subtitle"].endswith("(not an official warning)") and "Line one<br>Line two" in str(card)
     message = gmail.build_message("me@example.com", ["you@example.com"], "S", "B", [{"name": "a.xml", "mime": "application/xml", "text": "<a/>"}])
     assert message["To"] == "you@example.com" and any(p.get_filename() == "a.xml" for p in message.iter_attachments())
+    request = push.ntfy_request("तूफान की चेतावनी", "Body text", department="Health Department", severity="CRITICAL")
+    assert request["headers"]["Priority"] == "urgent" and all(v.isascii() for v in request["headers"].values()), "ntfy headers must be ASCII"
+    assert "तूफान" in request["data"].decode("utf-8")
+    msg = push.fcm_message("Subject", "Body", department="Health Department", topic="t1")["message"]
+    assert msg["topic"] == "t1" and msg["notification"]["title"].startswith("EXERCISE") and msg["data"]["exercise"] == "true"
+    pushed = router.queue_dispatch("Fisheries", "push", "Subject", "Body")
+    router.approve(pushed.id)
+    assert router.send(pushed.id).status == "dry_run", "push must also be a dry run by default"
+    os.environ.pop("NTFY_TOPIC", None); os.environ.pop("FCM_TOPIC", None)
+    try:
+        push.send_push("s", "b", department="d")
+        raise AssertionError("no provider configured must fail")
+    except RuntimeError as exc:
+        assert "No push provider" in str(exc)
     print("dispatch dry run ok")
 
 

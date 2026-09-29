@@ -23,7 +23,7 @@ Status = Literal["pending_approval", "approved", "rejected", "sent", "dry_run", 
 class Dispatch(BaseModel):
     id: str
     department: str
-    channel: Literal["chat", "email"]
+    channel: Literal["chat", "email", "push"]
     recipients: list[str] = Field(default_factory=list)
     subject: str
     body: str
@@ -64,7 +64,7 @@ def list_dispatches(status: str | None = None, limit: int = 100) -> list[Dispatc
 
 
 def queue_dispatch(
-    department: str, channel: Literal["chat", "email"], subject: str, body: str, *,
+    department: str, channel: Literal["chat", "email", "push"], subject: str, body: str, *,
     attachments: list[dict[str, Any]] | None = None, recipients: list[str] | None = None,
 ) -> Dispatch:
     """Queue a message for human approval. Recipients default to the department's test allow-list."""
@@ -95,7 +95,7 @@ def reject(dispatch_id: str, by: str = "officer") -> Dispatch:
 
 def send(dispatch_id: str) -> Dispatch:
     """Send an approved dispatch according to DISPATCH_MODE and the allow-list."""
-    from services.dispatch import chat, gmail
+    from services.dispatch import chat, gmail, push
 
     dispatch = get(dispatch_id)
     if dispatch.status != "approved":
@@ -103,10 +103,12 @@ def send(dispatch_id: str) -> Dispatch:
     settings = get_settings()
     update: dict[str, Any] = {"mode": settings.dispatch_mode, "sent_at_utc": _now()}
     if settings.dispatch_mode != "live":
-        update.update(status="dry_run", detail={"note": "dry run: nothing was sent", "would_send_to": dispatch.recipients or ["(chat test space)"]})
+        update.update(status="dry_run", detail={"note": "dry run: nothing was sent", "would_send_to": dispatch.recipients or [f"({'chat test space' if dispatch.channel == 'chat' else 'push topic'})"]})
         return _save(dispatch.model_copy(update=update))
     try:
-        if dispatch.channel == "chat":
+        if dispatch.channel == "push":
+            update.update(status="sent", detail=push.send_push(dispatch.subject, dispatch.body, department=dispatch.department))
+        elif dispatch.channel == "chat":
             card = chat.build_card(dispatch.subject, dispatch.body, department=dispatch.department, attachments=dispatch.attachments)
             update.update(status="sent", detail=chat.send_card(card))
         else:
