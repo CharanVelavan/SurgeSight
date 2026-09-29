@@ -134,6 +134,42 @@ def parse_bulletin_tool(args: ParseBulletinArgs) -> Any:
     )
 
 
+class BulletinToTrackArgs(BaseModel):
+    bulletin_run_id: str = Field(description="run_id returned by parse_bulletin.")
+
+
+@tool("bulletin_to_track", agent_scopes={"forecast"})
+def bulletin_to_track_tool(args: BulletinToTrackArgs) -> Any:
+    """Convert a parsed bulletin into a scorable cyclone track: the current position first, then
+    forecast points in time order. Points without coordinates are dropped and a missing wind
+    carries the last known wind forward; both are reported in flags. Errors if fewer than 2
+    usable points. Run this before score_track."""
+    from services.bulletin_parser import CycloneBulletin
+    from services.bulletin_track import InsufficientForecastPointsError, bulletin_to_track
+
+    store = get_store()
+    record = store.get(args.bulletin_run_id)
+    if record["kind"] != "bulletin":
+        return error_result("bulletin_to_track", f"{args.bulletin_run_id} is not a parsed bulletin")
+    bulletin = CycloneBulletin.model_validate(record["payload"])
+    try:
+        built = bulletin_to_track(bulletin)
+    except InsufficientForecastPointsError as exc:
+        return error_result("bulletin_to_track", str(exc))
+    run_id = new_run_id("track")
+    store.put(run_id, "track", {"flags": built.flags, "source_bulletin": args.bulletin_run_id})
+    store.put_frame(run_id, "track", built.track_df)
+    points = built.track_df[["ISO_TIME", "LAT", "LON", "WIND_KMH", "SOURCE"]]
+    data = {
+        "cyclone_name": bulletin.cyclone_name,
+        "points": _records(points, list(points.columns), 30),
+        "point_count": int(len(points)),
+        "flags": built.flags,
+        "landfall_text": bulletin.landfall.location_text,
+    }
+    return ok_result("bulletin_to_track", jsonable(data), source="bulletin_track", run_id=run_id)
+
+
 # ---------------------------------------------------------------- scoring
 
 class ScoreTrackArgs(BaseModel):
