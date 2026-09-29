@@ -639,13 +639,13 @@ Each WP: **Goal · Files · Tasks · Acceptance · Marker · Fallback · Estimat
   - Output: top-N per asset type, "HIGH in k/100 members" strings, spaghetti tracks GeoJSON (sample 20 for display).
   - Runtime target: < 6 s for 100 members. Test → `SURGESIGHT_ENSEMBLE_OK` (seed reproducibility + runtime).
   - Uncertainty calibration note (K9): add `ellipse_scale` computed on the backtest so nominal 90% ≈ observed coverage; label "calibrated in-sample on one storm".
-- [ ] **WP2.2 Rainfall pathway.** `services/hazards/rainfall.py`.
+- [x] **WP2.2 Rainfall pathway.** *(done 2026-09-29. Deviation: forecast rainfall uses the archived GFS run in Earth Engine `NOAA/GFS0P25` (issue time = cutoff, 6 h buckets), not Open-Meteo — its Previous Runs API has no data before 2024. Cached per asset in `data/processed/rainfall_assets.csv` by `scripts/build_rainfall.py`. Result: forecast vs IMERG correlation 0.70; GFS over-predicts (mean 298 vs 222 mm).)* `services/hazards/rainfall.py`.
   - `observed_rainfall(region, start_utc, end_utc)` — Earth Engine `NASA/GPM_L3/IMERG_V07`, band `precipitation` (mm/h, half-hourly) → accumulation mm; sample at assets (scale ≈ 11 km). **Validation/hindcast only** (§4.6).
   - `forecast_rainfall(region, init_utc, hours)` — Open-Meteo GFS precipitation (reuse `wind_provider` request/caching style) or WeatherNext precip if WP2.6 is available. Leakage guard like `FutureWindAccessError`.
   - Scores: `rain_score = clip(accum_mm / RAIN_REF_MM, 0, 1)` with `RAIN_REF_MM = 300`; `rain_flood_score = rain_score × (0.5 + 0.5 × terrain_flood_score)`.
   - IMD thresholds for labelling: heavy 64.5–115.5 mm/24h, very heavy 115.6–204.4, extremely heavy ≥ 204.5.
   - Script `scripts/build_rainfall.py` caches per-asset values in `data/processed/rainfall_assets.csv`. Tool `rainfall_hazard(mode="forecast"|"observed", ...)`. Marker `SURGESIGHT_RAINFALL_OK`.
-- [ ] **WP2.3 Surge screening.** `services/hazards/surge.py` — transparent, labelled **screening surge index**:
+- [x] **WP2.3 Surge screening.** *(done 2026-09-29: landfall 15.41°N 80.15°E, peak 0.81 m for Michaung; land polygon, per-asset coast distance and nearshore depth cached by `scripts/build_coast.py`.)* `services/hazards/surge.py` — transparent, labelled **screening surge index**:
   - Inverse barometer: `ib_m = 0.01 × (1010 − Pc_hPa)`.
   - Wind setup: `ws_m = K_WS × (V_landfall_ms / 50)² × shelf_factor`, `K_WS = 2.0` (prototype constant), `shelf_factor ∈ [0.7, 1.5]` from nearshore slope (Earth Engine `NOAA/NGDC/ETOPO1` bathymetry within 50 km offshore; gentler slope → higher).
   - Alongshore: right-of-track (NH) multiplier 1.0 decaying `exp(−d / (3·RMW))` from landfall; left-of-track 0.4 × same decay. `RMW_km = 46.4 × exp(−0.0155·Vmax_ms + 0.0169·|lat|)` (Willoughby et al. 2006).
@@ -653,7 +653,7 @@ Each WP: **Goal · Files · Tasks · Acceptance · Marker · Fallback · Estimat
   - All constants in one `SURGE_CONSTANTS` dict, echoed in outputs and README limitations.
   - Coastline: derive from LSIB land polygon (WP0.4); cache coast distance per asset.
   - Tool `surge_hazard(track_run_id | scenario args)`. Marker `SURGESIGHT_SURGE_OK`.
-- [ ] **WP2.4 Risk model v2.** `services/hazards/wind_field.py` (Holland 1980 profile: `V(r) = Vmax · [(Rmax/r)^B · exp(1 − (Rmax/r)^B)]^0.5`, `B = 1.5`, plus right-side translation asymmetry `+0.5·Vt·cos θ`) and `services/risk_model_v2.py`:
+- [x] **WP2.4 Risk model v2.** *(done 2026-09-29. **K2 target not met by design — reported honestly:** with the specified constants v2 gives LOW 0 / MODERATE 100 / HIGH 1,873 / CRITICAL 2,004 (v1: 4 / 2,228 / 1,737 / 8), because the whole corridor received IMD very-heavy to extremely-heavy rain; observed IMERG gives the same saturation. Added `v2_percentile` and `triage_tier` (1 = top 10 %) for relative ranking; recalibrate against Sentinel-1 in WP3 rather than tuning to a target distribution.)* `services/hazards/wind_field.py` (Holland 1980 profile: `V(r) = Vmax · [(Rmax/r)^B · exp(1 − (Rmax/r)^B)]^0.5`, `B = 1.5`, plus right-side translation asymmetry `+0.5·Vt·cos θ`) and `services/risk_model_v2.py`:
   - `wind_v2 = clip(V(r) / 120 km/h, 0, 1)`
   - `combined_v2 = 1 − (1 − 0.8·wind_v2)(1 − 0.9·surge)(1 − 0.8·rain_flood)`; `dominant_hazard = argmax`.
   - Same class thresholds (config). Per-asset breakdown `{wind, surge, rain_flood, terrain}` for "why flagged".

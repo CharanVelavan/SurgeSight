@@ -26,6 +26,7 @@ def main() -> None:
         ("If Michaung shifts 30 km north, which hospitals become newly high risk? Top 5 only.", None, "English", {"run_scenario"}),
         ("How well would the experimental track forecast issued at 2023-12-03 12:00 have done, and does it change hospital impact?", None, "English", {"experimental_forecast"}),
         ("Track uncertainty is real. Around a 30 km northward shift, which 5 hospitals are most likely to be HIGH or worse across many possible tracks?", None, "English", {"run_ensemble"}),
+        ("Using the multi-hazard v2 model, which hazard dominates for the highest-priority assets, and how many hospitals fall in triage tier 1?", None, "English", {"risk_v2"}),
         ("Score the attached bulletin and tell Health what to prepare, in Tamil.", [bulletin_id], "Tamil", {"parse_bulletin", "bulletin_to_track", "score_track", "draft_advisory"}),
     ]
     for question, run_ids, language, expected_tools in cases:

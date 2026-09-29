@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -51,3 +51,138 @@ def run_ensemble_tool(args: RunEnsembleArgs) -> Any:
         "hospital_note": "Hospital ranking excludes OSM records that are clinics, dental or eye-care sites.",
     })
     return ok_result("run_ensemble", data, source="ensemble:risk_model_v1", run_id=run_id, model_version=result.parameters["model_version"])
+
+
+# ---------------------------------------------------------------- v2 hazards
+
+class HazardScenarioArgs(BaseModel):
+    north_shift_km: float = Field(default=0.0, ge=-50, le=50, description="Shift the Michaung reference track north (+) / south (-), km.")
+    east_shift_km: float = Field(default=0.0, ge=-50, le=50, description="Shift the track east (+) / west (-), km.")
+    intensity_change_pct: float = Field(default=0.0, ge=-20, le=20, description="Change wind speed by this percent.")
+
+
+def _scenario_track(args: HazardScenarioArgs):
+    import pandas as pd
+
+    from services.config import load_region
+    from services.scenario_engine import shift_track_geodesically
+
+    track = pd.read_csv(load_region().path("track"))
+    return shift_track_geodesically(track, args.north_shift_km, args.east_shift_km, args.intensity_change_pct)
+
+
+def _top_v2(frame, n: int = 15) -> list[dict[str, Any]]:
+    cols = ["name", "asset_type", "osm_element", "osm_id", "v1_class", "class_v2", "combined_v2",
+            "dominant_hazard", "wind_kmh_v2", "surge_m", "rain_mm", "triage_tier"]
+    ranked = frame.sort_values("combined_v2", ascending=False).head(n)[cols]
+    return jsonable(ranked.to_dict(orient="records"))
+
+
+@tool("risk_v2", agent_scopes={"impact"})
+def risk_v2_tool(args: HazardScenarioArgs) -> Any:
+    """Score every asset with risk model v2, which combines a modelled wind field (Holland profile),
+    a screening storm-surge index and rainfall-on-terrain flooding, optionally after shifting the
+    Michaung track or changing intensity. Returns v1 vs v2 class counts, the dominant hazard per
+    asset, triage tiers (1 = highest relative priority) and the top 15 assets with their hazard
+    breakdown. Rainfall is the pre-landfall GFS forecast, not observed. Absolute classes are high
+    across this corridor because the whole corridor was hit hard; use triage tiers to rank."""
+    from services.risk_model_v2 import class_distribution, score_v2
+    import pandas as pd
+
+    from services.config import load_region
+
+    assets = pd.read_csv(load_region().path("scored_assets"))
+    frame, meta = score_v2(_scenario_track(args), assets)
+    run_id = new_run_id("riskv2")
+    store = get_store()
+    store.put(run_id, "riskv2", jsonable({"meta": meta, "parameters": args.model_dump()}))
+    store.put_frame(run_id, "assets", frame)
+    hospitals = frame[(frame["asset_type"] == "hospital") & (frame["facility_quality"] == "hospital")]
+    data = {
+        "parameters": args.model_dump(),
+        "v1_class_counts": class_distribution(frame, "v1_class"),
+        "v2_class_counts": class_distribution(frame, "class_v2"),
+        "dominant_hazard_counts": frame["dominant_hazard"].value_counts().to_dict(),
+        "triage_tier_counts": frame["triage_tier"].value_counts().sort_index().to_dict(),
+        "hospitals_only": {
+            "count": int(len(hospitals)),
+            "v2_high_plus": int(hospitals["class_v2"].isin(["HIGH", "CRITICAL"]).sum()),
+            "tier_1": int((hospitals["triage_tier"] == 1).sum()),
+        },
+        "top_assets": _top_v2(frame),
+        "surge": {k: meta["surge"].get(k) for k in ("peak_surge_m", "inverse_barometer_m", "wind_setup_m", "shelf_mean_depth_m", "landfall")},
+        "rain": meta["rain"],
+        "label": meta["label"],
+        "surge_label": meta["surge_label"],
+        "note": "Hospital counts use real hospitals only (OSM clinics and dental sites excluded).",
+    }
+    return ok_result("risk_v2", jsonable(data), source="risk_model_v2", run_id=run_id, model_version=meta["model_version"])
+
+
+@tool("surge_hazard", agent_scopes={"impact"})
+def surge_hazard_tool(args: HazardScenarioArgs) -> Any:
+    """Screening storm-surge index for the Michaung track (optionally shifted): landfall point,
+    inverse-barometer and wind-setup components, peak surge in metres, and the coastal assets
+    (within 10 km of the coast and below the surge level) that surge would reach. It is a
+    screening index built from published formulas, not a hydrodynamic surge model."""
+    import pandas as pd
+
+    from services.config import load_region
+    from services.hazards.surge import surge_scores
+
+    assets = pd.read_csv(load_region().path("scored_assets"))
+    frame, info = surge_scores(_scenario_track(args), assets)
+    merged = assets[["name", "asset_type", "osm_element", "osm_id", "elevation_m"]].merge(frame, on=["osm_element", "osm_id"])
+    reached = merged[merged["surge_score"] > 0].sort_values("surge_score", ascending=False)
+    run_id = new_run_id("surge")
+    get_store().put(run_id, "surge", jsonable({"info": {k: v for k, v in info.items() if k != "constants"}, "parameters": args.model_dump()}))
+    get_store().put_frame(run_id, "assets", merged)
+    data = {
+        "parameters": args.model_dump(),
+        "landfall": info["landfall"],
+        "peak_surge_m": info["peak_surge_m"],
+        "inverse_barometer_m": info.get("inverse_barometer_m"),
+        "wind_setup_m": info.get("wind_setup_m"),
+        "shelf_mean_depth_m": info.get("shelf_mean_depth_m"),
+        "assets_reached": int(len(reached)),
+        "assets_reached_by_type": reached["asset_type"].value_counts().to_dict(),
+        "top_assets": jsonable(reached.head(15)[["name", "asset_type", "osm_element", "osm_id", "elevation_m", "surge_m", "surge_score", "coast_side"]].to_dict(orient="records")),
+        "warnings": info["warnings"],
+        "label": info["label"],
+    }
+    return ok_result("surge_hazard", jsonable(data), source="hazards.surge", run_id=run_id, model_version="surge-screening-v1")
+
+
+class RainfallHazardArgs(BaseModel):
+    mode: Literal["forecast", "observed"] = Field(
+        default="forecast",
+        description="'forecast' = GFS run issued at the cutoff (a valid pre-landfall input). "
+        "'observed' = satellite IMERG after the fact: validation only, never a prediction input.",
+    )
+
+
+@tool("rainfall_hazard", agent_scopes={"impact"})
+def rainfall_hazard_tool(args: RainfallHazardArgs) -> Any:
+    """Rainfall across the assets: forecast (NOAA GFS run issued 2023-12-03 12:00 UTC, next 72 h)
+    or observed (NASA GPM IMERG, validation only). Returns mean/peak totals, counts of assets in
+    each IMD 24-hour rainfall class (heavy 64.5-115.5 mm, very heavy 115.6-204.4 mm, extremely heavy
+    204.5 mm and above) and the wettest assets. In 'observed' mode the result is labelled
+    validation-only; it must not be presented as a pre-landfall forecast."""
+    import pandas as pd
+
+    from services.config import load_region
+    from services.hazards.rainfall import imd_category, rain_inputs
+
+    assets = pd.read_csv(load_region().path("scored_assets"))
+    rain, meta = rain_inputs(args.mode, hindcast=True)
+    frame = assets[["name", "asset_type", "osm_element", "osm_id"]].merge(rain, on=["osm_element", "osm_id"])
+    frame["imd_24h_class"] = frame["peak_24h_mm"].apply(lambda v: imd_category(v) if pd.notna(v) else "n/a")
+    data = {
+        "mode": args.mode, "validation_only": meta["validation_only"], "note": meta["note"],
+        "total_mm": {"mean": round(float(frame["accum_mm"].mean()), 1), "max": round(float(frame["accum_mm"].max()), 1)},
+        "peak_24h_mm": {"mean": round(float(frame["peak_24h_mm"].mean()), 1), "max": round(float(frame["peak_24h_mm"].max()), 1)},
+        "imd_24h_class_counts": frame["imd_24h_class"].value_counts().to_dict(),
+        "wettest_assets": jsonable(frame.sort_values("accum_mm", ascending=False).head(10)[["name", "asset_type", "osm_element", "osm_id", "accum_mm", "peak_24h_mm", "imd_24h_class"]].to_dict(orient="records")),
+    }
+    warnings = ["Observed rainfall is for validation only, not a pre-landfall input."] if meta["validation_only"] else []
+    return ok_result("rainfall_hazard", jsonable(data), source="NOAA/GFS0P25" if args.mode == "forecast" else "NASA/GPM_L3/IMERG_V07", warnings=warnings, model_version="rain-v1")

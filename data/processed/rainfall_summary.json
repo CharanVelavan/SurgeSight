@@ -1,0 +1,39 @@
+{
+  "region": "michaung_2023",
+  "forecast": {
+    "source": "NOAA/GFS0P25 (NOAA GFS via Earth Engine)",
+    "init_utc": "2023-12-03T12:00:00+00:00",
+    "information_cutoff_utc": "2023-12-03T12:00:00+00:00",
+    "hours": 72,
+    "bucket_hours": 6,
+    "note": "NOAA GFS 0.25 degree forecast run issued at the cutoff time (Earth Engine archive); 6-hour accumulation buckets. Rainfall is not shifted when a what-if moves the track."
+  },
+  "observed_source": "NASA GPM IMERG V07 via Earth Engine (validation only)",
+  "window_utc": [
+    "2023-12-03 12:00:00",
+    "2023-12-06 12:00:00"
+  ],
+  "event_window_utc": [
+    "2023-12-01 00:00",
+    "2023-12-07 00:00"
+  ],
+  "assets": 3977,
+  "assets_with_observed": 3977,
+  "forecast_vs_observed": {
+    "correlation": 0.702,
+    "mean_forecast_mm": 297.7,
+    "mean_observed_mm": 222.1
+  },
+  "imd_peak_24h_forecast_counts": {
+    "extremely heavy": 2396,
+    "very heavy": 1150,
+    "heavy": 407,
+    "below heavy": 24
+  },
+  "imd_peak_24h_observed_counts": {
+    "very heavy": 2054,
+    "extremely heavy": 1154,
+    "heavy": 769
+  },
+  "note": "NOAA GFS 0.25 degree forecast run issued at the cutoff time (Earth Engine archive); 6-hour accumulation buckets. Rainfall is not shifted when a what-if moves the track."
+}
