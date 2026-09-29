@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SurgeSight push test</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    button { font: inherit; padding: .6rem 1rem; border-radius: .5rem; border: 1px solid #888; cursor: pointer; }
+    button.primary { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+    #log { white-space: pre-wrap; background: #f4f4f4; padding: .8rem; border-radius: .5rem; margin-top: 1rem; min-height: 6rem; }
+    @media (prefers-color-scheme: dark) { body { background: #111; color: #eee; } #log { background: #222; } }
+  </style>
+</head>
+<body>
+  <h1>SurgeSight push test</h1>
+  <p>Register this browser to receive SurgeSight <strong>exercise</strong> notifications through Firebase Cloud Messaging. Nothing here is an official warning.</p>
+  <p><button class="primary" id="enable">Enable notifications</button> <button id="disable">Turn off</button></p>
+  <div id="log">Ready.</div>
+  <script type="module">
+    const log = (m) => { document.getElementById("log").textContent += "\n" + m; };
+    const cfg = await (await fetch("/api/push/config")).json();
+    const base = `https://www.gstatic.com/firebasejs/${cfg.sdk_version}`;
+    const { initializeApp } = await import(`${base}/firebase-app.js`);
+    const { getMessaging, getToken, deleteToken, onMessage } = await import(`${base}/firebase-messaging.js`);
+    const app = initializeApp(cfg.firebase);
+    const messaging = getMessaging(app);
+    onMessage(messaging, (p) => {
+      log("Received while the page is open: " + JSON.stringify(p.notification || p.data));
+      if (Notification.permission === "granted" && p.notification) new Notification(p.notification.title, { body: p.notification.body });
+    });
+    document.getElementById("enable").onclick = async () => {
+      try {
+        if (!("serviceWorker" in navigator) || !("Notification" in window)) throw new Error("This browser has no web push support.");
+        if (await Notification.requestPermission() !== "granted") throw new Error("Notification permission was not granted.");
+        const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        await navigator.serviceWorker.ready;
+        const token = await getToken(messaging, { serviceWorkerRegistration: registration });
+        if (!token) throw new Error("No registration token was returned.");
+        localStorage.setItem("surgesight_fcm_token", token);
+        const response = await fetch("/api/push/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token }) });
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.detail || response.statusText);
+        log(`This browser is registered (${body.registered} registered in total). Approve a push dispatch in SurgeSight and it will appear here.`);
+      } catch (error) { log("Error: " + error.message); }
+    };
+    document.getElementById("disable").onclick = async () => {
+      try {
+        const token = localStorage.getItem("surgesight_fcm_token");
+        if (token) await fetch("/api/push/unsubscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token }) });
+        await deleteToken(messaging);
+        localStorage.removeItem("surgesight_fcm_token");
+        log("Notifications turned off for this browser.");
+      } catch (error) { log("Error: " + error.message); }
+    };
+  </script>
+</body>
+</html>

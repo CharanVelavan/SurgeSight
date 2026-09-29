@@ -59,12 +59,17 @@ def test_dispatch() -> None:
     request = push.ntfy_request("तूफान की चेतावनी", "Body text", department="Health Department", severity="CRITICAL")
     assert request["headers"]["Priority"] == "urgent" and all(v.isascii() for v in request["headers"].values()), "ntfy headers must be ASCII"
     assert "तूफान" in request["data"].decode("utf-8")
-    msg = push.fcm_message("Subject", "Body", department="Health Department", topic="t1")["message"]
-    assert msg["topic"] == "t1" and msg["notification"]["title"].startswith("EXERCISE") and msg["data"]["exercise"] == "true"
+    msg = push.fcm_message("Subject", "Body", department="Health Department", token="t" * 30)["message"]
+    assert msg["token"] == "t" * 30 and msg["notification"]["title"].startswith("EXERCISE") and msg["data"]["exercise"] == "true"
     pushed = router.queue_dispatch("Fisheries", "push", "Subject", "Body")
     router.approve(pushed.id)
     assert router.send(pushed.id).status == "dry_run", "push must also be a dry run by default"
-    os.environ.pop("NTFY_TOPIC", None); os.environ.pop("FCM_TOPIC", None)
+    os.environ.pop("NTFY_TOPIC", None)
+    assert push.register_token("a" * 40) == {"registered": 1} and push.list_tokens() == ["a" * 40]
+    push.register_token("a" * 40)
+    assert len(push.list_tokens()) == 1, "registering the same token twice must not duplicate it"
+    push.remove_token("a" * 40)
+    assert push.list_tokens() == []
     try:
         push.send_push("s", "b", department="d")
         raise AssertionError("no provider configured must fail")

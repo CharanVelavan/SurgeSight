@@ -150,6 +150,24 @@ def test_agent_stream() -> None:
     print("agent stream ok")
 
 
+def test_push_routes() -> None:
+    cfg = ok(client.get("/api/push/config")).json()
+    assert cfg["firebase"]["appId"] and cfg["firebase"]["projectId"] and cfg["sdk_version"]
+    sw = ok(client.get("/firebase-messaging-sw.js"))
+    assert sw.headers["content-type"].startswith("text/javascript") and "__CONFIG__" not in sw.text and cfg["firebase"]["appId"] in sw.text
+    assert sw.headers["service-worker-allowed"] == "/"
+    page = ok(client.get("/push-test"))
+    assert "Enable notifications" in page.text and "not an official" in page.text.lower() or "exercise" in page.text.lower()
+    assert client.post("/api/push/subscribe", json={"token": "short"}).status_code == 422
+    token = "t" * 60
+    assert ok(client.post("/api/push/subscribe", json={"token": token})).json() == {"subscribed": True, "registered": 1}
+    assert ok(client.post("/api/push/subscribe", json={"token": token})).json()["registered"] == 1, "same token must not duplicate"
+    assert ok(client.post("/api/push/unsubscribe", json={"token": token})).json() == {"subscribed": False}
+    from services.dispatch import push
+    assert push.list_tokens() == []
+    print("push routes ok")
+
+
 def test_tasks() -> None:
     polled = ok(client.post("/tasks/poll", json={"text": SAMPLE + "\nAPI task test issue."})).json()
     assert polled["new"] and polled["bulletin_ref"] and polled["caller"] == "local"
@@ -179,11 +197,13 @@ if __name__ == "__main__":
     test_assets()
     if not LIVE:
         print("SKIPPED live-model routes (SURGESIGHT_OFFLINE=1)")
+        test_push_routes()
         test_tasks()
     else:
         rid = test_scenario_flow()
         test_bulletin_and_parametric()
         test_advisory_dispatch(rid)
         test_agent_stream()
+        test_push_routes()
         test_tasks()
     print("SURGESIGHT_API_OK")
