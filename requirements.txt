@@ -1,5 +1,5 @@
 # SurgeSight — Python 3.14
-# google-adk is intentionally omitted: current release pins google-genai<2 (see WP1.5).
+# google-adk 2.10 works with google-genai 2.x. It pins opentelemetry <=1.42.1 while google-api-core wants >=1.44; we run 1.45 (pip check warns, ADK works).
 earthengine-api==1.7.46
 geopandas==1.2.0
 google-genai==2.25.0
@@ -28,3 +28,6 @@ google-api-python-client==2.200.0
 google-auth==2.59.0
 google-auth-oauthlib==1.4.1
 lxml==6.1.3
+google-adk==2.10.0
+opentelemetry-api==1.45.0
+opentelemetry-sdk==1.45.0

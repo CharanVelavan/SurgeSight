@@ -1,0 +1,128 @@
+{
+  "cutoff_utc": "2023-12-03 12:00:00+00:00",
+  "source": "NOAA/GFS0P25 (NOAA GFS via Earth Engine)",
+  "rows": [
+    {
+      "lead_hours": 6,
+      "valid_utc": "2023-12-03 18:00:00",
+      "gfs": {
+        "lat": 12.08,
+        "lon": 81.75,
+        "max_wind_kmh": 79.3,
+        "vorticity_1e5_per_s": 43.9
+      },
+      "kalman": {
+        "lat": 12.8,
+        "lon": 82.02
+      },
+      "gfs_vs_kalman_km": 85.0,
+      "observed_validation_only": {
+        "lat": 12.8,
+        "lon": 81.8,
+        "wind_kmh": 83.3
+      },
+      "gfs_error_km": 80.2,
+      "kalman_error_km": 24.0
+    },
+    {
+      "lead_hours": 12,
+      "valid_utc": "2023-12-04 00:00:00",
+      "gfs": {
+        "lat": 12.58,
+        "lon": 81.5,
+        "max_wind_kmh": 87.9,
+        "vorticity_1e5_per_s": 49.0
+      },
+      "kalman": {
+        "lat": 13.27,
+        "lon": 81.76
+      },
+      "gfs_vs_kalman_km": 82.0,
+      "observed_validation_only": {
+        "lat": 13.1,
+        "lon": 81.4,
+        "wind_kmh": 83.3
+      },
+      "gfs_error_km": 58.8,
+      "kalman_error_km": 43.4
+    },
+    {
+      "lead_hours": 18,
+      "valid_utc": "2023-12-04 06:00:00",
+      "gfs": {
+        "lat": 13.84,
+        "lon": 81.25,
+        "max_wind_kmh": 96.5,
+        "vorticity_1e5_per_s": 55.9
+      },
+      "kalman": {
+        "lat": 13.75,
+        "lon": 81.5
+      },
+      "gfs_vs_kalman_km": 28.7,
+      "observed_validation_only": {
+        "lat": 13.5,
+        "lon": 80.9,
+        "wind_kmh": 92.6
+      },
+      "gfs_error_km": 53.5,
+      "kalman_error_km": 70.2
+    },
+    {
+      "lead_hours": 24,
+      "valid_utc": "2023-12-04 12:00:00",
+      "gfs": {
+        "lat": 14.09,
+        "lon": 81.0,
+        "max_wind_kmh": 84.9,
+        "vorticity_1e5_per_s": 61.8
+      },
+      "kalman": {
+        "lat": 14.22,
+        "lon": 81.23
+      },
+      "gfs_vs_kalman_km": 29.2,
+      "observed_validation_only": {
+        "lat": 14.0,
+        "lon": 80.6,
+        "wind_kmh": 101.9
+      },
+      "gfs_error_km": 44.3,
+      "kalman_error_km": 72.7
+    },
+    {
+      "lead_hours": 36,
+      "valid_utc": "2023-12-05 00:00:00",
+      "gfs": {
+        "lat": 15.1,
+        "lon": 80.75,
+        "max_wind_kmh": 95.1,
+        "vorticity_1e5_per_s": 79.9
+      },
+      "observed_validation_only": {
+        "lat": 14.9,
+        "lon": 80.1,
+        "wind_kmh": 92.6
+      },
+      "gfs_error_km": 73.3
+    },
+    {
+      "lead_hours": 48,
+      "valid_utc": "2023-12-05 12:00:00",
+      "gfs": {
+        "lat": 16.35,
+        "lon": 80.75,
+        "max_wind_kmh": 76.7,
+        "vorticity_1e5_per_s": 58.5
+      },
+      "observed_validation_only": {
+        "lat": 16.0,
+        "lon": 80.2,
+        "wind_kmh": 74.1
+      },
+      "gfs_error_km": 70.5
+    }
+  ],
+  "ensemble_sigma_km_12h": 36.42,
+  "label": "NOAA GFS forecast (numerical weather prediction) analysed in Google Earth Engine, shown beside the SurgeSight experimental track. The GFS centre is found from its 10 m wind field at 0.25 degrees, so its centre is approximate (tens of kilometres). Not an official forecast; IMD remains authoritative. Google WeatherNext access is pending."
+}

@@ -34,7 +34,10 @@ TESTS: list[tuple[str, list[str], bool]] = [
     ("scripts/test_terrain_landmask.py", ["SURGESIGHT_TERRAIN_LANDMASK_OK"], True),
     ("scripts/test_bulletin_parser.py", ["SURGESIGHT_BULLETIN_PARSER_OK"], True),
     ("scripts/test_bulletin_to_risk.py", ["SURGESIGHT_BULLETIN_TO_RISK_OK"], True),
+    ("scripts/test_river_nwp.py", ["SURGESIGHT_RIVER_FLOOD_OK", "SURGESIGHT_NWP_COMPARISON_OK"], False),
+    ("scripts/test_search_grounding.py", ["SURGESIGHT_SEARCH_GROUNDING_OK"], True),
     ("scripts/test_agent.py", ["SURGESIGHT_AGENT_OK"], True),
+    ("scripts/test_adk.py", ["SURGESIGHT_ADK_OK"], True),
 ]
 GENERATED = [
     "data/processed/scenario_assets.csv",

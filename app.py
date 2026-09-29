@@ -11,6 +11,7 @@ import streamlit as st
 from services.advisory import AUDIENCES, LANGUAGES, RoleAdvisory, generate_role_advisory
 from services.config import load_region
 from ui.agent_console import render as render_agent_console
+from ui.hazard_layers import render as render_hazard_layers
 from ui.satellite_validation import render as render_satellite_validation
 from ui.bulletin_scoring import render as render_bulletin_scoring
 from services.bulletin_parser import parse_bulletin_file, parse_bulletin_text
@@ -279,10 +280,10 @@ with st.expander("Track data"):
     )
 
 st.divider()
-intelligence_tab, advisory_tab, simulator_tab, track_forecast_tab, agent_tab, satellite_tab = st.tabs(
+intelligence_tab, advisory_tab, simulator_tab, track_forecast_tab, agent_tab, satellite_tab, hazard_tab = st.tabs(
     [
         "Bulletin Intelligence", "Role-specific advisories", "Forecast Simulator",
-        "Experimental Track Forecast", "Agent console", "Satellite validation",
+        "Experimental Track Forecast", "Agent console", "Satellite validation", "Hazard layers",
     ],
     on_change="rerun",
     key="intelligence_tabs",
@@ -1005,3 +1006,7 @@ if agent_tab.open:
 if satellite_tab.open:
     with satellite_tab:
         render_satellite_validation()
+
+if hazard_tab.open:
+    with hazard_tab:
+        render_hazard_layers()

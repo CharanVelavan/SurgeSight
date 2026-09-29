@@ -267,3 +267,97 @@ def satellite_validation_tool(args: SatelliteValidationArgs) -> Any:
     store.put(run_id, "satellite_validation", jsonable(data))
     warnings = ["Observed flood flag is a remote-sensing proxy; Sentinel-1 had no usable coverage."] if meta["sensor"] == "sentinel2" else []
     return ok_result("satellite_validation", jsonable(data), source=f"{meta['sensor']}:flood_flag", run_id=run_id, warnings=warnings, model_version="satval-v1")
+
+
+# ---------------------------------------------------------------- live search
+
+class SearchBulletinsArgs(BaseModel):
+    cyclone_name: str | None = Field(default=None, description="Cyclone name, for example 'Michaung'. Omit to look for any active cyclone.")
+    region: str = Field(default="Andhra Pradesh and Tamil Nadu coast, India", description="Area of interest in words.")
+
+
+@tool("search_latest_bulletins", agent_scopes={"forecast", "comms"})
+def search_latest_bulletins_tool(args: SearchBulletinsArgs) -> Any:
+    """Find the latest published cyclone bulletins and news with Google Search grounding, with cited
+    sources. Use it in live mode or when the officer asks what the official sources are saying now.
+    Returns a summary and a list of source links. Web reports are not verified by SurgeSight; they
+    do not feed the risk model unless the officer pastes a bulletin to parse."""
+    from services.search_grounding import search_latest_bulletins
+
+    result = search_latest_bulletins(args.cyclone_name, args.region)
+    warnings = [] if result["grounded"] else ["No cited sources were returned; treat the summary as unverified."]
+    return ok_result("search_latest_bulletins", jsonable(result), source="gemini:google_search", warnings=warnings)
+
+
+# ---------------------------------------------------------------- independent NWP
+
+class NwpComparisonArgs(BaseModel):
+    cutoff: str | None = Field(default=None, description="Forecast issue time, UTC, for example '2023-12-03 12:00'. Omit for the demo cutoff.")
+
+
+@tool("nwp_comparison", agent_scopes={"forecast"})
+def nwp_comparison_tool(args: NwpComparisonArgs) -> Any:
+    """Compare SurgeSight's experimental (Kalman) track forecast with an independent numerical
+    weather prediction: the NOAA GFS forecast run issued at the cutoff, analysed in Google Earth
+    Engine. Returns, per lead time, the GFS storm centre and peak 10 m wind, the Kalman position, the
+    distance between them, and (validation only) the error of each against the observed track. Use it
+    to say whether an independent model agrees with the statistical track. Not an official forecast."""
+    import json
+
+    import pandas as pd
+
+    from services.config import load_region
+    from services.nwp_comparison import nwp_comparison
+
+    region = load_region()
+    cutoff = args.cutoff or region.demo_cutoff
+    cache = region.path("nwp_comparison")
+    result = None
+    if cache.exists():
+        cached = json.loads(cache.read_text(encoding="utf-8"))
+        if pd.Timestamp(cached["cutoff_utc"]).tz_localize(None) == pd.Timestamp(cutoff).tz_localize(None):
+            result = cached
+    if result is None:
+        result = nwp_comparison(pd.read_csv(region.path("track")), cutoff)
+    run_id = new_run_id("nwp")
+    get_store().put(run_id, "nwp_comparison", jsonable(result))
+    return ok_result("nwp_comparison", jsonable(result), source="noaa_gfs:earth_engine", run_id=run_id, model_version="gfs-vortex-v1")
+
+
+# ---------------------------------------------------------------- river flood
+
+class RiverFloodArgs(BaseModel):
+    top_n: int = Field(default=15, ge=1, le=15, description="How many assets to list per asset type.")
+
+
+@tool("river_flood", agent_scopes={"impact", "forecast"})
+def river_flood_tool(args: RiverFloodArgs) -> Any:
+    """River flood screening: which assets sit low beside a drainage line (MERIT Hydro height above
+    nearest drainage, analysed in Google Earth Engine) and are under heavy forecast rain. Use it for
+    questions about river or inland flooding, as opposed to wind or coastal surge. Returns counts and
+    the top assets by river flood index (0 to 1). It is a screening index, not a river-level forecast;
+    live river-level forecasts are not available."""
+    import pandas as pd
+
+    from services.config import load_region
+    from services.hazards.rainfall import rain_inputs
+    from services.hazards.river_flood import LABEL, river_flood_frame, summarise
+
+    assets = pd.read_csv(load_region().path("scored_assets"))
+    rain, rain_meta = rain_inputs("forecast")
+    frame = river_flood_frame(rain, assets)
+    if "facility_quality" in assets.columns:
+        frame = frame.merge(assets[["osm_element", "osm_id", "facility_quality"]], on=["osm_element", "osm_id"], how="left")
+    cols = ["name", "asset_type", "osm_element", "osm_id", "hand_m", "upstream_km2", "rain_mm", "river_flood_index"]
+    ranking = frame[frame["facility_quality"].isin(["hospital", "not_applicable"])] if "facility_quality" in frame else frame
+    top = {
+        str(kind): jsonable(group.sort_values("river_flood_index", ascending=False).head(args.top_n)[cols].to_dict(orient="records"))
+        for kind, group in ranking.groupby("asset_type")
+    }
+    run_id = new_run_id("river")
+    store = get_store()
+    store.put(run_id, "river_flood", jsonable({"summary": summarise(frame), "top_by_type": top}))
+    store.put_frame(run_id, "assets", frame)
+    data = jsonable({"summary": summarise(frame), "top_by_type": top, "rain_source": rain_meta.get("source", "GFS forecast"), "label": LABEL,
+                     "hospital_note": "Hospital ranking excludes OSM records that are clinics, dental or eye-care sites."})
+    return ok_result("river_flood", data, source="merit_hydro+gfs:earth_engine", run_id=run_id, model_version="river-v1")

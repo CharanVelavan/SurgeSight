@@ -15,6 +15,7 @@ from pydantic import BaseModel
 
 NUMBER_RE = re.compile(r"(?<![\w.])\d[\d,]*(?:\.\d+)?")
 LIST_MARKER_RE = re.compile(r"(?m)^\s*(?:[-*]\s*)?\d{1,2}[.)]\s")
+RUN_ID_RE = re.compile(r"\b[a-z][a-z0-9_]*-[0-9a-f]{10}\b")  # run ids are identifiers, not quantities
 ALWAYS_ALLOWED = {6.0, 12.0, 24.0, 112.0, 0.0, 1.0}
 YEAR_RANGE = range(1990, 2101)
 REDACTION = "[unverified]"
@@ -22,7 +23,7 @@ REDACTION = "[unverified]"
 
 def extract_numbers(text: str) -> list[str]:
     """Numbers in free text, ignoring markdown list numbering and identifiers like 'v2'."""
-    text = LIST_MARKER_RE.sub(" ", text or "")
+    text = RUN_ID_RE.sub(" ", LIST_MARKER_RE.sub(" ", text or ""))
     return NUMBER_RE.findall(text)
 
 

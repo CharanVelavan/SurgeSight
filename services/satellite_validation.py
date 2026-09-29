@@ -211,6 +211,14 @@ def compute_metrics(scored: pd.DataFrame, observed: pd.DataFrame, meta: dict[str
     ``scored`` needs osm ids, asset_type, v1_class/v1_score, class_v2/combined_v2 and the v2 components.
     """
     frame = scored.merge(observed, on=["osm_element", "osm_id"], how="inner")
+    try:  # river flood layer (WP2.7): MERIT Hydro height above drainage combined with the forecast rain
+        from services.hazards.river_flood import load_river_table, river_flood_index
+
+        river = load_river_table()[["osm_element", "osm_id", "hand_m", "river_susceptibility"]]
+        frame = frame.merge(river, on=["osm_element", "osm_id"], how="left")
+        frame["river_flood_index"] = river_flood_index(frame["rain_mm"].fillna(0.0), frame["hand_m"].fillna(30.0))
+    except (FileNotFoundError, KeyError):
+        pass
     if "district" not in frame.columns:
         from services.exposure import assign_districts
 
@@ -230,6 +238,7 @@ def compute_metrics(scored: pd.DataFrame, observed: pd.DataFrame, meta: dict[str
         "v1_combined_score": "v1_score", "v2_combined": "combined_v2", "v2_rain_flood": "rain_flood_score",
         "v2_wind": "wind_v2", "v2_surge": "surge_score", "terrain_flood_score": "terrain_flood_score",
         "forecast_rain_mm": "rain_mm", "elevation_inverse": "elevation_m",
+        "river_susceptibility": "river_susceptibility", "river_flood_index": "river_flood_index",
     }
     skill = {}
     for name, column in predictors.items():

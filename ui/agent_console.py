@@ -9,6 +9,7 @@ import streamlit as st
 
 from services.agent.builtin_tools import register_bulletin_file, register_bulletin_text
 from services.agent.orchestrator import TraceStep, run_agent
+from services.agent.adk_app import run_adk_agent
 from services.store import get_store
 
 SAMPLE_BULLETIN = Path("data/raw/sample_michaung_bulletin.txt")
@@ -54,6 +55,10 @@ def render() -> None:
         question = st.text_area("Question for the incident commander", key="agent_question", height=100)
         with st.container(horizontal=True):
             language = st.selectbox("Answer language", LANGUAGES, key="agent_language")
+            engine = st.segmented_control(
+                "Orchestrator", ["Single", "ADK multi-agent"], default="Single", key="agent_engine",
+                help="Single: one Gemini function-calling loop. ADK multi-agent: Incident Commander with forecast, impact, department and comms agents. Same tools.",
+            )
             source = st.segmented_control(
                 "Bulletin", ["None", "Sample bulletin", "Upload", "Paste text"],
                 default="None", key="agent_bulletin_source",
@@ -72,7 +77,8 @@ def render() -> None:
             try:
                 bulletin_id = _bulletin_run_id(source or "None", upload, pasted)
                 with st.status("Incident commander working…", expanded=True) as status:
-                    answer, trace = run_agent(
+                    runner = run_adk_agent if engine == "ADK multi-agent" else run_agent
+                    answer, trace = runner(
                         question,
                         context_run_ids=[bulletin_id] if bulletin_id else None,
                         language=language,

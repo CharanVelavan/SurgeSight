@@ -25,7 +25,9 @@
     "v2_surge": 0.5,
     "terrain_flood_score": 0.554,
     "forecast_rain_mm": 0.626,
-    "elevation_inverse": 0.557
+    "elevation_inverse": 0.557,
+    "river_susceptibility": 0.586,
+    "river_flood_index": 0.618
   },
   "auc_reading": "0.5 = no skill, 1.0 = perfect. Compares how well each score ranks flooded above unflooded assets.",
   "v1_high_plus": {
