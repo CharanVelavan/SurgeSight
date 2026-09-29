@@ -75,20 +75,52 @@ def _api_compatible_schema(value: object) -> object:
     return value
 
 
+_clients: dict[tuple, genai.Client] = {}
+CLOUD_SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
+
+
+def adc_credentials():
+    """Application Default Credentials read straight from the saved file.
+
+    ``google.auth.default()`` starts ``gcloud config get project`` in a subprocess for a gcloud login file. On macOS that
+    fork crashes in the PROJ library once ``pyproj`` is loaded ("Python quit unexpectedly"), so the file is read here
+    instead. Returns None when there is no file (the client then uses the normal lookup, for example on Cloud Run).
+    """
+    import json
+    from pathlib import Path
+
+    path = Path(os.getenv("GOOGLE_APPLICATION_CREDENTIALS") or Path.home() / ".config" / "gcloud" / "application_default_credentials.json")
+    if not path.exists():
+        return None
+    kind = json.loads(path.read_text(encoding="utf-8")).get("type")
+    if kind == "authorized_user":
+        from google.oauth2.credentials import Credentials
+
+        return Credentials.from_authorized_user_file(str(path), scopes=CLOUD_SCOPES)
+    if kind == "service_account":
+        from google.oauth2 import service_account
+
+        return service_account.Credentials.from_service_account_file(str(path), scopes=CLOUD_SCOPES)
+    return None
+
+
 def create_client() -> genai.Client:
+    """One client per configuration and process: building a Vertex client loads Google credentials each time."""
     load_dotenv()
     if os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "false").strip().lower() in {"1", "true", "yes"}:
-        return genai.Client(
-            vertexai=True,
-            project=os.getenv("GOOGLE_CLOUD_PROJECT"),
-            location=os.getenv("GOOGLE_CLOUD_LOCATION", "asia-south1"),
-        )
+        key = ("vertex", os.getenv("GOOGLE_CLOUD_PROJECT"), os.getenv("GOOGLE_CLOUD_LOCATION", "asia-south1"))
+        if key not in _clients:
+            _clients[key] = genai.Client(vertexai=True, project=key[1], location=key[2], credentials=adc_credentials())
+        return _clients[key]
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise GeminiConfigurationError(
             "GEMINI_API_KEY is not available. Add it to the environment or local .env file."
         )
-    return genai.Client(api_key=api_key)
+    key = ("key", api_key)
+    if key not in _clients:
+        _clients[key] = genai.Client(api_key=api_key)
+    return _clients[key]
 
 
 def generate_structured(
