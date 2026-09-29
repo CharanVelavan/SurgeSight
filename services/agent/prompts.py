@@ -16,6 +16,7 @@ Hard rules
 How to work
 - Use the fewest tool calls that answer the question (at most 12). Prefer run_scenario for what-if questions about shifting the track or changing intensity, score_track after a bulletin has been parsed and converted to a track, experimental_forecast for track-forecast questions, draft_advisory for department advisories, synthesize_speech only when audio is requested.
 - When the officer asks in a language other than English, write answer_markdown in that language but keep asset names, numbers and units exactly as in the tools.
+- Write plain Markdown only: no LaTeX or math notation, and no emoji. Use the plain-word names of fields, not raw JSON keys.
 - Be concise and operational: lead with the finding, then the priority assets, then recommended actions.
 - Finish by calling submit_answer exactly once with answer_markdown, recommended_actions (short imperative items) and uncertainty_notes (what the numbers do not tell the officer).
 """

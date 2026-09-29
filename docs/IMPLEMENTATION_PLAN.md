@@ -631,7 +631,7 @@ Each WP: **Goal · Files · Tasks · Acceptance · Marker · Fallback · Estimat
 
 **Goal:** real surge, rainfall and probabilistic exposure; fix discrimination (K2). **Estimate:** 4.5 h. **Depends on:** WP0, WP1.1 (to register tools).
 
-- [ ] **WP2.1 Ensemble + priority ranking.** `services/ensemble.py::run_ensemble(members=100, seed=42, center_shift_n_km=0, center_shift_e_km=0, center_intensity_pct=0, sigma_km=None, sigma_intensity_pct=8.0) -> EnsembleResult`.
+- [x] **WP2.1 Ensemble + priority ranking.** *(done 2026-09-29: `sigma_km` is per-axis = backtest RMSE/√2 ≈ 36.4 km at 12 h; `scenario_engine.shift_track_unbounded` added so members can exceed the ±50 km what-if limit; 12 h `ellipse_scale` ≈ 0.48; tool `run_ensemble`)* `services/ensemble.py::run_ensemble(members=100, seed=42, center_shift_n_km=0, center_shift_e_km=0, center_intensity_pct=0, sigma_km=None, sigma_intensity_pct=8.0) -> EnsembleResult`.
   - Member = rigid geodesic shift `(dn, de) ~ N(center, σ)` + intensity `~ N(center, σ_i)`, via existing `shift_track_geodesically` + `compare_scenario` (reuses the validated engine).
   - Default `σ` derived from the Kalman backtest RMSE at the relevant lead (≈ 50 km at 12 h); make it a parameter and record it.
   - Per asset: `p_high_plus`, `p_critical`, `score_mean`, `score_p10`, `score_p90`.

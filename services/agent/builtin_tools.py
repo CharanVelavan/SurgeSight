@@ -195,9 +195,9 @@ def score_track_tool(args: ScoreTrackArgs) -> Any:
 
 
 class RunScenarioArgs(BaseModel):
-    north_shift_km: float = Field(default=0.0, ge=-300, le=300, description="Shift the whole track north (+) or south (-), km.")
-    east_shift_km: float = Field(default=0.0, ge=-300, le=300, description="Shift the whole track east (+) or west (-), km.")
-    intensity_change_pct: float = Field(default=0.0, ge=-50, le=100, description="Change wind speed by this percent.")
+    north_shift_km: float = Field(default=0.0, ge=-50, le=50, description="Shift the whole track north (+) or south (-), km (limit 50).")
+    east_shift_km: float = Field(default=0.0, ge=-50, le=50, description="Shift the whole track east (+) or west (-), km (limit 50).")
+    intensity_change_pct: float = Field(default=0.0, ge=-20, le=20, description="Change wind speed by this percent (limit 20).")
 
 
 @tool("run_scenario", agent_scopes={"impact"})

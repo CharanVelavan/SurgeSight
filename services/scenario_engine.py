@@ -56,20 +56,16 @@ def load_scenario_inputs(
     return track, assets
 
 
-def shift_track_geodesically(
+def shift_track_unbounded(
     track: pd.DataFrame,
     north_shift_km: float,
     east_shift_km: float,
     intensity_change_pct: float,
 ) -> pd.DataFrame:
-    """Translate every track point using a WGS84 geodesic displacement."""
+    """Translate every track point using a WGS84 geodesic displacement (no range limits).
 
-    if not -50 <= north_shift_km <= 50:
-        raise ValueError("North/south shift must be between -50 and +50 km")
-    if not -50 <= east_shift_km <= 50:
-        raise ValueError("East/west shift must be between -50 and +50 km")
-    if not -20 <= intensity_change_pct <= 20:
-        raise ValueError("Intensity change must be between -20% and +20%")
+    Used by the ensemble, whose members can fall outside the interactive what-if limits.
+    """
 
     shifted = track.copy()
     distance_km = math.hypot(north_shift_km, east_shift_km)
@@ -90,6 +86,23 @@ def shift_track_geodesically(
         shifted["BASELINE_WIND_KMH"] * (1.0 + intensity_change_pct / 100.0)
     ).round(3)
     return shifted
+
+
+def shift_track_geodesically(
+    track: pd.DataFrame,
+    north_shift_km: float,
+    east_shift_km: float,
+    intensity_change_pct: float,
+) -> pd.DataFrame:
+    """Translate every track point using a WGS84 geodesic displacement."""
+
+    if not -50 <= north_shift_km <= 50:
+        raise ValueError("North/south shift must be between -50 and +50 km")
+    if not -50 <= east_shift_km <= 50:
+        raise ValueError("East/west shift must be between -50 and +50 km")
+    if not -20 <= intensity_change_pct <= 20:
+        raise ValueError("Intensity change must be between -20% and +20%")
+    return shift_track_unbounded(track, north_shift_km, east_shift_km, intensity_change_pct)
 
 
 def _status_for_row(row: pd.Series) -> str:

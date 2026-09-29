@@ -1,0 +1,8 @@
+# Department configuration. WP2.1 only needs the criticality weights; WP4.1 adds the departments.
+# Weights are prototype judgement values used to rank assets for attention, not measured quantities.
+[criticality_weights]
+hospital = 1.0
+substation = 0.9
+shelter = 0.8
+school = 0.5
+default = 0.5
