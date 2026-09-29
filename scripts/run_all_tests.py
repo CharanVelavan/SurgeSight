@@ -1,5 +1,7 @@
 """Run every SurgeSight test script and print a summary table.
 
+Default: offline (live tests are SKIPPED). Pass --live to also call the Google APIs, which uses Gemini quota or credit.
+
 A test passes only if it exits 0 and prints every expected marker. Scripts that call live
 Google APIs are reported SKIPPED (never OK) when SURGESIGHT_OFFLINE=1.
 Generated scenario outputs are restored afterwards so a test run leaves the repo clean.
@@ -22,6 +24,7 @@ PYTHON = sys.executable
 # script -> markers it must print. live=True means it needs Google APIs.
 TESTS: list[tuple[str, list[str], bool]] = [
     ("scripts/test_config.py", ["SURGESIGHT_CONFIG_OK"], False),
+    ("scripts/test_gemini_fallback.py", ["SURGESIGHT_GEMINI_FALLBACK_OK"], False),
     ("scripts/test_scenario_engine.py", ["SURGESIGHT_SCENARIO_BASELINE_MATCH_OK", "SURGESIGHT_SCENARIO_30KM_OK"], False),
     ("scripts/test_track_forecaster.py", ["SURGESIGHT_TRACK_FORECASTER_OK"], False),
     ("scripts/test_facility_quality.py", ["SURGESIGHT_FACILITY_QUALITY_OK"], False),
@@ -56,8 +59,12 @@ GENERATED = [
 
 
 def main() -> int:
-    offline = os.getenv("SURGESIGHT_OFFLINE") == "1"
-    only = sys.argv[1:]
+    # Live tests call paid or quota-limited Google APIs (Gemini, TTS, Live, Maps). They run only with --live.
+    args = [a for a in sys.argv[1:] if a != "--live"]
+    offline = os.getenv("SURGESIGHT_OFFLINE") == "1" or "--live" not in sys.argv[1:]
+    if offline:
+        os.environ["SURGESIGHT_OFFLINE"] = "1"
+    only = args
     backup = Path(tempfile.mkdtemp())
     for rel in GENERATED:
         if (ROOT / rel).exists():

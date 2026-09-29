@@ -20,7 +20,9 @@ import services.agent  # noqa: F401  (registers tools)
 from services.agent import grounding_guard, prompts
 from services.agent.orchestrator import AgentAnswer, SubmitAnswerArgs, TraceStep, _context_note, _finalise, _summarise
 from services.agent.tools import TOOLS, ToolResult, execute_tool
-from services.gemini_client import MODEL_NAME
+import time
+
+from services import gemini_client
 
 APP_NAME = "surgesight"
 SUB_AGENTS = {
@@ -62,13 +64,14 @@ class RegistryTool(BaseTool):
         return {"result": result.model_dump(mode="json")}
 
 
-def build_agents(sink: list[ToolResult], on_call: Callable[[str, dict, ToolResult, int], None]) -> LlmAgent:
+def build_agents(sink: list[ToolResult], on_call: Callable[[str, dict, ToolResult, int], None], model: str | None = None) -> LlmAgent:
+    model = model or gemini_client.MODEL_NAME
     subs = []
     for agent_name, (scope, description) in SUB_AGENTS.items():
         tools = [RegistryTool(name, sink, on_call) for name, spec in TOOLS.items() if scope in spec.agent_scopes]
-        subs.append(LlmAgent(name=agent_name, model=MODEL_NAME, description=description, instruction=SUB_INSTRUCTION, tools=tools))
+        subs.append(LlmAgent(name=agent_name, model=model, description=description, instruction=SUB_INSTRUCTION, tools=tools))
     return LlmAgent(
-        name="incident_commander", model=MODEL_NAME,
+        name="incident_commander", model=model,
         description="Coordinates the cyclone impact workflow across specialist agents.",
         instruction=prompts.INCIDENT_COMMANDER.replace(
             "You run the workflow by calling tools.",
@@ -80,7 +83,7 @@ def build_agents(sink: list[ToolResult], on_call: Callable[[str, dict, ToolResul
     )
 
 
-async def _run(question: str, context_run_ids: list[str] | None, language: str, on_step: Callable[[TraceStep], None] | None):
+async def _run(question: str, context_run_ids: list[str] | None, language: str, on_step: Callable[[TraceStep], None] | None, model: str):
     if not os.getenv("GOOGLE_API_KEY") and os.getenv("GEMINI_API_KEY"):
         os.environ["GOOGLE_API_KEY"] = os.environ["GEMINI_API_KEY"]
     results: list[ToolResult] = []
@@ -93,7 +96,7 @@ async def _run(question: str, context_run_ids: list[str] | None, language: str, 
         if on_step:
             on_step(step)
 
-    root = build_agents(results, on_call)
+    root = build_agents(results, on_call, model)
     runner = InMemoryRunner(agent=root, app_name=APP_NAME)
     session = await runner.session_service.create_session(app_name=APP_NAME, user_id="officer")
     message = types.Content(role="user", parts=[types.Part(
@@ -123,6 +126,17 @@ def run_adk_agent(
     on_step: Callable[[TraceStep], None] | None = None,
 ) -> tuple[AgentAnswer, list[TraceStep]]:
     """Same contract as ``run_agent``, executed by the ADK multi-agent team."""
-    final, results, trace = asyncio.run(_run(question, context_run_ids, language, on_step))
+    last: Exception | None = None
+    for model in gemini_client.model_chain():  # free-tier models run out of daily quota one at a time
+        try:
+            final, results, trace = asyncio.run(_run(question, context_run_ids, language, on_step, model))
+            break
+        except Exception as exc:
+            if "RESOURCE_EXHAUSTED" not in str(exc) and "429" not in str(exc):
+                raise
+            gemini_client._exhausted[model] = time.time()
+            last = exc
+    else:
+        raise last  # type: ignore[misc]
     submitted = SubmitAnswerArgs(answer_markdown=final or "The agent team could not produce an answer from the tool results.")
     return _finalise(submitted, final, results, question, trace)

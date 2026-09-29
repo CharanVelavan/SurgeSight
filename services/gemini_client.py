@@ -15,8 +15,46 @@ from pydantic import BaseModel
 
 load_dotenv()
 MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-3.7-flash")
+# On the free tier every model has its own small daily allowance, so when one is used up the next one is tried.
+FALLBACK_MODELS = tuple(
+    m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.6-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite").split(",") if m.strip()
+)
+EXHAUSTED_COOLDOWN_S = 3600
 MAX_ATTEMPTS = 3
 SchemaT = TypeVar("SchemaT", bound=BaseModel)
+
+
+_exhausted: dict[str, float] = {}
+last_model_used: str | None = None
+
+
+def is_quota_error(exc: Exception) -> bool:
+    return isinstance(exc, errors.ClientError) and exc.code == 429 and "RESOURCE_EXHAUSTED" in str(exc)
+
+
+def model_chain() -> list[str]:
+    """Models to try in order, skipping ones recently found out of quota (all of them if none is left)."""
+    now = time.time()
+    chain = [MODEL_NAME, *[m for m in FALLBACK_MODELS if m != MODEL_NAME]]
+    ready = [m for m in chain if now - _exhausted.get(m, 0.0) > EXHAUSTED_COOLDOWN_S]
+    return ready or chain
+
+
+def _call_with_fallback(call) -> object:
+    """Run ``call(model)`` on each model in turn, moving on only when a model's quota is exhausted."""
+    global last_model_used
+    last: Exception | None = None
+    for model in model_chain():
+        try:
+            result = call(model)
+            last_model_used = model
+            return result
+        except Exception as exc:
+            if not is_quota_error(exc):
+                raise
+            _exhausted[model] = time.time()
+            last = exc
+    raise last if last else RuntimeError("No Gemini model available")
 
 
 class GeminiConfigurationError(RuntimeError):
@@ -67,17 +105,16 @@ def generate_structured(
     last_error: Exception | None = None
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=contents,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    temperature=temperature,
-                    max_output_tokens=max_output_tokens,
-                    response_mime_type="application/json",
-                    response_schema=_api_compatible_schema(schema.model_json_schema()),
-                    automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
-                ),
+            structured_config = types.GenerateContentConfig(
+                system_instruction=system_instruction,
+                temperature=temperature,
+                max_output_tokens=max_output_tokens,
+                response_mime_type="application/json",
+                response_schema=_api_compatible_schema(schema.model_json_schema()),
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+            )
+            response = _call_with_fallback(
+                lambda model: client.models.generate_content(model=model, contents=contents, config=structured_config)
             )
             if isinstance(response.parsed, schema):
                 return response.parsed
@@ -108,8 +145,8 @@ def generate_with_retry(
     last_error: Exception | None = None
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
-            return client.models.generate_content(
-                model=MODEL_NAME, contents=contents, config=config
+            return _call_with_fallback(
+                lambda model: client.models.generate_content(model=model, contents=contents, config=config)
             )
         except Exception as exc:
             last_error = exc
