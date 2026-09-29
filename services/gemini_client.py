@@ -13,7 +13,8 @@ from google.genai import types
 from pydantic import BaseModel
 
 
-MODEL_NAME = "gemini-3.7-flash"
+load_dotenv()
+MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-3.7-flash")
 MAX_ATTEMPTS = 3
 SchemaT = TypeVar("SchemaT", bound=BaseModel)
 
@@ -38,6 +39,12 @@ def _api_compatible_schema(value: object) -> object:
 
 def create_client() -> genai.Client:
     load_dotenv()
+    if os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "false").strip().lower() in {"1", "true", "yes"}:
+        return genai.Client(
+            vertexai=True,
+            project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+            location=os.getenv("GOOGLE_CLOUD_LOCATION", "asia-south1"),
+        )
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise GeminiConfigurationError(
@@ -87,3 +94,27 @@ def generate_structured(
     raise RuntimeError(
         f"Gemini structured generation failed after {MAX_ATTEMPTS} attempts: {last_error}"
     ) from last_error
+
+
+def generate_with_retry(
+    *,
+    contents: object,
+    config: types.GenerateContentConfig,
+    client: genai.Client | None = None,
+) -> types.GenerateContentResponse:
+    """Raw ``generate_content`` with the same retry policy (used by the agent loop)."""
+
+    client = client or create_client()
+    last_error: Exception | None = None
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            return client.models.generate_content(
+                model=MODEL_NAME, contents=contents, config=config
+            )
+        except Exception as exc:
+            last_error = exc
+            retryable = not (isinstance(exc, errors.ClientError) and exc.code < 500 and exc.code != 429)
+            if not retryable or attempt == MAX_ATTEMPTS:
+                break
+            time.sleep(2 ** (attempt - 1))
+    raise RuntimeError(f"Gemini call failed after {MAX_ATTEMPTS} attempts: {last_error}") from last_error
