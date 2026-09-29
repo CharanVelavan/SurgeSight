@@ -39,6 +39,24 @@ class RunStore(ABC):
     def payload(self, run_id: str) -> dict[str, Any]:
         return self.get(run_id)["payload"]
 
+    def log_event(self, collection: str, doc_id: str, data: dict[str, Any]) -> None:
+        """Append-only audit record (approvals). Stores that have no such collection may ignore it."""
+
+    def mark_seen(self, key: str, info: dict[str, Any] | None = None) -> bool:
+        """Remember a fingerprint (bulletin hash); True if it had not been seen before."""
+        seen = self.get_seen()
+        if key in seen:
+            return False
+        seen[key] = info or {}
+        self.put("_bulletins_seen", "bulletins_seen", {"seen": seen})
+        return True
+
+    def get_seen(self) -> dict[str, Any]:
+        try:
+            return dict(self.get("_bulletins_seen")["payload"]["seen"])
+        except KeyError:
+            return {}
+
 
 _store: RunStore | None = None
 
@@ -54,8 +72,12 @@ def get_store() -> RunStore:
             from services.store.local_store import LocalStore
 
             _store = LocalStore()
+        elif backend == "firestore":
+            from services.store.firestore_store import FirestoreStore
+
+            _store = FirestoreStore()
         else:
-            raise NotImplementedError(f"Run store '{backend}' is not available yet (WP5.4)")
+            raise ValueError(f"Unknown SURGESIGHT_STORE '{backend}' (use local or firestore)")
     return _store
 
 

@@ -1,0 +1,50 @@
+# Parametric insurance triggers (WP5.2). EVERYTHING HERE IS ILLUSTRATIVE: the sums insured, tiers and payout
+# percentages are made up to show the mechanism. They are not real products, prices or contracts.
+[meta]
+illustrative = true
+currency = "INR"
+note = "Illustrative portfolios and payout tiers. Not a real insurance product."
+# The trigger index of a portfolio is the value that at least this share of its insured sites reach (75th percentile).
+index_quantile = 0.75
+
+# Wind: km/h, tiers follow the IMD classes (cyclonic storm 62, severe 89, very severe 118, extremely severe 166).
+[[triggers]]
+id = "wind"
+label = "Wind speed at insured sites (km/h)"
+tiers = [ { at = 62.0, payout_pct = 10 }, { at = 89.0, payout_pct = 25 }, { at = 118.0, payout_pct = 50 }, { at = 166.0, payout_pct = 100 } ]
+
+# Rainfall: mm in the wettest 24 h of the forecast, tiers from the IMD heavy / very heavy / extremely heavy rainfall classes.
+[[triggers]]
+id = "rain_24h"
+label = "Rainfall in the wettest 24 h (mm)"
+tiers = [ { at = 64.5, payout_pct = 10 }, { at = 115.6, payout_pct = 25 }, { at = 204.5, payout_pct = 50 } ]
+
+# Surge: the screening surge score (0 to 1), not metres of water.
+[[triggers]]
+id = "surge"
+label = "Storm surge screening score (0 to 1)"
+tiers = [ { at = 0.2, payout_pct = 15 }, { at = 0.5, payout_pct = 40 }, { at = 0.8, payout_pct = 100 } ]
+
+[[portfolios]]
+id = "chennai_infra"
+name = "Chennai critical infrastructure (illustrative)"
+districts = ["Chennai"]
+sum_insured_inr = 2000000000
+
+[[portfolios]]
+id = "tiruvallur_kanchipuram"
+name = "Tiruvallur and Kanchipuram municipal assets (illustrative)"
+districts = ["Tiruvallur", "Kanchipuram", "Chengalpattu"]
+sum_insured_inr = 1200000000
+
+[[portfolios]]
+id = "nellore_prakasam"
+name = "Nellore and Prakasam coastal assets (illustrative)"
+districts = ["Potti Sriramulu Nellore", "Prakasam"]
+sum_insured_inr = 900000000
+
+[[portfolios]]
+id = "guntur_krishna"
+name = "Guntur and Krishna delta assets (illustrative)"
+districts = ["Guntur", "Krishna"]
+sum_insured_inr = 800000000

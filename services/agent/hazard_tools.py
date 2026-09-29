@@ -385,3 +385,65 @@ def department_priority_tool(args: DepartmentPriorityArgs) -> Any:
     run_id = new_run_id("dept")
     get_store().put(run_id, "department_priority", jsonable(result))
     return ok_result("department_priority", jsonable(result), source="departments:risk_v2", run_id=run_id, model_version="v2")
+
+
+# ---------------------------------------------------------------- parametric
+
+class ParametricArgs(BaseModel):
+    members: int = Field(default=60, ge=0, le=200, description="Ensemble members for trigger probabilities; 0 for the reference track only.")
+    liquidity_brief: bool = Field(default=True, description="Also write a short liquidity brief.")
+
+
+@tool("parametric_triggers", agent_scopes={"finance", "impact"})
+def parametric_triggers_tool(args: ParametricArgs) -> Any:
+    """Evaluate ILLUSTRATIVE parametric insurance triggers (wind, 24-hour rainfall, surge) for four invented
+    district portfolios: which triggers breach on the reference track, the probability of each across the track
+    ensemble, and the expected payout, in rupee crore. Optionally writes a liquidity brief. Portfolios and payouts
+    are made up to show the mechanism; never present them as a real product."""
+    from services.parametric import evaluate, liquidity_brief, with_crore
+
+    result = with_crore(evaluate(members=args.members))
+    if args.liquidity_brief:
+        result["liquidity_brief"] = liquidity_brief(result).model_dump()
+    run_id = new_run_id("parametric")
+    get_store().put(run_id, "parametric", jsonable(result))
+    return ok_result("parametric_triggers", jsonable(result), source="parametric:illustrative", run_id=run_id, model_version="param-v1")
+
+
+# ---------------------------------------------------------------- spatial asset queries
+
+class AssetsWithinArgs(BaseModel):
+    lat: float = Field(ge=-90, le=90)
+    lon: float = Field(ge=-180, le=180)
+    radius_km: float = Field(default=10.0, gt=0, le=200)
+    types: list[str] = Field(default_factory=list, description="Asset types to include, for example ['hospital']. Empty for all.")
+    min_class: Literal["LOW", "MODERATE", "HIGH", "CRITICAL"] = "LOW"
+
+
+@tool("assets_within", agent_scopes={"impact", "department"})
+def assets_within_tool(args: AssetsWithinArgs) -> Any:
+    """List assets within a radius (km) of a point, nearest first, with their v2 class, score and triage tier.
+    Use it for questions such as which hospitals are within 10 km of a location. Fixed parameterised query
+    (BigQuery GIS when configured, a local equivalent otherwise). At most 50 rows."""
+    from services.store.bigquery_store import get_asset_queries
+
+    queries = get_asset_queries()
+    rows = queries.assets_within(args.lat, args.lon, args.radius_km, args.types or None, args.min_class)
+    return ok_result("assets_within", jsonable({"count": len(rows), "assets": rows, "backend": queries.backend}), source=f"assets:{queries.backend}", model_version="v2")
+
+
+class AssetsInDistrictArgs(BaseModel):
+    district: str = Field(description="District name such as 'Chennai', 'Guntur' or 'Chengalpattu'.")
+    types: list[str] = Field(default_factory=list)
+    min_class: Literal["LOW", "MODERATE", "HIGH", "CRITICAL"] = "LOW"
+
+
+@tool("assets_in_district", agent_scopes={"impact", "department"})
+def assets_in_district_tool(args: AssetsInDistrictArgs) -> Any:
+    """List a district's assets ranked by v2 score, optionally limited to some asset types and a minimum class.
+    Fixed parameterised query; at most 50 rows."""
+    from services.store.bigquery_store import get_asset_queries
+
+    queries = get_asset_queries()
+    rows = queries.assets_in_district(args.district, args.types or None, args.min_class)
+    return ok_result("assets_in_district", jsonable({"count": len(rows), "assets": rows, "backend": queries.backend}), source=f"assets:{queries.backend}", model_version="v2")

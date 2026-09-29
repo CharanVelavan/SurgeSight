@@ -26,7 +26,8 @@ APP_NAME = "surgesight"
 SUB_AGENTS = {
     "forecast_agent": ("forecast", "Track and NWP questions: experimental track forecast, GFS comparison, ensemble of possible tracks, latest bulletins."),
     "impact_agent": ("impact", "Impact questions: what-if scenarios, multi-hazard v2 scoring, surge, rainfall, river flood, exposed population, satellite validation, asset details."),
-    "department_agent": ("department", "Department advisories for the District Collector, Electricity Board or Health Department, in English, Tamil or Telugu."),
+    "department_agent": ("department", "Advisories for the seven departments (Collector, Health, Fire & Rescue, Electricity, Police, Water, Fisheries) in English, Tamil, Telugu, Hindi, Odia or Bengali."),
+    "finance_agent": ("finance", "Finance: illustrative parametric insurance triggers, probabilities, expected payouts and the liquidity brief."),
     "comms_agent": ("comms", "Public communication: audio of an advisory, bulletin parsing and search for the latest official bulletins."),
 }
 SUB_INSTRUCTION = (
@@ -71,7 +72,7 @@ def build_agents(sink: list[ToolResult], on_call: Callable[[str, dict, ToolResul
         description="Coordinates the cyclone impact workflow across specialist agents.",
         instruction=prompts.INCIDENT_COMMANDER.replace(
             "You run the workflow by calling tools.",
-            "You run the workflow by delegating to your specialist agents (forecast_agent, impact_agent, department_agent, comms_agent), "
+            "You run the workflow by delegating to your specialist agents (forecast_agent, impact_agent, department_agent, finance_agent, comms_agent), "
             "which own the tools. Delegate, then write the final answer yourself from what they report.",
         ).replace("Finish by calling submit_answer exactly once with answer_markdown, recommended_actions (short imperative items) and uncertainty_notes (what the numbers do not tell the officer).",
                   "Write the final answer in plain Markdown: the finding first, then priority assets, then short recommended actions, then what the numbers do not tell the officer."),
