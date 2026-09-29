@@ -13,6 +13,13 @@ south = 11.5
 east = 82.0
 north = 15.0
 
+# Extent of the scored assets (+0.1 deg): the exposure grid covers this, not the terrain bbox.
+[extent]
+west = 79.4
+south = 12.4
+east = 81.1
+north = 16.6
+
 [paths]
 track = "data/processed/michaung_track.csv"
 scored_assets = "data/processed/scored_assets.csv"
@@ -28,3 +35,5 @@ land_polygon = "data/processed/land_india.geojson"
 coast_assets = "data/processed/coast_assets.csv"
 coast_shelf = "data/processed/coast_shelf.csv"
 rainfall_assets = "data/processed/rainfall_assets.csv"
+exposure_grid = "data/processed/exposure_grid.csv"
+districts = "data/processed/districts.geojson"

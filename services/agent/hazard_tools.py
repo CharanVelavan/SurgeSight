@@ -7,7 +7,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 from services.agent.builtin_tools import jsonable
-from services.agent.tools import ok_result, tool
+from services.agent.tools import error_result, ok_result, tool
 from services.store import get_store, new_run_id
 
 
@@ -186,3 +186,42 @@ def rainfall_hazard_tool(args: RainfallHazardArgs) -> Any:
     }
     warnings = ["Observed rainfall is for validation only, not a pre-landfall input."] if meta["validation_only"] else []
     return ok_result("rainfall_hazard", jsonable(data), source="NOAA/GFS0P25" if args.mode == "forecast" else "NASA/GPM_L3/IMERG_V07", warnings=warnings, model_version="rain-v1")
+
+
+# ---------------------------------------------------------------- exposure
+
+class ExposureArgs(BaseModel):
+    run_id: str = Field(description="run_id of a risk_v2, run_ensemble, run_scenario or score_track result.")
+    rule: Literal["class_high_plus", "triage_tier_1_2", "ensemble_p50"] | None = Field(
+        default=None,
+        description="Which assets define the hazard footprint. class_high_plus = HIGH or CRITICAL; "
+        "triage_tier_1_2 = top 30% relative priority (risk_v2 runs); ensemble_p50 = HIGH+ in at least "
+        "half of the members (run_ensemble runs). Omit to pick the natural rule for the run.",
+    )
+    radius_km: float = Field(default=5.0, ge=1, le=25, description="Footprint radius around each qualifying asset, km.")
+
+
+@tool("exposure_summary", agent_scopes={"impact"})
+def exposure_summary_tool(args: ExposureArgs) -> Any:
+    """Exposed people and buildings per district for a stored run: population (WorldPop) and buildings
+    (Google Open Buildings) inside the footprint of the assets that meet a rule (HIGH or above, top
+    triage tiers, or likely under the ensemble). Use it to answer 'how many people / buildings /
+    which districts are affected'. 'Exposed' means inside the hazard footprint; it is not a casualty or
+    damage estimate. Districts are listed by exposed population."""
+    from services.exposure import exposure_summary
+
+    store = get_store()
+    record = store.get(args.run_id)
+    kind = record["kind"]
+    if kind not in {"riskv2", "ensemble", "scenario", "score", "surge"}:
+        return error_result("exposure_summary", f"{args.run_id} is a '{kind}' run; use a risk_v2, run_ensemble, run_scenario or score_track run")
+    frame = store.get_frame(args.run_id, "assets")
+    rule = args.rule or ("ensemble_p50" if kind == "ensemble" else "class_high_plus")
+    summary = exposure_summary(frame, rule=rule, radius_km=args.radius_km, include_footprint=True)
+    footprint = summary.pop("footprint_geojson")
+    run_id = new_run_id("exposure")
+    store.put(run_id, "exposure", jsonable({"source_run_id": args.run_id, "summary": summary, "footprint_geojson": footprint}))
+    compact = dict(summary)
+    compact["by_district"] = summary["by_district"][:10]
+    compact["districts_listed"] = f"top {len(compact['by_district'])} of {len(summary['by_district'])} by exposed population"
+    return ok_result("exposure_summary", jsonable(compact), source="exposure_grid", run_id=run_id)

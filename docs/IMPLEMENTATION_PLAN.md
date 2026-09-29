@@ -658,7 +658,7 @@ Each WP: **Goal · Files · Tasks · Acceptance · Marker · Fallback · Estimat
   - `combined_v2 = 1 − (1 − 0.8·wind_v2)(1 − 0.9·surge)(1 − 0.8·rain_flood)`; `dominant_hazard = argmax`.
   - Same class thresholds (config). Per-asset breakdown `{wind, surge, rain_flood, terrain}` for "why flagged".
   - v1 untouched; UI shows v1 vs v2. Report the new class distribution; target: materially more LOW and fewer HIGH than v1 (K2). Marker `SURGESIGHT_RISK_V2_OK`.
-- [ ] **WP2.5 Exposure.** `services/exposure.py`:
+- [x] **WP2.5 Exposure.** *(done 2026-09-29. Precomputed 0.05° grid (`scripts/build_exposure_grid.py`): WorldPop 2020, Open Buildings v3 confidence ≥ 0.75 (a building counts in each cell it touches), FAO GAUL **2025** districts (2015 is deprecated; AP 2022 districts such as Bapatla are absent). Extent is the asset extent (12.4–16.6°N), not the 11.5–15°N terrain bbox. Michaung result: HIGH+ footprint = 20.2 M people / 4.1 M buildings (73.5 % of the grid); top triage tiers = 10.6 M / 1.9 M. Tool `exposure_summary`.)* `services/exposure.py`:
   - Districts: Earth Engine `FAO/GAUL/2015/level2` → assign `district`, `state` to every asset (also used by CAP `areaDesc`, BigQuery, Looker).
   - Hazard footprint = union of cells/buffers where v2 class ≥ HIGH (or ensemble `p_high_plus ≥ 0.5`).
   - Exposed population (WorldPop) and exposed buildings (`GOOGLE/Research/open-buildings/v3/polygons`, count, optionally confidence ≥ 0.75) inside footprint, per district. This replaces the misleading "population in analysis region".

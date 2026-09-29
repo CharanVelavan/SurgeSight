@@ -76,6 +76,7 @@ class Region:
     languages: tuple[str, ...]
     demo_cutoff: str
     bbox: dict[str, float]
+    extent: dict[str, float]
     paths: dict[str, Path]
     raw: dict = field(default_factory=dict, repr=False)
 
@@ -104,6 +105,7 @@ def load_region(name: str | None = None) -> Region:
         languages=tuple(data.get("languages", ["English"])),
         demo_cutoff=data.get("demo_cutoff", ""),
         bbox=dict(data["bbox"]),
+        extent=dict(data.get("extent", data["bbox"])),
         paths={key: Path(value) for key, value in data.get("paths", {}).items()},
         raw=data,
     )

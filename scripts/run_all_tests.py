@@ -27,6 +27,7 @@ TESTS: list[tuple[str, list[str], bool]] = [
     ("scripts/test_facility_quality.py", ["SURGESIGHT_FACILITY_QUALITY_OK"], False),
     ("scripts/test_ensemble.py", ["SURGESIGHT_ENSEMBLE_OK"], False),
     ("scripts/test_hazards.py", ["SURGESIGHT_RAINFALL_OK", "SURGESIGHT_SURGE_OK", "SURGESIGHT_RISK_V2_OK"], False),
+    ("scripts/test_exposure.py", ["SURGESIGHT_EXPOSURE_OK"], False),
     ("scripts/test_grounding_guard.py", ["SURGESIGHT_GROUNDING_GUARD_OK"], False),
     ("scripts/test_tts.py", ["SURGESIGHT_TTS_MULTILINGUAL_OK"], True),
     ("scripts/test_terrain_landmask.py", ["SURGESIGHT_TERRAIN_LANDMASK_OK"], True),
