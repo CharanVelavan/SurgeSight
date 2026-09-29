@@ -16,6 +16,22 @@ from services.advisory import RoleAdvisory
 
 
 LANGUAGE_CODES = {"English": "en-IN", "Tamil": "ta-IN", "Telugu": "te-IN"}
+MAX_TTS_BYTES = 4800  # Cloud TTS limit is 5,000 bytes of input text
+_SENTENCE_ENDINGS = ".!?।॥"
+
+
+def _truncate_utf8(text: str, max_bytes: int = MAX_TTS_BYTES) -> str:
+    """Trim text to at most max_bytes of UTF-8, preferring a sentence boundary.
+
+    Never splits a multibyte character.
+    """
+    if len(text.encode("utf-8")) <= max_bytes:
+        return text
+    clipped = text.encode("utf-8")[:max_bytes].decode("utf-8", errors="ignore")
+    boundary = max(clipped.rfind(mark) for mark in _SENTENCE_ENDINGS)
+    if boundary >= len(clipped) // 2:
+        return clipped[: boundary + 1].strip()
+    return clipped.strip()
 
 
 def advisory_to_speech_text(advisory: RoleAdvisory) -> str:
@@ -59,6 +75,9 @@ def _access_token() -> tuple[str, str | None]:
         credentials.refresh(Request())
         return str(credentials.token), project or detected_project
     except Exception:
+        # The gcloud CLI only exists on developer machines, never on Cloud Run.
+        if os.getenv("SURGESIGHT_ENV", "local") != "local":
+            raise
         token = subprocess.run(
             ["gcloud", "auth", "print-access-token"],
             check=True,
@@ -93,8 +112,7 @@ def synthesize_advisory(advisory: RoleAdvisory, language: str) -> bytes:
     text = advisory_to_speech_text(advisory).strip()
     if not text:
         raise ValueError("Advisory has no text to synthesize")
-    if len(text.encode("utf-8")) > 4800:
-        text = text[:3500]
+    text = _truncate_utf8(text)
     try:
         return _adc_synthesize(text, LANGUAGE_CODES[language])
     except Exception:
