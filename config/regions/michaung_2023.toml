@@ -1,0 +1,26 @@
+# Cyclone Michaung 2023 (Tamil Nadu / Andhra Pradesh). Paths are relative to the project root.
+id = "michaung_2023"
+display_name = "Cyclone Michaung 2023"
+cyclone_name = "MICHAUNG"
+ibtracs_sid = "2023334N08088"
+country = "India"
+languages = ["English", "Tamil", "Telugu"]
+demo_cutoff = "2023-12-03 12:00:00"
+
+[bbox]
+west = 79.0
+south = 11.5
+east = 82.0
+north = 15.0
+
+[paths]
+track = "data/processed/michaung_track.csv"
+scored_assets = "data/processed/scored_assets.csv"
+risk_summary = "data/processed/risk_summary.json"
+scenario_assets_csv = "data/processed/scenario_assets.csv"
+scenario_assets_geojson = "data/processed/scenario_assets.geojson"
+scenario_summary = "data/processed/scenario_summary.json"
+track_backtest = "data/processed/track_backtest.json"
+terrain_summary = "data/processed/michaung_terrain_summary.json"
+wind_cache = "data/raw/wind/gfs_pressure_winds_michaung.npz"
+sample_bulletin = "data/raw/sample_michaung_bulletin.txt"

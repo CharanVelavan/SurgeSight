@@ -12,14 +12,16 @@ import numpy as np
 import pandas as pd
 from pyproj import Geod
 
+from services.config import load_region
 from services.risk_model import attach_nearest_track, score_assets_from_terrain
 
 
-TRACK_FILE = Path("data/processed/michaung_track.csv")
-BASELINE_ASSETS_FILE = Path("data/processed/scored_assets.csv")
-OUTPUT_CSV = Path("data/processed/scenario_assets.csv")
-OUTPUT_GEOJSON = Path("data/processed/scenario_assets.geojson")
-OUTPUT_SUMMARY = Path("data/processed/scenario_summary.json")
+_REGION = load_region()
+TRACK_FILE = _REGION.path("track")
+BASELINE_ASSETS_FILE = _REGION.path("scored_assets")
+OUTPUT_CSV = _REGION.path("scenario_assets_csv")
+OUTPUT_GEOJSON = _REGION.path("scenario_assets_geojson")
+OUTPUT_SUMMARY = _REGION.path("scenario_summary")
 WGS84 = Geod(ellps="WGS84")
 HIGH_RISK_CLASSES = {"HIGH", "CRITICAL"}
 RISK_ORDER = {"LOW": 0, "MODERATE": 1, "HIGH": 2, "CRITICAL": 3}

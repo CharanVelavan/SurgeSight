@@ -9,11 +9,13 @@ from typing import Any
 import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field
 
+from services.config import load_region
 from services.gemini_client import generate_structured
 
 
-ASSETS_FILE = Path("data/processed/scored_assets.csv")
-SUMMARY_FILE = Path("data/processed/risk_summary.json")
+_REGION = load_region()
+ASSETS_FILE = _REGION.path("scored_assets")
+SUMMARY_FILE = _REGION.path("risk_summary")
 AUDIENCES = (
     "District Collector / Disaster Management",
     "Electricity Board",

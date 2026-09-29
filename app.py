@@ -9,6 +9,7 @@ import pydeck as pdk
 import streamlit as st
 
 from services.advisory import AUDIENCES, LANGUAGES, RoleAdvisory, generate_role_advisory
+from services.config import load_region
 from services.bulletin_parser import parse_bulletin_file, parse_bulletin_text
 from services.scenario_engine import run_scenario
 from services.scenario_explainer import explain_scenario
@@ -35,9 +36,10 @@ from services.wind_provider import WindDataUnavailable, load_wind_grid
 
 st.set_page_config(page_title="SurgeSight", page_icon="🌀", layout="wide")
 
-TRACK_FILE = Path("data/processed/michaung_track.csv")
-SCORED_ASSETS_FILE = Path("data/processed/scored_assets.csv")
-RISK_SUMMARY_FILE = Path("data/processed/risk_summary.json")
+_REGION = load_region()
+TRACK_FILE = _REGION.path("track")
+SCORED_ASSETS_FILE = _REGION.path("scored_assets")
+RISK_SUMMARY_FILE = _REGION.path("risk_summary")
 
 RISK_COLORS = {
     "LOW": [46, 160, 67, 190],
@@ -46,7 +48,7 @@ RISK_COLORS = {
     "CRITICAL": [198, 40, 40, 235],
 }
 ASSET_RADII = {"hospital": 5000, "shelter": 4200, "school": 3000, "substation": 3800}
-TRACK_BACKTEST_FILE = Path("data/processed/track_backtest.json")
+TRACK_BACKTEST_FILE = _REGION.path("track_backtest")
 TRACK_STYLE = {
     "reference": {"color": [40, 110, 220, 235], "width": 6, "pattern": None},
     MODEL_KALMAN: {"color": [240, 140, 0, 240], "width": 5, "pattern": (3, 2)},

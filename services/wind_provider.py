@@ -25,6 +25,8 @@ import pandas as pd
 import requests
 from pyproj import Geod
 
+from services.config import load_region
+
 
 API_URL = "https://historical-forecast-api.open-meteo.com/v1/forecast"
 MODEL = "gfs_global"
@@ -40,7 +42,7 @@ STEERING_WEIGHTS = {850: 0.45, 500: 0.35, 200: 0.20}
 ANNULUS_RADII_KM = (300.0, 450.0, 600.0)
 ANNULUS_AZIMUTHS = 16
 TRAILING_WINDOW_HOURS = 6
-DEFAULT_CACHE = Path("data/raw/wind/gfs_pressure_winds_michaung.npz")
+DEFAULT_CACHE = load_region().path("wind_cache")
 GRID_LATS = np.arange(0.0, 27.0, 1.0)
 GRID_LONS = np.arange(72.0, 97.0, 1.0)
 BATCH_SIZE = 100
