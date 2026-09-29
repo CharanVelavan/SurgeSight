@@ -20,6 +20,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from services.earth_engine import init_ee
+from services.facility_quality import add_facility_quality
 from services.risk_model import (
     REFERENCE_WIND_KMH,
     SCREENING_CORRIDOR_KM,
@@ -89,8 +91,8 @@ def load_ee_cache() -> dict[str, dict[str, float]]:
 def sample_earth_engine(
     assets: pd.DataFrame, project: str
 ) -> tuple[dict[str, dict[str, float]], list[dict[str, Any]]]:
+    project = init_ee(project or None)
     print(f"Initializing Earth Engine project: {project}")
-    ee.Initialize(project=project)
     cache = load_ee_cache()
     missing_rows = [row for row in assets.itertuples(index=False) if asset_key(row) not in cache]
     failures: list[dict[str, Any]] = []
@@ -178,11 +180,8 @@ def dataframe_geojson(frame: pd.DataFrame) -> dict[str, Any]:
 def main() -> None:
     track, assets, terrain_summary = load_inputs()
     assets = attach_nearest_track(assets, track)
-    project = str(terrain_summary.get("project") or "")
-    if not project:
-        raise ValueError("Earth Engine project is missing from terrain summary")
-    samples, ee_failures = sample_earth_engine(assets, project)
-    scored = score_assets(assets, samples)
+    samples, ee_failures = sample_earth_engine(assets, "")
+    scored = add_facility_quality(score_assets(assets, samples))
 
     OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     scored.to_csv(OUTPUT_CSV, index=False)
