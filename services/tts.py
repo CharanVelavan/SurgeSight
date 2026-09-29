@@ -125,3 +125,29 @@ def synthesize_advisory(advisory: RoleAdvisory, language: str) -> bytes:
         return _adc_synthesize(text, LANGUAGE_CODES[language])
     except Exception:
         return _rest_synthesize(text, LANGUAGE_CODES[language])
+
+
+def plain_speech_text(markdown: str) -> str:
+    """Markdown answer to text that reads well aloud (no symbols, links or table syntax)."""
+    import re
+
+    text = re.sub(r"`([^`]*)`", r"\1", markdown)
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    text = re.sub(r"(?m)^\s*(?:[-*]|\d+[.)])\s+", "", text)
+    text = re.sub(r"[#*_>|]", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def synthesize_text(text: str, language: str) -> bytes:
+    """Spoken MP3 of free text (voice replies). Text is trimmed to the Cloud TTS limit at a sentence boundary."""
+    if language in TEXT_ONLY_LANGUAGES:
+        raise ValueError(TEXT_ONLY_LANGUAGES[language])
+    if language not in LANGUAGE_CODES:
+        raise ValueError(f"Unsupported TTS language: {language}")
+    text = _truncate_utf8(plain_speech_text(text))
+    if not text:
+        raise ValueError("No text to synthesize")
+    try:
+        return _adc_synthesize(text, LANGUAGE_CODES[language])
+    except Exception:
+        return _rest_synthesize(text, LANGUAGE_CODES[language])

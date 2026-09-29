@@ -11,6 +11,8 @@ from services.agent.builtin_tools import register_bulletin_file, register_bullet
 from services.agent.orchestrator import TraceStep, run_agent
 from services.agent.adk_app import run_adk_agent
 from services.store import get_store
+from services.tts import TEXT_ONLY_LANGUAGES, audio_supported, synthesize_text
+from services.voice.stt import LANGUAGE_CODES as STT_LANGUAGES, transcribe
 
 SAMPLE_BULLETIN = Path("data/raw/sample_michaung_bulletin.txt")
 LANGUAGES = ["English", "Tamil", "Telugu", "Hindi", "Odia", "Bengali"]
@@ -50,6 +52,29 @@ def render() -> None:
     if example and st.session_state.get("agent_example_applied") != example:
         st.session_state["agent_question"] = EXAMPLES[example]
         st.session_state["agent_example_applied"] = example
+
+    with st.expander("Ask by voice", icon=":material/mic:"):
+        voice_language = st.selectbox("Speaking language", list(STT_LANGUAGES), key="voice_language")
+        recording = st.audio_input("Record your question", key="voice_recording")
+        if recording is not None:
+            audio = recording.getvalue()
+            stamp = (len(audio), hash(audio))
+            if st.session_state.get("voice_done") != stamp:
+                try:
+                    with st.spinner("Transcribing…"):
+                        heard = transcribe(audio, STT_LANGUAGES[voice_language])
+                    st.session_state["voice_done"] = stamp
+                    if heard.text:
+                        st.session_state["agent_question"] = heard.text
+                        st.session_state["agent_language"] = voice_language if voice_language in LANGUAGES else "English"
+                        st.session_state["voice_heard"] = f"Heard ({heard.language_code}, confidence {heard.confidence}): {heard.text}"
+                    else:
+                        st.session_state["voice_heard"] = "Nothing was recognised. Try again closer to the microphone."
+                    st.rerun()
+                except Exception as exc:
+                    st.error(f"Transcription failed: {exc}")
+        if st.session_state.get("voice_heard"):
+            st.caption(st.session_state["voice_heard"] + " The question below was filled in; edit it if needed, then press Ask.")
 
     with st.form("agent_form"):
         question = st.text_area("Question for the incident commander", key="agent_question", height=100)
@@ -101,6 +126,17 @@ def render() -> None:
             f"Removed unsupported numbers: {', '.join(answer.ungrounded_numbers)}",
             icon=":material/warning:", color="orange",
         )
+    reply_language = st.session_state.get("agent_language", "English")
+    if not audio_supported(reply_language):
+        st.caption(TEXT_ONLY_LANGUAGES.get(reply_language, "Audio is not available for this language."))
+    elif st.button("Read the answer aloud", icon=":material/volume_up:", key="agent_speak"):
+        try:
+            with st.spinner("Speaking…"):
+                st.session_state["agent_audio"] = synthesize_text(answer.answer_markdown, reply_language)
+        except Exception as exc:
+            st.error(f"Text-to-speech failed: {exc}")
+    if st.session_state.get("agent_audio") and audio_supported(reply_language):
+        st.audio(st.session_state["agent_audio"], format="audio/mp3")
     if answer.recommended_actions:
         st.markdown("**Recommended actions**")
         for action in answer.recommended_actions:
