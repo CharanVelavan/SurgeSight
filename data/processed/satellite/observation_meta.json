@@ -1,0 +1,28 @@
+{
+  "sensor": "sentinel2",
+  "attempts": {
+    "sentinel1": {
+      "asset_coverage": 0.0,
+      "flooded_share_of_observed": null
+    },
+    "sentinel2": {
+      "asset_coverage": 0.4871,
+      "flooded_share_of_observed": 0.1146
+    }
+  },
+  "windows": {
+    "pre": [
+      "2023-11-05",
+      "2023-11-28"
+    ],
+    "post": [
+      "2023-12-06",
+      "2023-12-15"
+    ]
+  },
+  "method": "Sentinel-2 SR: MNDWI > 0.1 in >= 50% of clear post-event scenes and <= 20% of clear pre-event scenes",
+  "exclusions": "JRC permanent water (>80% occurrence) and slope > 5.0 deg",
+  "asset_buffer_m": 100,
+  "note": "Observed flood flag is a remote-sensing proxy (residual standing water on the scene dates, clouds and urban flooding under-detected). Unobserved assets are excluded from every rate.",
+  "built_at_utc": "2026-09-29T16:26:39.499626+00:00"
+}

@@ -1,0 +1,31 @@
+{
+  "digest": "fada08ce8b575e0a19d61678ad88e21df2e2d0686c5ceb83de800daad2532cba",
+  "review": {
+    "summary": "Out of 3977 total assets, 1937 were observed with an asset coverage of 48.7 percent, identifying 222 flooded assets (a flooded share of 0.115). Pre-landfall screening v2 triage tier 1 and tier 2 flagged 431 assets with 66 true positives and 365 false positives, achieving a hit rate of 0.297 and precision of 0.153. While rainfall-driven screening showed skill with an AUC of 0.626 for forecast rain and 0.622 for v2 rain flood, overall v2 combined AUC was 0.554 due to inland misses and coastal over-flagging.",
+    "missed_areas": [
+      "Inland western areas of Chittoor, where observed flood signal rings appear on assets assigned to lower triage tiers despite a district flooded share of 0.312.",
+      "Portions of Potti Sriramulu Nellore located farther inland where flood rings appear on lower-tier assets.",
+      "Scattered flooded assets in Guntur and Prakasam classified into lower triage tiers."
+    ],
+    "over_flagged_areas": [
+      "Coastal Chennai and coastal Chengalpattu, where high-risk tier 1 and tier 2 flags show high density but many assets lack observed flood signals.",
+      "Coastal sections of Prakasam and Guntur flagged in elevated triage tiers with low observed flooded shares of 0.051 and 0.041, respectively."
+    ],
+    "likely_causes": [
+      "Over-reliance on coastal proximity and storm surge indicators (v2 surge AUC of 0.500 and v2 wind AUC of 0.394 showed negligible to negative ranking skill).",
+      "Underestimation of inland pluvial accumulation and local topographic drainage pooling in Chittoor and Potti Sriramulu Nellore.",
+      "Coarse spatial resolution in global precipitation and elevation products failing to capture micro-topography and urban drainage corridors in Chennai and Tiruvallur."
+    ],
+    "model_improvements": [
+      "Increase the weighting of forecast rainfall (AUC 0.626) and calibrated rain-flood hazard components relative to wind and surge scores.",
+      "Reduce coastal distance penalty weights to avoid over-prioritizing unflooded coastal corridors in Prakasam and Guntur.",
+      "Incorporate higher-resolution digital elevation and hydrological routing models to improve inland flow accumulation mapping in Chittoor and Potti Sriramulu Nellore.",
+      "Recalibrate the classification threshold for v2 high-plus flags to reduce false positive counts (currently 1685 false positives with a false alarm rate of 0.983)."
+    ],
+    "data_limitations": [
+      "Satellite observations are derived from Sentinel-2 MNDWI optical imagery with an asset coverage of 48.7 percent, leaving 2040 assets unobserved due to cloud cover and revisit timelines.",
+      "The optical remote-sensing proxy captures standing surface water across post-event scene windows (2023-12-06 to 2023-12-15) and under-detects rapid urban drainage and sub-canopy inundation."
+    ]
+  },
+  "created_at_utc": "2026-09-29T16:28:44.350746+00:00"
+}

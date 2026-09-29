@@ -674,13 +674,14 @@ Each WP: **Goal · Files · Tasks · Acceptance · Marker · Fallback · Estimat
 
 **Goal:** real satellite feed + real multimodal reasoning + honest hindcast. **Estimate:** 1.5 h. **Depends on:** WP0.4, WP2.2, WP2.4.
 
-- [ ] `services/satellite_validation.py`:
+- [x] **WP3 status (2026-09-29): done, with one data deviation.** Sentinel-1 code path is implemented but **S1 did not image the area after landfall** (5-19 Dec scenes cover < 1 % of the extent), so the pipeline automatically fell back to a **Sentinel-2 MNDWI water mask** (post 6-15 Dec vs pre 5-28 Nov; 48.7 % of assets observed). Findings (Michaung hindcast): 11.5 % of observed assets show a flood signal; AUC forecast rain 0.63, v2 rain-flood 0.62, v1 0.56, v2 combined 0.55, wind 0.39 (wind does not flood); v2 HIGH+ hit 0.98 / false alarm 0.98 (no discrimination), v1 HIGH+ hit 0.42 / false alarm 0.32. Gemini review cached in `data/processed/satellite/`. Recalibration of v2 (more weight on rain, less on wind/surge for flood impact) is the follow-up this evidence supports. Tool `satellite_validation`; tab "Satellite validation".
+- [x] `services/satellite_validation.py`:
   - `observed_flood_mask(region, pre=(2023-11-01, 2023-11-25), post=(2023-12-04, 2023-12-07))`: `COPERNICUS/S1_GRD`, IW, VV, descending/ascending consistent; speckle filter (focal median 50 m); flood where `post_db − pre_db < −3` **and** `post_db < −18`; mask permanent water (JRC occurrence > 80) and slope > 5° (SRTM).
   - `compute_metrics(run_id, flood_mask)` — deterministic: per asset flooded yes/no (buffer 100 m), confusion vs HIGH+ (v1 and v2), hit rate, false-alarm rate, per type and district.
   - `render_images(...) -> {flood_png, rain_png, screening_png}` via `earth_engine.thumbnail_png`.
   - `review_with_gemini(images, metrics) -> SatelliteReview` — prompt: *"Here is the observed flood extent and our pre-landfall screening; where did we miss?"*; schema-constrained; numbers only from metrics.
-- [ ] Streamlit **Satellite Validation** tab: images side by side, metrics table, Gemini review.
-- [ ] Tool `satellite_validation(run_id)`. Marker `SURGESIGHT_SATELLITE_VALIDATION_OK`.
+- [x] Streamlit **Satellite Validation** tab: images side by side, metrics table, Gemini review.
+- [x] Tool `satellite_validation(run_id)`. Marker `SURGESIGHT_SATELLITE_VALIDATION_OK`.
 
 **Acceptance:** metrics computed for v1 and v2; Gemini review references specific areas visible in the images and only metric numbers.
 

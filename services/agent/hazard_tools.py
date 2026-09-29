@@ -225,3 +225,45 @@ def exposure_summary_tool(args: ExposureArgs) -> Any:
     compact["by_district"] = summary["by_district"][:10]
     compact["districts_listed"] = f"top {len(compact['by_district'])} of {len(summary['by_district'])} by exposed population"
     return ok_result("exposure_summary", jsonable(compact), source="exposure_grid", run_id=run_id)
+
+
+# ---------------------------------------------------------------- satellite validation
+
+class SatelliteValidationArgs(BaseModel):
+    run_id: str | None = Field(default=None, description="A risk_v2 run_id to validate. Omit to validate the historical Michaung baseline.")
+    include_review: bool = Field(default=True, description="Include the cached Gemini multimodal review of the maps, if one exists.")
+
+
+@tool("satellite_validation", agent_scopes={"impact"})
+def satellite_validation_tool(args: SatelliteValidationArgs) -> Any:
+    """Validate the screening against satellite observation of Cyclone Michaung (hindcast): share of
+    assets with an observed flood signal, how well each risk score ranks flooded above unflooded assets
+    (AUC: 0.5 = no skill), HIGH+ hit and false-alarm rates for v1 and v2, and rates by asset type and
+    district. Uses Sentinel-2 water mapping because Sentinel-1 did not image the area. It is a proxy for
+    flooding on the scene dates with cloud gaps; unobserved assets are excluded."""
+    import pandas as pd
+
+    from services.config import load_region
+    from services.risk_model_v2 import score_v2
+    from services.satellite_validation import REVIEW_FILE, compute_metrics, load_observed
+
+    observed, meta = load_observed()
+    store = get_store()
+    if args.run_id:
+        record = store.get(args.run_id)
+        if record["kind"] != "riskv2":
+            return error_result("satellite_validation", f"{args.run_id} is a '{record['kind']}' run; pass a risk_v2 run or omit run_id")
+        frame = store.get_frame(args.run_id, "assets")
+    else:
+        region = load_region()
+        frame, _ = score_v2(pd.read_csv(region.path("track")), pd.read_csv(region.path("scored_assets")))
+    metrics = compute_metrics(frame, observed, meta)
+    data: dict[str, Any] = {"metrics": metrics}
+    if args.include_review and REVIEW_FILE.exists():
+        import json
+
+        data["gemini_review"] = json.loads(REVIEW_FILE.read_text(encoding="utf-8"))["review"]
+    run_id = new_run_id("satval")
+    store.put(run_id, "satellite_validation", jsonable(data))
+    warnings = ["Observed flood flag is a remote-sensing proxy; Sentinel-1 had no usable coverage."] if meta["sensor"] == "sentinel2" else []
+    return ok_result("satellite_validation", jsonable(data), source=f"{meta['sensor']}:flood_flag", run_id=run_id, warnings=warnings, model_version="satval-v1")
