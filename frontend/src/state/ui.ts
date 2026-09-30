@@ -23,6 +23,10 @@ interface UiState {
   infra: Record<AssetType, boolean>
   /** Index into the columnar asset arrays of the marker under the pointer. */
   hoverAsset: number | null
+  /** True while the opening fly-in plays. */
+  intro: boolean
+  /** One-shot request to fly the camera to a point (used by the summary list). */
+  focus: { lon: number; lat: number; zoom: number } | null
   /** Last pointer position over the map, or null when the pointer left it. */
   cursor: { lon: number; lat: number; x: number; y: number } | null
   set: (patch: Partial<Omit<UiState, 'set'>>) => void
@@ -37,6 +41,8 @@ export const useUi = create<UiState>(set => ({
   zoom: 4,
   infra: infraDefault,
   hoverAsset: null,
+  intro: false,
+  focus: null,
   cursor: null,
   set: patch => set(patch),
 }))

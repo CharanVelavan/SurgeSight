@@ -70,6 +70,8 @@ interface State {
   head: number
   lastStepMs: number
   steps: number
+  /** Particles simulated and drawn: the budget scaled to the visible share of the domain. */
+  active: number
   [key: string]: unknown
 }
 
@@ -112,12 +114,12 @@ export class WindParticleLayer extends Layer<WindParticleLayerProps> {
       outputs: ['nextState'],
       topology: 'point-list',
     })
-    this.setState({ model, transform, ring: [], head: 0, lastStepMs: 0, steps: 0 })
+    this.setState({ model, transform, ring: [], head: 0, lastStepMs: 0, steps: 0, active: 0 })
   }
 
   /** deck.gl sets every instanced model's count from this; the layer has no `data`, so report particles. */
   getNumInstances(): number {
-    return this.props.numParticles
+    return this.state.active || this.props.numParticles
   }
 
   updateState(params: UpdateParameters<this>): void {
@@ -150,7 +152,7 @@ export class WindParticleLayer extends Layer<WindParticleLayerProps> {
     const ring = Array.from({ length: trail + 1 }, () => device.createBuffer({ data: seed }))
     this.state.model.setInstanceCount(n)
     this.state.transform.model.setVertexCount(n)
-    this.setState({ ring, head: 0, steps: 0 })
+    this.setState({ ring, head: 0, steps: 0, active: n })
   }
 
   /** Visible part of the data domain, where particles are spawned and kept. */
@@ -160,6 +162,18 @@ export class WindParticleLayer extends Layer<WindParticleLayerProps> {
     const b = vp.getBounds ? vp.getBounds() : [w, s, e, n]
     const box: Vec4 = [Math.max(w, b[0]), Math.max(s, b[1]), Math.min(e, b[2]), Math.min(n, b[3])]
     return box[0] < box[2] && box[1] < box[3] ? box : [w, s, e, n]
+  }
+
+  /** Density stays constant on screen: zoomed in over a small area, fewer of the particles are used. */
+  private _fitActive(): void {
+    const { numParticles, domain } = this.props
+    const box = this._spawnBox()
+    const share = ((box[2] - box[0]) * (box[3] - box[1])) / ((domain[2] - domain[0]) * (domain[3] - domain[1]))
+    const active = Math.max(1500, Math.round(numParticles * Math.min(1, Math.max(0.05, share * 5))))
+    if (active === this.state.active) return
+    this.state.active = active
+    this.state.model.setInstanceCount(active)
+    this.state.transform.model.setVertexCount(active)
   }
 
   private _step(texA: unknown, texB: unknown): void {
@@ -203,6 +217,7 @@ export class WindParticleLayer extends Layer<WindParticleLayerProps> {
     const texB = atlasTexture(device, imageB)
     warmOne(device, this.props.preload)
 
+    this._fitActive()
     if (animate) {
       if (!this.state.lastStepMs || clockMs - this.state.lastStepMs > 250) this.state.lastStepMs = clockMs - STEP_MS
       // Fixed-rate simulation: trails keep the same length on 60 Hz and 120 Hz displays.

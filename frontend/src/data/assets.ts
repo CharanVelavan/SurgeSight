@@ -39,6 +39,8 @@ export interface AssetData {
   type: string[]
   riskClass: string[]
   riskScore: number[]
+  lon: number[]
+  lat: number[]
   tier: number[]
   hazard: string[]
   groups: Map<AssetType, AssetGroup>
@@ -77,7 +79,7 @@ export function groupAssets(cols: Awaited<ReturnType<typeof api.assets>>): Asset
   }
   return {
     runId: cols.run_id, count: cols.count, name: cols.name, type: cols.asset_type, riskClass: cols.risk_class,
-    riskScore: cols.risk_score, tier: cols.triage_tier, hazard: cols.dominant_hazard, groups,
+    riskScore: cols.risk_score, lon: cols.lon, lat: cols.lat, tier: cols.triage_tier, hazard: cols.dominant_hazard, groups,
   }
 }
 

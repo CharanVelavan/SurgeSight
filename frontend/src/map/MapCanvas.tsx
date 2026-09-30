@@ -10,7 +10,7 @@ import { SurgeMapsOverlay } from './overlay'
 import { useUi, type Basemap } from '@/state/ui'
 import { onFrame } from '@/timeline/clock'
 import { buildLayers } from './layers'
-import { IMPACT, IMPACT_LIMIT, INDIA, fitCamera } from './view'
+import { INTRO_MS, IMPACT, IMPACT_LIMIT, INDIA, easeInOutCubic, fitCamera, introSeen, markIntroSeen } from './view'
 import { recordFrame } from './quality'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined
@@ -24,10 +24,53 @@ function ViewController() {
   const map = useMap()
   const view = useUi(s => s.view)
 
+  // Opening fly-in: once per session, skippable, never with reduced motion.
+  useEffect(() => {
+    if (!map || introSeen()) return
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      markIntroSeen()
+      return
+    }
+    const div = map.getDiv()
+    const to = fitCamera(INDIA, div.clientWidth, div.clientHeight)
+    const from = { lat: 24, lng: 80, zoom: Math.max(2, to.zoom - 2.4) }
+    useUi.getState().set({ intro: true })
+    map.setOptions({ restriction: null, minZoom: 1, maxZoom: 21, gestureHandling: 'none' })
+    map.moveCamera({ center: { lat: from.lat, lng: from.lng }, zoom: from.zoom })
+    const t0 = performance.now()
+    let raf = 0
+    const finish = () => {
+      markIntroSeen()
+      cancelAnimationFrame(raf)
+      window.removeEventListener('pointerdown', finish)
+      window.removeEventListener('keydown', finish)
+      map.moveCamera({ center: to.center, zoom: to.zoom })
+      map.setOptions({ minZoom: to.zoom, maxZoom: to.zoom })
+      useUi.getState().set({ intro: false, zoom: to.zoom })
+    }
+    const frame = (now: number) => {
+      const t = Math.min(1, (now - t0) / INTRO_MS)
+      const e = easeInOutCubic(t)
+      map.moveCamera({ center: { lat: from.lat + (to.center.lat - from.lat) * e, lng: from.lng + (to.center.lng - from.lng) * e }, zoom: from.zoom + (to.zoom - from.zoom) * e })
+      if (t < 1) raf = requestAnimationFrame(frame)
+      else finish()
+    }
+    raf = requestAnimationFrame(frame)
+    window.addEventListener('pointerdown', finish)
+    window.addEventListener('keydown', finish)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('pointerdown', finish)
+      window.removeEventListener('keydown', finish)
+    }
+  }, [map])
+
+  // Frame the view; locked on India, pannable only inside the impact area.
   useEffect(() => {
     if (!map) return
     const div = map.getDiv()
     const apply = () => {
+      if (useUi.getState().intro) return
       const w = div.clientWidth, h = div.clientHeight
       if (!w || !h) return
       const cam = fitCamera(view === 'india' ? INDIA : IMPACT, w, h)
@@ -44,17 +87,45 @@ function ViewController() {
               restriction: { latLngBounds: { north: IMPACT_LIMIT.north, south: IMPACT_LIMIT.south, west: IMPACT_LIMIT.west, east: IMPACT_LIMIT.east }, strictBounds: false },
             },
       )
-      useUi.getState().set({ zoom: map.getZoom() ?? cam.zoom })
+      useUi.getState().set({ zoom: cam.zoom })
     }
     apply()
     const ro = new ResizeObserver(apply)
     ro.observe(div)
-    const zl = map.addListener('zoom_changed', () => useUi.getState().set({ zoom: map.getZoom() ?? 4 }))
+    const zl = map.addListener('zoom_changed', () => {
+      if (!useUi.getState().intro) useUi.getState().set({ zoom: map.getZoom() ?? 4 })
+    })
+    const unsub = useUi.subscribe((s, prev) => {
+      if (prev.intro && !s.intro) apply()
+    })
     return () => {
       ro.disconnect()
       zl.remove()
+      unsub()
     }
   }, [map, view])
+
+  // Fly to a point on request (the summary list), staying inside the impact area.
+  useEffect(
+    () =>
+      useUi.subscribe((s, prev) => {
+        const f = s.focus
+        if (!map || !f || f === prev.focus) return
+        useUi.getState().set({ focus: null })
+        const c = map.getCenter()
+        if (!c) return
+        const from = { lat: c.lat(), lng: c.lng(), zoom: map.getZoom() ?? f.zoom }
+        const t0 = performance.now()
+        const frame = (now: number) => {
+          const t = Math.min(1, (now - t0) / 900)
+          const e = easeInOutCubic(t)
+          map.moveCamera({ center: { lat: from.lat + (f.lat - from.lat) * e, lng: from.lng + (f.lon - from.lng) * e }, zoom: from.zoom + (f.zoom - from.zoom) * e })
+          if (t < 1) requestAnimationFrame(frame)
+        }
+        requestAnimationFrame(frame)
+      }),
+    [map],
+  )
 
   return null
 }

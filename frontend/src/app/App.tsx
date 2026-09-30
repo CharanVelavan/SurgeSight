@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { TrackSync } from './TrackSync'
 import { MapCanvas } from '@/map/MapCanvas'
 import { CursorReadout } from '@/panels/CursorReadout'
 import { LayerCard } from '@/panels/LayerCard'
@@ -9,7 +10,9 @@ import { PerfOverlay } from '@/panels/PerfOverlay'
 import { TopBar } from '@/panels/TopBar'
 import { Timeline } from '@/timeline/Timeline'
 import { loadAssets } from '@/data/assets'
+import { AtRisk } from '@/panels/AtRisk'
 import { AssetPopover } from '@/panels/AssetPopover'
+import { Intro } from '@/panels/Intro'
 import { ViewSwitch } from '@/panels/ViewSwitch'
 import { loadWeather } from '@/weather/atlas'
 import { useWeather } from '@/weather/useWeather'
@@ -39,15 +42,18 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={300}>
         <main className="relative h-full w-full overflow-hidden bg-background">
+          <TrackSync />
           <MapCanvas />
           <TopBar />
           <ViewSwitch />
+          <AtRisk />
           <LayerCard />
           <Legend />
           <Timeline />
           <CursorReadout />
           <AssetPopover />
           <LoadingNote />
+          <Intro />
           {showPerf && <PerfOverlay />}
         </main>
       </TooltipProvider>

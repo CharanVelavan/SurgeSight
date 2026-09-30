@@ -31,6 +31,8 @@ export const clock = createStore<ClockState>(() => ({
   speed: 1,
 }))
 
+if (import.meta.env.DEV && typeof window !== 'undefined') (window as unknown as { __clock: unknown }).__clock = clock
+
 export const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x))
 
 /** Advance playback by `dtMs` of wall time; stops at the end of the window. Pure, for tests. */

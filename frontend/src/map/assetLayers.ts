@@ -16,9 +16,10 @@ const hover = (group: AssetGroup) => (info: { index: number }) => {
 }
 
 type BinaryData = { length: number; attributes: Record<string, { value: Float32Array | Uint8Array; size: number }> }
+type Cached = { icon: BinaryData; dot: BinaryData; halo: BinaryData }
 
 /** Binary layer data, built once per group so deck.gl sees the same object every frame and never re-uploads. */
-const binaryCache = new WeakMap<AssetGroup, { icon: BinaryData; dot: BinaryData }>()
+const binaryCache = new WeakMap<AssetGroup, Cached>()
 function binaryData(g: AssetGroup) {
   let b = binaryCache.get(g)
   if (!b) {
@@ -27,6 +28,7 @@ function binaryData(g: AssetGroup) {
     b = {
       icon: { length: g.count, attributes: { getPosition, getColor: color } },
       dot: { length: g.count, attributes: { getPosition, getFillColor: color } },
+      halo: { length: g.count, attributes: { getPosition } },
     }
     binaryCache.set(g, b)
   }
@@ -34,7 +36,7 @@ function binaryData(g: AssetGroup) {
 }
 
 /** Small at first sight of the coast so clusters stay readable, growing to a full glyph when zoomed in. */
-const markerSize = (zoom: number) => Math.round(Math.min(22, 7 + (zoom - MARKER_ZOOM) * 4))
+const markerSize = (zoom: number) => Math.round(Math.min(30, 10 + (zoom - MARKER_ZOOM) * 4))
 
 export function buildAssetLayers(): Layer[] {
   const { data } = assetsStore.getState()
@@ -47,6 +49,13 @@ export function buildAssetLayers(): Layer[] {
     const g = data.groups.get(type)
     if (!g || !infra[type]) continue
     const binary = binaryData(g)
+    if (icons)
+      layers.push(
+        new ScatterplotLayer({
+          id: `assets-halo-${type}`, data: binary.halo, radiusUnits: 'pixels', getRadius: markerSize(zoom) / 2 + 1.5,
+          getFillColor: [11, 13, 16, 200], stroked: false, pickable: false, parameters: { depthCompare: 'always' },
+        }),
+      )
     layers.push(
       icons
         ? new IconLayer({

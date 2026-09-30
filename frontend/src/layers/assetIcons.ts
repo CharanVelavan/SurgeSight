@@ -1,4 +1,4 @@
-/** Glyph atlas for infrastructure markers, drawn once on a canvas: a disc with the glyph knocked out. */
+/** Glyph atlas for infrastructure markers, drawn once on a canvas: a ring around a solid glyph. */
 
 import { ASSET_ORDER, ASSET_TYPES, type AssetType } from '@/data/assets'
 
@@ -99,13 +99,15 @@ export function assetIconAtlas(): { url: string; mapping: IconMapping } {
     c.save()
     c.translate(i * CELL, 0)
     c.fillStyle = '#fff'
+    c.strokeStyle = '#fff'
+    // ring + solid glyph, both tinted by the layer colour (mask icons)
+    c.lineWidth = 6
     c.beginPath()
-    c.arc(32, 32, 30, 0, Math.PI * 2)
-    c.fill()
-    c.globalCompositeOperation = 'destination-out'
+    c.arc(32, 32, 27, 0, Math.PI * 2)
+    c.stroke()
     c.save()
     c.translate(32, 32)
-    c.scale(0.72, 0.72)
+    c.scale(0.7, 0.7)
     c.translate(-32, -32)
     GLYPHS[ASSET_TYPES[type].glyph](c)
     c.restore()

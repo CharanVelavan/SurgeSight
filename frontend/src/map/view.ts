@@ -18,3 +18,24 @@ export function fitCamera(box: Box, width: number, height: number) {
   const yc = (mercY(box.north) + mercY(box.south)) / 2
   return { zoom, center: { lat: (2 * Math.atan(Math.exp(yc)) - Math.PI / 2) * (180 / Math.PI), lng: (box.west + box.east) / 2 } }
 }
+
+export const INTRO_KEY = 'surgesight.intro'
+export const INTRO_MS = 2600
+
+export function introSeen(): boolean {
+  try {
+    return sessionStorage.getItem(INTRO_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+export function markIntroSeen(): void {
+  try {
+    sessionStorage.setItem(INTRO_KEY, '1')
+  } catch {
+    /* storage can be blocked; the intro then plays again next load */
+  }
+}
+
+export const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2)

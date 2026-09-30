@@ -27,6 +27,27 @@ export interface AssetColumns {
   dominant_hazard: string[]
 }
 
+export interface ForecastPoint {
+  lead_hours: number
+  timestamp: string
+  lat: number
+  lon: number
+  uncertainty_radius_km: number
+}
+
+export interface ForecastModel { label: string; forecast: ForecastPoint[] }
+
+export interface ExperimentalForecast {
+  run_id: string
+  data: {
+    forecast_label: string
+    disclaimer: string
+    cutoff_time: string
+    last_observation_time: string
+    models: Record<'position_only_kalman' | 'wind_informed_kalman', ForecastModel>
+  }
+}
+
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(path)
   if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`)
@@ -35,5 +56,6 @@ async function get<T>(path: string): Promise<T> {
 
 export const api = {
   timeline: () => get<Timeline>('/api/timeline'),
+  forecast: (cutoff: string) => get<ExperimentalForecast>(`/api/forecast/experimental?cutoff=${encodeURIComponent(cutoff)}`),
   assets: () => get<AssetColumns>('/api/assets?format=columnar'),
 }

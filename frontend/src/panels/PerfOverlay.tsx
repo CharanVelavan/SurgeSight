@@ -10,7 +10,7 @@ export function PerfOverlay() {
     return () => clearInterval(id)
   }, [])
   return (
-    <div className="panel num pointer-events-none fixed top-28 right-3 z-50 px-2.5 py-1.5 text-[11px] leading-4 text-muted-foreground">
+    <div className="panel num pointer-events-none fixed right-3 bottom-40 z-50 px-2.5 py-1.5 text-[11px] leading-4 text-muted-foreground">
       <div><span className="text-foreground">{perf.fps.toFixed(0)}</span> fps · {perf.frameMs.toFixed(1)} ms</div>
       <div>{(quality.particles / 1000).toFixed(0)}k particles · trail {quality.trail}</div>
       <div>{document.documentElement.dataset.renderingType ?? '…'}</div>
