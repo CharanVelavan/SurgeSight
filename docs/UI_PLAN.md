@@ -177,6 +177,19 @@ Dev: Vite on :5173 proxies `/api` to FastAPI on :8000. Production (WP11): Fireba
 | **S7 Responsive and access** | Tablet rail, phone bottom sheets, touch readout, reduced motion, keyboard and focus order, contrast check | Playwright screenshots at 390, 820, 1440 px; axe has no serious issues | 2 h |
 | **S8 Verify and capture** | `scripts/test_web.py` (build + Vitest + Playwright) → `SURGESIGHT_WEB_OK` in `run_all_tests.py`; README screenshots; backup screen recording | Marker passes; README screenshots added | 1 h |
 
+### 7.1 Model per slice and hand-off order
+
+The owner switches models between phases. Each phase ends with a commit and a message telling the owner to switch.
+
+| Phase | Model | Work | Why |
+|---|---|---|---|
+| **A** | Sonnet 5.5, medium | **S1** complete (weather frames, manifest, leakage test). Backend of S4/S5 only: `api/routes_web.py` (all routes in 5.2), `api/auth.py` + `AUTH_MODE` + auth tests with a mocked verifier, `scripts/set_department_claims.py`, `POST /api/voice/ask`, add `firebase-admin` to requirements. **No `frontend/` work.** | Python and API work following existing repo patterns; none of it needs the front-end scaffold |
+| **B** | **Opus 5.5** | **S0** spike and scaffold, then **S2** (GPU wind particles, rain crossfade shader, frame clock, timeline, layer card, legend, cursor readout) | deck.gl 9 / luma.gl 9 custom shaders and interleaved Google Maps are where the 60 fps target is won or lost |
+| **C** | Sonnet 5.5, medium | **S3**, front end of **S4** (sign-in, i18n, `translate_ui.py`, fonts), **S5** agent dock, **S6** drawers, **S7**, **S8** | Component work on top of the Phase B foundation |
+| (any time) | Opus 5.5 | Any frame-rate regression below 55 fps | Profiling and GPU debugging |
+
+Phase A stop condition: `SURGESIGHT_WEATHER_FRAMES_OK` and `SURGESIGHT_API_OK` pass offline, committed; then tell the owner "Phase A done, switch to Opus 5.5 for Phase B".
+
 **Total ≈ 23 h** (the original WP10 estimate of 5 h did not include animated weather, auth or full i18n).
 
 ## 8. Tests
