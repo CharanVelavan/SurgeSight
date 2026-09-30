@@ -36,7 +36,7 @@ flowchart TB
 
     subgraph Surfaces
         API[FastAPI<br/>REST + SSE agent stream]
-        ST[Streamlit dashboard<br/>9 tabs]
+        ST[React web app<br/>roles · map · facilities · roads · advisories]
     end
 
     Inputs --> Services
@@ -55,7 +55,7 @@ flowchart TB
 
 ## 2. Design decisions
 
-1. **Services first.** All logic lives in `services/`. Streamlit and FastAPI are thin. The React UI in the plan can replace Streamlit without touching the models.
+1. **Services first.** All logic lives in `services/`. FastAPI and the React web app are thin, so either can change without touching the models.
 2. **Gemini never calculates.** Every number Gemini states must appear in a tool result. `grounding_guard` compares each number in the answer with the numbers in that run's tool outputs (matching the precision shown), allows one rewrite, then redacts what is still unsupported and says so. Tools return compact top-15 views; full results stay in the run store.
 3. **Deterministic tools, agentic orchestration.** Gemini chooses which tool to call and reads the results. The single orchestrator (a manual loop with a step budget) and the ADK team share the same registry, filtered by agent scope.
 4. **Frozen v1 baseline.** The original screening model and its 3,977-asset table are unchanged, guarded by a baseline-match test. v2 and the department layers sit beside it.

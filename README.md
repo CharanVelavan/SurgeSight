@@ -9,7 +9,7 @@
 
 **Status:** working prototype, live on Cloud Run at https://surgesight-221627601364.asia-south1.run.app. See [Limitations](#responsible-use-and-limitations).
 
-**Team Echo:** Charan and Vishal. **Demo video:** https://youtu.be/BeFNW2ZWFQM · **Pitch deck:** [`docs/pitch/SurgeSight_TeamEcho.pdf`](docs/pitch/SurgeSight_TeamEcho.pdf) (light and dark editions are alongside). The scripts that record the demo from the running app are in [`docs/pitch/video_v2/`](docs/pitch/video_v2/).
+**Team Echo:** Charan and Vishal. **Demo video:** https://youtu.be/BeFNW2ZWFQM · **Pitch deck:** [`docs/pitch/SurgeSight_TeamEcho.pdf`](docs/pitch/SurgeSight_TeamEcho.pdf) · **Code:** https://gitlab.com/charanvelavan12/surgesight
 
 ## What it does
 
@@ -40,7 +40,7 @@ flowchart LR
     D --> Q[Approval queue]
     Q -->|approved| S[Gmail · Firebase push]
     API[FastAPI] --- AG
-    UI[Streamlit dashboard] --- API
+    UI[React web app] --- API
     ST[(Firestore · BigQuery GIS)] --- E
 ```
 
@@ -89,7 +89,6 @@ Requires Python 3.14, a Google Cloud project with Application Default Credential
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-streamlit run app.py                 # dashboard on http://localhost:8501
 uvicorn api.main:app --port 8000     # API; docs at /docs, push test page at /push-test
 python scripts/run_all_tests.py      # offline tests
 python scripts/run_all_tests.py --live   # also calls Google APIs (uses quota or credit)
@@ -142,11 +141,10 @@ npm --prefix frontend run build && gcloud run deploy surgesight --source . --reg
 ```
 services/   models and integrations (risk, ensemble, hazards, agent, dispatch, cap, voice, maps)
 api/        FastAPI wrappers over the services, including the streaming agent
-ui/ app.py  Streamlit dashboard (an internal development harness)
 frontend/   React web app: roles, overview, GPU weather map, facilities, areas, roads, advisories (see above)
 config/     regions, departments, parametric triggers, CAP schema
 scripts/    data builds and the test suite (each test prints a SURGESIGHT_*_OK marker)
-docs/       architecture, the implementation plan and the original vision document
+docs/       architecture, the road method, screenshots and the pitch deck
 ```
 
 ## Responsible use and limitations
