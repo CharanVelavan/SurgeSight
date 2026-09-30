@@ -1,6 +1,6 @@
 # SurgeSight
 
-**From cyclone forecast to infrastructure consequence.** SurgeSight turns a cyclone bulletin into a ranked list of the hospitals, substations, shelters, fire and police stations, water works and harbours most likely to be hit. It lets an officer test "what if the track shifts 30 km north?", drafts a grounded advisory for each department in six languages, and queues alerts for human approval.
+**From cyclone forecast to infrastructure consequence.** SurgeSight turns a cyclone bulletin into relative exposure screening for main roads and a ranked list of the hospitals, substations, shelters, fire and police stations, water works and harbours most likely to be hit. It lets an officer test "what if the track shifts 30 km north?", drafts a grounded advisory for each department in six languages, and queues alerts for human approval.
 
 *Google Cloud × hack2skill · Build with AI: Code for Communities 2.0 · Problem Statement 05: Track-Based Cyclone Impact & Infrastructure Vulnerability Forecaster.*
 *Demonstrated on Cyclone Michaung (December 2023, Tamil Nadu and Andhra Pradesh).*
@@ -14,7 +14,7 @@
 | Step | What happens |
 |---|---|
 | 1. Read | Gemini parses an IMD-style bulletin (text, PDF or image) into a structured track. |
-| 2. Score | 4,214 assets are scored by a multi-hazard model: modelled wind field, screening storm surge, and rainfall on terrain. |
+| 2. Score | 4,214 assets and about 34,000 km of OSM motorway-to-tertiary roads are screened using modelled wind, storm surge, and rainfall on terrain. |
 | 3. Test | A what-if simulator shifts the track or intensity. A 100-member ensemble, with spread taken from a measured track-error backtest, ranks assets by how often they reach HIGH or worse. |
 | 4. Check | Results are compared with an independent NOAA GFS forecast, and validated against Sentinel-2 flood observations of the real event. |
 | 5. Explain | A Gemini agent picks and runs the tools. A guard checks that **every number in its answer appears in a tool result**, and redacts any that do not. |
@@ -90,7 +90,7 @@ python scripts/run_all_tests.py      # offline tests
 python scripts/run_all_tests.py --live   # also calls Google APIs (uses quota or credit)
 ```
 
-`.env` (never committed): `GOOGLE_CLOUD_PROJECT`, `GOOGLE_GENAI_USE_VERTEXAI=true`, `GOOGLE_CLOUD_LOCATION=global`, `GEMINI_API_KEY` (optional fallback), `GOOGLE_MAPS_API_KEY`, `DISPATCH_MODE=dry_run` (default; `live` sends only to `DISPATCH_ALLOWLIST`), and the `FIREBASE_*` web settings.
+`.env` (never committed): `GOOGLE_CLOUD_PROJECT`, `GOOGLE_GENAI_USE_VERTEXAI=true`, `GOOGLE_CLOUD_LOCATION=global`, `GEMINI_API_KEY` (optional fallback), `GOOGLE_MAPS_API_KEY`, `DISPATCH_MODE=dry_run` (default; `live` sends only to `DISPATCH_ALLOWLIST`), `APPROVER_PASSCODE` (short-lived login mode for non-Cloud Run tests), `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM` (or `SENDGRID_API_KEY` and `SENDGRID_FROM`) for real email dispatch, and the `FIREBASE_*` web settings.
 
 ## Web app
 
@@ -105,7 +105,8 @@ A React app (`frontend/`) for district officials and emergency departments. The 
 | Map | Alert zones, storm track and experimental forecast, storm surge, rain, wind particles and every facility, over a timeline that never shows what was not yet known |
 | Facilities | The full ranked list, searchable; each row opens "Why is this critical?" (the numbers, then a short Gemini explanation checked against them) |
 | Affected areas | Districts by alert level, with population and facilities |
-| Advisories | A Gemini advisory per department in the chosen language, with audio (Cloud Text-to-Speech), a CAP 1.2 alert and the automatic dispatch pipeline |
+| Roads | Relative road exposure by level, named roads to check, and facilities whose screened hospital access is at risk |
+| Advisories | A Gemini advisory per department in the chosen language, with audio (Cloud Text-to-Speech), a CAP 1.2 alert, recipient management, and interactive dispatch controls to queue and approve alerts |
 | Guide, Settings | Who uses which screen and how to read the map; role, theme, language, map defaults, saved data |
 
 Six languages (English, Hindi, Tamil, Telugu, Bengali, Odia), light and dark themes, and a service worker that keeps the last data for weak connections.
@@ -115,6 +116,7 @@ uvicorn api.main:app --port 8000          # API (also serves frontend/dist when 
 cd frontend && npm install && npm run dev  # http://localhost:5173  (set VITE_GOOGLE_MAPS_API_KEY and VITE_GOOGLE_MAP_ID in .env)
 python scripts/build_weather_frames.py     # storm replay weather images from Earth Engine (cached)
 python scripts/build_live_weather.py       # live weather images from the newest complete GFS run
+python scripts/build_roads.py              # rebuild road outputs; Earth Engine samples resume from data/raw/road_samples.csv
 python scripts/test_web.py                 # build, unit tests and a real-Chrome check of every screen
 ```
 
@@ -136,7 +138,7 @@ npm --prefix frontend run build && gcloud run deploy surgesight --source . --reg
 services/   models and integrations (risk, ensemble, hazards, agent, dispatch, cap, voice, maps)
 api/        FastAPI wrappers over the services, including the streaming agent
 ui/ app.py  Streamlit dashboard (an internal development harness)
-frontend/   React web app: roles, overview, GPU weather map, facilities, areas, advisories (see above)
+frontend/   React web app: roles, overview, GPU weather map, facilities, areas, roads, advisories (see above)
 config/     regions, departments, parametric triggers, CAP schema
 scripts/    data builds and the test suite (each test prints a SURGESIGHT_*_OK marker)
 docs/       architecture, the implementation plan and the original vision document
@@ -144,7 +146,7 @@ docs/       architecture, the implementation plan and the original vision docume
 
 ## Responsible use and limitations
 
-- **Screening indices only.** No damage, casualty or outage predictions. Roads are not scored, so route results say "lower modelled exposure", never "safe".
+- **Screening indices only.** No damage, casualty, outage or road-status predictions. Road levels are relative within this storm: the top 5% of assessed km is always highlighted as most exposed.
 - **One storm.** Calibration, the backtest and the validation all use Michaung. Nothing is validated out of sample. A second region (Fani 2019, Odisha) is planned but not built.
 - **Satellite proxy.** Sentinel-1 radar did not image the area after landfall, so the flood flag comes from Sentinel-2 optical water mapping, which misses cloud-covered and urban flooding.
 - **Data gaps.** OSM coverage of fire stations, water works and fishing harbours is thin. Live Google Weather shows today's conditions, not the 2023 event.
@@ -155,3 +157,9 @@ docs/       architecture, the implementation plan and the original vision docume
 ## Data sources
 
 NOAA IBTrACS and GFS, NASA GPM IMERG, Copernicus Sentinel-1/2, JRC Global Surface Water, USGS SRTM, WorldPop, Google Open Buildings, MERIT Hydro, FAO GAUL, OpenStreetMap contributors (ODbL), and Google Maps Platform. Places content is shown but never stored.
+
+## Road method
+
+The road model covers OpenStreetMap motorway, trunk, primary, secondary and tertiary roads (including link roads) in the Michaung study area, about 34,000 km. Rain and terrain use the same non-saturating interaction as the facility model; km-weighted percentiles assign the top 5% to “most exposed,” the next 15% to “high exposure,” and the next 30% to “watch.” Absolute IMD wind bands can raise a section's level. See [Road exposure](docs/ROAD_EXPOSURE.md) for validation and limits.
+
+`roads_web.json.gz`, `road_access.csv` and `roads_summary.json` are committed for the deployed app. The 12 MB `road_sections.csv` is ignored; rebuild all road outputs with `.venv/bin/python scripts/build_roads.py` (cached Earth Engine samples make repeat builds fast).

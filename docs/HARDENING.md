@@ -13,6 +13,7 @@ The dashboard is read-only and used by officials during an event, so wrong or st
 | Cost control | Model routes (advisory, tts, agent, voice, bulletin, scenario, dispatch) limited to 10–20 calls a minute per client; the Why button 20 a minute; 429 with Retry-After | `test_api.py` (rate limit) |
 | Accessibility | axe (including colour contrast) has no serious or critical issues on the landing page and the dashboard; keyboard control of the timeline; text alternatives for every button; markers use shape as well as colour | `e2e/smoke.mjs` |
 | Weak network | Service worker keeps the app and last data; offline page still lists views and at-risk assets | `e2e/offline.mjs` |
+| Dispatch Security | Email dispatch defaults to dry_run. In live mode, messages are strictly limited to the `DISPATCH_ALLOWLIST` and the department's configured `recipients`, preventing accidental broadcast | `test_dispatch_monitor.py` |
 | Secrets | `.env`, tokens and keys are git-ignored; the browser only receives `VITE_` keys | review before every commit |
 
 ## Still to do by the owner
@@ -23,3 +24,4 @@ The dashboard is read-only and used by officials during an event, so wrong or st
 4. **Walk through the app with a real responder** and note where wording or layout slows them down.
 5. **Shared rate limit.** The limit is per server process. With several Cloud Run instances the real ceiling is higher; if that matters, use Firestore or Redis for the counts.
 6. **Approve the Vertex/Gemini calls** the Why button makes (a few tenths of a cent each).
+7. **Configure Email Dispatch:** Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, and `SMTP_FROM` in Cloud Run Secret Manager to enable SMTP dispatch. Alternatively, set `SENDGRID_API_KEY` and `SENDGRID_FROM`. Before enabling `DISPATCH_MODE=live`, verify these secrets are properly loaded and your allowlist (`DISPATCH_ALLOWLIST`) is correctly configured so real emails are only sent to approved addresses.
