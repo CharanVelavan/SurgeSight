@@ -11,6 +11,7 @@ from fastapi.responses import Response
 from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
+from api.auth import LOCAL_PRINCIPAL, Principal, require_approver
 from api.deps import call_tool, require_task_caller, run_frame, stored, tool_payload
 from services.agent.builtin_tools import jsonable
 from services.store import get_store, new_run_id
@@ -147,26 +148,31 @@ def dispatch_queue(body: DispatchBody) -> dict[str, Any]:
     return tool_payload(call_tool("queue_dispatch", body.model_dump()))
 
 
+def _decider(body: DecisionBody, principal: Principal) -> str:
+    """The signed-in email when auth is on; the request's own ``by`` in local mode."""
+    return body.by if principal is LOCAL_PRINCIPAL else (principal.email or principal.uid)
+
+
 @router.post("/api/dispatch/{dispatch_id}/approve")
-def dispatch_approve(dispatch_id: str, body: DecisionBody = DecisionBody()) -> dict[str, Any]:
+def dispatch_approve(dispatch_id: str, body: DecisionBody = DecisionBody(), principal: Principal = Depends(require_approver)) -> dict[str, Any]:
     d = _dispatch(dispatch_id)
     try:
-        return d.approve(dispatch_id, body.by).model_dump(exclude={"attachments"})
+        return d.approve(dispatch_id, _decider(body, principal)).model_dump(exclude={"attachments"})
     except ValueError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from None
 
 
 @router.post("/api/dispatch/{dispatch_id}/reject")
-def dispatch_reject(dispatch_id: str, body: DecisionBody = DecisionBody()) -> dict[str, Any]:
+def dispatch_reject(dispatch_id: str, body: DecisionBody = DecisionBody(), principal: Principal = Depends(require_approver)) -> dict[str, Any]:
     d = _dispatch(dispatch_id)
     try:
-        return d.reject(dispatch_id, body.by).model_dump(exclude={"attachments"})
+        return d.reject(dispatch_id, _decider(body, principal)).model_dump(exclude={"attachments"})
     except ValueError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from None
 
 
 @router.post("/api/dispatch/{dispatch_id}/send")
-def dispatch_send(dispatch_id: str) -> dict[str, Any]:
+def dispatch_send(dispatch_id: str, principal: Principal = Depends(require_approver)) -> dict[str, Any]:
     """Send an approved dispatch (a dry run unless DISPATCH_MODE=live)."""
     d = _dispatch(dispatch_id)
     try:
