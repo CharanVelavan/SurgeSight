@@ -245,3 +245,49 @@ Waiting on the owner (each needs an approval or a console step):
 | Auth adds friction for judges | One-click demo (viewer) sign-in on the sign-in screen |
 | GFS/IMERG gaps for some hours | Manifest marks missing frames; the shader holds the last good frame and the legend says so |
 | Scope (≈ 23 h) | Slices are ordered so S0–S3 alone is a strong demo; S5b and parts of S7 can drop |
+
+## 11. Version 2 plan (agreed with the owner, 2026-09-30)
+
+The dashboard is a read-only tool for **officials and responders** during a real event, so wording, provenance and failure behaviour matter as much as features. The deadline is a month or more, so everything below is in scope. Order matters: each package builds on the one before.
+
+### 11.1 Decisions
+
+| Topic | Decision |
+|---|---|
+| Audience | Officials and responders (district collectors, department heads, control rooms). |
+| Login | Landing page first; guest access by default; sign-in optional and reserved for staff features later. No Firebase console work needed yet. |
+| Live tile | Weather right now over India (not a cyclone feed): wind, rain, cloud cover, temperature and humidity. |
+| Storms | Michaung (done), then Fani 2019, Biparjoy 2023, Amphan 2020. |
+| Alert zones | Red, orange, yellow, green in IMD style, with SurgeSight's own thresholds shown on screen and labelled "screening, not an IMD warning". They change with the time on the timeline. |
+| Why button | Fact table first (elevation, wind, rain, flood, surge, distance to the cyclone at that time), then a short Gemini explanation written only from those numbers. The existing grounding check redacts invented figures. One call per asset, cached. |
+| Weak network | Installable app that keeps the last-loaded data and shows "last updated"; lighter weather download on slow links. |
+| Map | Zoom and pan freely, but only inside India's boundary. Default view shows only what is needed; one key explains every symbol. |
+| Interface languages | Six languages, machine-translated once the English text has settled; the translation run needs the owner's approval. |
+
+### 11.2 What the map shows and where it comes from
+
+- **Blue track:** IBTrACS best track (archived observed positions from the warning agencies, including IMD). Not live.
+- **Wind, rain, cloud, temperature, humidity:** NOAA GFS model via Earth Engine. Model output, not observation. The Live tile uses the newest cycle, at most a few hours old; the latest checked was 8.8 h old.
+- **Observed rain:** NASA IMERG. Recent days are available through NASA's free image service; the Earth Engine copy lags by months.
+- **Satellite cloud imagery over India:** not dependable from NASA's free layers (the Himawari tile for India came back almost empty). INSAT via MOSDAC needs registration and is a later upgrade. Until then the cloud layer is labelled "model cloud cover".
+- **Amber dashed track and circles:** SurgeSight's experimental Kalman forecast from the last fix at the cutoff, with its 90% radius. Not an IMD forecast.
+- **Known limit:** GFS 0.25° winds underestimate cyclone winds (the Michaung analysis peaks near 24 m/s against 55+ kt observed). Near the storm, alert zones therefore use the parametric wind model already in the v2 risk model, driven by the observed or forecast intensity; GFS is used away from the storm.
+
+### 11.3 Work packages
+
+| # | Package | Done when | Needs from owner |
+|---|---|---|---|
+| W1 | **Map behaviour and clarity.** Free zoom and pan inside India's boundary; default layers reduced; infrastructure hidden until Impact area; one "What am I seeing?" key replacing the separate legends. | Playwright: drag and zoom work inside the boundary and cannot leave it; every visible symbol is named in the key. | Review the key wording. |
+| W2 | **Landing page and routing.** `/` with tiles, `/live`, `/storm/:id`; region registry served by `/api/regions`; per-region data folders. | Tiles open the right storm; unknown ids show a clear error; guest needs no sign-in. | Tile copy. |
+| W3 | **Alert zones.** One shared thresholds file used by the backend and the shader; zone layer and marker colours recomputed for the timeline time; distance to the cyclone from the observed or forecast track. | Known points give expected levels (Chennai on 4 Dec 06Z red or orange, Jaipur green); zones move with time; Python and TypeScript agree on a test table. | Thresholds reviewed by a meteorologist or disaster official before any real use. |
+| W4 | **Why is this critical?** `POST /api/assets/{id}/explain` returns facts plus the Gemini text, cached; hover card gets a button. | Facts complete; Gemini text passes the grounding check; offline test uses a mock. | Approve Vertex calls (fractions of a cent each). |
+| W5 | **Live weather.** `build_live_weather.py` fetches the newest GFS cycle (72 h ahead) into atlases; refresh every 6 h; the tile shows "cycle 00Z, age x h" and warns when older than 12 h. | Live tile loads current wind, rain, cloud, temperature and humidity; stale warning fires in a test. | Cloud Scheduler and Cloud Run at deployment time. |
+| W6 | **More storms.** Fani, Biparjoy, Amphan. First find what the pipeline hard-codes to Michaung (region config, asset extraction, surge and terrain inputs), then add each storm as data. | Each storm passes the same weather, risk and API tests as Michaung; data-quality notes recorded (OSM coverage differs by coast). | Confirm each storm's area of interest. |
+| W7 | **Weak network.** Service worker for the app shell and last data, "last updated" banner, lighter weather set. | Airplane-mode test shows the last storm with its age. | None. |
+| W8 | **Languages.** Move all text into locale files; translate once; Indic fonts. | No missing keys in six locales. | Approve the translation run. |
+| W9 | **Disaster-use hardening.** Timestamps and sources on every number; consistent "screening, not official; follow IMD and NDMA" notice; clear error and empty states; rate limits on the Gemini routes; restricted browser key. | Checklist review; axe clean; failure-mode tests (API down, stale data). | Walk-through with a real user if possible. |
+| W10 | **Deploy.** Firebase Hosting with the API on Cloud Run and the scheduled live refresh. | Public URL passes `test_web.py` against production. | Billing and project settings. |
+
+### 11.4 Order
+
+W1 → W2 → W3 → W4 → W5 → W6 (Fani, then Biparjoy, then Amphan) → W7 → W8 → W9 → W10. The alert zones (W3) and the Why button (W4) are what make the app useful in an event, so they come before adding more storms.
