@@ -32,8 +32,9 @@ def region_track(region_id: str) -> dict[str, Any]:
 
 @router.get("/api/assets")
 def assets(region: str | None = None, dept: str | None = None, min_class: Literal["LOW", "MODERATE", "HIGH", "CRITICAL"] = "LOW",
-           run_id: str | None = Query(None, description="A stored run with an assets table. Omit for the v2 baseline.")) -> dict[str, Any]:
-    """Assets as GeoJSON, optionally for one department and a minimum class."""
+           run_id: str | None = Query(None, description="A stored run with an assets table. Omit for the v2 baseline."),
+           format: Literal["geojson", "columnar"] = Query("geojson", description="columnar: parallel arrays, about a fifth of the size")) -> dict[str, Any]:
+    """Assets as GeoJSON (or columnar arrays for the web map), optionally for one department and a minimum class."""
     from services.departments import department_mask, get_department, score_all_assets
 
     require_region(region)
@@ -44,6 +45,13 @@ def assets(region: str | None = None, dept: str | None = None, min_class: Litera
         except KeyError as exc:
             raise HTTPException(status_code=404, detail=str(exc).strip("'\"")) from None
     frame = frame[frame["risk_class"].map(CLASS_RANK).fillna(0) >= CLASS_RANK[min_class]]
+    if format == "columnar":
+        cols = [c for c in ("name", "asset_type", "osm_element", "osm_id", "risk_class", "risk_score", "triage_tier", "dominant_hazard") if c in frame.columns]
+        out = {"count": len(frame), "run_id": run_id, "class_order": list(CLASS_RANK),
+               "lon": [round(float(v), 5) for v in frame["lon"]], "lat": [round(float(v), 5) for v in frame["lat"]],
+               "risk_class_rank": [int(v) for v in frame["risk_class"].map(CLASS_RANK).fillna(0)]}
+        out.update({c: jsonable(frame[c].astype(object).where(frame[c].notna(), None).tolist()) for c in cols})
+        return out
     body = geojson(frame, ["name", "asset_type", "osm_element", "osm_id", "risk_class", "risk_score", "triage_tier", "dominant_hazard"])
     body["count"] = len(body["features"])
     body["run_id"] = run_id

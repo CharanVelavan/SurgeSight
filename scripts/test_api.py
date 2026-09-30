@@ -32,6 +32,7 @@ EXPECTED = {
     "/api/ensemble", "/api/forecast/experimental", "/api/hazards/{run_id}", "/api/exposure/{run_id}", "/api/validation/satellite/{run_id}",
     "/api/advisory", "/api/tts", "/api/cap/{item_id}", "/api/parametric/{run_id}", "/api/dispatch", "/api/dispatch/{dispatch_id}/approve",
     "/api/dispatch/{dispatch_id}/reject", "/api/agent", "/tasks/poll", "/tasks/process", "/runs/{run_id}", "/healthz",
+    "/api/weather/manifest", "/api/weather/{file}", "/api/timeline", "/api/layers/{name}", "/api/me", "/api/voice/ask",
 }
 
 
@@ -64,6 +65,93 @@ def test_assets() -> None:
     assert client.get("/api/assets", params={"run_id": "nope-000"}).status_code == 404
     assert client.get("/api/assets", params={"min_class": "SEVERE"}).status_code == 422
     print("assets ok")
+
+
+def test_web_routes() -> None:
+    manifest = ok(client.get("/api/weather/manifest")).json()
+    assert manifest["analysis_wind"]["frames"] and len(manifest["forecast"]) == 15
+    cut = ok(client.get("/api/weather/manifest", params={"cutoff": "2023-12-03 12:00"})).json()
+    assert cut["forecast"]["cycle"] == "2023-12-03T12:00:00Z" and cut["observed_rain"]["frames"][-1] <= "2023-12-03T12:00:00Z"
+    assert len(ok(client.get("/api/weather/manifest", params={"cutoff": "2023-12-03 12:00", "validation": "true"})).json()["observed_rain"]["frames"]) == 169
+    assert client.get("/api/weather/manifest", params={"cutoff": "not a time"}).status_code == 422
+    png = ok(client.get(f"/api/weather/{manifest['analysis_wind']['file']}"))
+    assert png.headers["content-type"] == "image/png" and "immutable" in png.headers["cache-control"]
+    assert client.get("/api/weather/nope.png").status_code == 404 and client.get("/api/weather/manifest.json").status_code == 404
+    timeline = ok(client.get("/api/timeline")).json()
+    assert timeline["track"][0]["time"].endswith("Z") and timeline["cutoffs"] and timeline["first_over_land"]["time"] >= timeline["start"]
+    districts = ok(client.get("/api/layers/districts")).json()
+    assert districts["type"] == "FeatureCollection" and any("population" in f["properties"] for f in districts["features"])
+    for name, prop in (("surge", "surge_m"), ("river", "river_susceptibility")):
+        layer = ok(client.get(f"/api/layers/{name}")).json()
+        assert layer["features"] and prop in layer["features"][0]["properties"], name
+    assert client.get("/api/layers/lava").status_code == 422
+    columns = ok(client.get("/api/assets", params={"format": "columnar", "min_class": "HIGH"})).json()
+    assert columns["count"] == len(columns["lon"]) == len(columns["risk_class_rank"]) == len(columns["name"]) > 100 and min(columns["risk_class_rank"]) >= 2
+    assert ok(client.get("/api/me")).json() == {"auth_mode": "off", "uid": "local", "email": "local@dev", "department": None, "role": "approver"}
+    print("web routes ok")
+
+
+def test_voice_ask_mocked() -> None:
+    from types import SimpleNamespace
+
+    import services.agent.orchestrator as orchestrator
+    import services.tts as tts_module
+    from services.voice import stt
+
+    seen = {}
+    fake_answer = SimpleNamespace(answer_markdown="Two hospitals are in tier 1.", model_dump=lambda: {"answer_markdown": "Two hospitals are in tier 1.", "grounded": True})
+    real = (stt.transcribe, orchestrator.run_agent, tts_module.synthesize_text)
+    stt.transcribe = lambda audio, code, **kw: seen.update(code=code) or stt.Transcript("how many hospitals", 0.9, code)
+    orchestrator.run_agent = lambda question, **kw: (fake_answer, [])
+    tts_module.synthesize_text = lambda text, language: b"MP3DATA"
+    try:
+        wav = {"audio": ("q.wav", b"RIFFxxxx", "audio/wav")}
+        body = ok(client.post("/api/voice/ask", files=wav, data={"language": "Tamil"})).json()
+        assert seen["code"] == "ta-IN" and body["transcript"] == "how many hospitals" and body["answer"]["grounded"]
+        import base64
+        assert base64.b64decode(body["audio_mp3_base64"]) == b"MP3DATA"
+        assert ok(client.post("/api/voice/ask", files=wav, data={"speak": "false"})).json()["audio_mp3_base64"] is None
+        assert client.post("/api/voice/ask", files=wav, data={"language": "Odia"}).status_code == 422, "Odia has no speech input"
+        assert client.post("/api/voice/ask", files={"audio": ("q.wav", b"", "audio/wav")}).status_code == 422
+    finally:
+        stt.transcribe, orchestrator.run_agent, tts_module.synthesize_text = real
+    print("voice ask ok")
+
+
+def test_auth_roles() -> None:
+    import api.auth as auth
+
+    claims = {"good-approver": {"uid": "u1", "email": "collector@example.org", "role": "approver", "department": "District Collector / Disaster Management"},
+              "good-viewer": {"uid": "u2", "email": "demo@example.org", "role": "viewer"}, "no-role": {"uid": "u3", "email": "x@example.org"}}
+
+    def fake_verify(token: str) -> dict:
+        if token not in claims:
+            raise ValueError("bad token")
+        return claims[token]
+
+    real, real_mode = auth._verify_token, os.environ.get("AUTH_MODE")
+    auth._verify_token = fake_verify
+    os.environ["AUTH_MODE"] = "firebase"
+    bearer = lambda t: {"Authorization": f"Bearer {t}"}  # noqa: E731
+    try:
+        assert client.get("/api/me").status_code == 401
+        assert client.get("/api/me", headers=bearer("forged")).status_code == 401
+        me = ok(client.get("/api/me", headers=bearer("good-viewer"))).json()
+        assert me["role"] == "viewer" and me["auth_mode"] == "firebase"
+        assert ok(client.get("/api/me", headers=bearer("no-role"))).json()["role"] == "viewer", "a token without a role claim is view-only"
+        for action in ("approve", "reject", "send"):
+            path = f"/api/dispatch/nope-1/{action}"
+            assert client.post(path).status_code == 401, f"{action} without a token"
+            assert client.post(path, headers=bearer("good-viewer")).status_code == 403, f"{action} by a viewer must be refused"
+            assert client.post(path, headers=bearer("no-role")).status_code == 403
+            assert client.post(path, headers=bearer("good-approver")).status_code == 404, f"{action}: approver passes the gate, dispatch is unknown"
+        assert client.get("/api/dispatch", headers=bearer("good-viewer")).status_code == 200, "viewers may read the queue"
+        assert client.get("/api/assets", params={"min_class": "CRITICAL"}).status_code == 200, "read routes stay open"
+    finally:
+        auth._verify_token = real
+        os.environ.pop("AUTH_MODE", None) if real_mode is None else os.environ.__setitem__("AUTH_MODE", real_mode)
+    assert client.post("/api/dispatch/nope-1/approve").status_code == 404, "auth off: no sign-in needed"
+    print("auth roles ok")
 
 
 def test_scenario_flow() -> str:
@@ -195,6 +283,9 @@ def test_tasks() -> None:
 if __name__ == "__main__":
     test_routes_and_basics()
     test_assets()
+    test_web_routes()
+    test_voice_ask_mocked()
+    test_auth_roles()
     if not LIVE:
         print("SKIPPED live-model routes (SURGESIGHT_OFFLINE=1)")
         test_push_routes()

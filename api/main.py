@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.routes_analysis import router as analysis_router
 from api.routes_ops import router as ops_router
 from api.routes_push import router as push_router
+from api.routes_web import router as web_router
 from services.config import get_settings
 
 DEFAULT_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173"
@@ -23,6 +24,7 @@ def create_app() -> FastAPI:
     app.include_router(analysis_router)
     app.include_router(ops_router)
     app.include_router(push_router)
+    app.include_router(web_router)
 
     @app.get("/healthz")
     def health() -> dict[str, str]:
