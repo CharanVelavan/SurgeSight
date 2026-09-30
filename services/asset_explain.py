@@ -138,7 +138,7 @@ def narrate(facts: dict[str, Any], generate=None, language: str = "English") -> 
 
         def generate(prompt: str) -> Narrative:  # type: ignore[misc]
             return generate_structured(contents=prompt, schema=Narrative, system_instruction=SYSTEM_INSTRUCTION,
-                                       max_output_tokens=600)
+                                       max_output_tokens=2048)
     style = "" if language == "English" else f"Write in {language}, but keep every number in Latin digits 0-9 exactly as given.\n"
     prompt = f"Explain this ranking.\n{style}\n<FACTS>\n{json.dumps(facts, ensure_ascii=False, indent=1)}\n</FACTS>"
     try:

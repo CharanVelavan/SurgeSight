@@ -92,22 +92,43 @@ python scripts/run_all_tests.py --live   # also calls Google APIs (uses quota or
 
 `.env` (never committed): `GOOGLE_CLOUD_PROJECT`, `GOOGLE_GENAI_USE_VERTEXAI=true`, `GOOGLE_CLOUD_LOCATION=global`, `GEMINI_API_KEY` (optional fallback), `GOOGLE_MAPS_API_KEY`, `DISPATCH_MODE=dry_run` (default; `live` sends only to `DISPATCH_ALLOWLIST`), and the `FIREBASE_*` web settings.
 
-## Web dashboard
+## Web app
 
-A read-only React dashboard (`frontend/`) shows the weather and the at-risk infrastructure for the storm on a locked map of India. Wind particles and rain run on the GPU inside the Google vector map; the timeline splits the observed past from the forecast issued at a movable cutoff, so nothing after the cutoff leaks into the forecast view. An **Impact area** button zooms to the affected coast, where hospitals, power substations, police and fire stations, shelters and other assets show as risk-coloured markers.
+**Live:** https://surgesight-221627601364.asia-south1.run.app (Cloud Run, asia-south1)
+
+A React app (`frontend/`) for district officials and emergency departments. The first visit asks for the user's role (District Collector, Health, Fire & Rescue, Electricity, Police, Water, Fisheries), language and theme. Every screen then puts that role's facilities first.
+
+| Screen | What it shows |
+|---|---|
+| Home | Live weather over India, and past storms to replay |
+| Overview | The storm at the chosen bulletin time, when it reaches the coast, the role's top facilities, affected districts and parametric payout triggers |
+| Map | Alert zones, storm track and experimental forecast, storm surge, rain, wind particles and every facility, over a timeline that never shows what was not yet known |
+| Facilities | The full ranked list, searchable; each row opens "Why is this critical?" (the numbers, then a short Gemini explanation checked against them) |
+| Affected areas | Districts by alert level, with population and facilities |
+| Advisories | A Gemini advisory per department in the chosen language, with audio (Cloud Text-to-Speech), a CAP 1.2 alert and the automatic dispatch pipeline |
+| Guide, Settings | Who uses which screen and how to read the map; role, theme, language, map defaults, saved data |
+
+Six languages (English, Hindi, Tamil, Telugu, Bengali, Odia), light and dark themes, and a service worker that keeps the last data for weak connections.
 
 ```bash
-uvicorn api.main:app --port 8000          # API
+uvicorn api.main:app --port 8000          # API (also serves frontend/dist when it has been built)
 cd frontend && npm install && npm run dev  # http://localhost:5173  (set VITE_GOOGLE_MAPS_API_KEY and VITE_GOOGLE_MAP_ID in .env)
-python scripts/build_weather_frames.py     # rebuilds the wind and rain images from Earth Engine (cached)
-python scripts/test_web.py                 # build, unit tests and a real-Chrome check (needs the Maps API online)
+python scripts/build_weather_frames.py     # storm replay weather images from Earth Engine (cached)
+python scripts/build_live_weather.py       # live weather images from the newest complete GFS run
+python scripts/test_web.py                 # build, unit tests and a real-Chrome check of every screen
 ```
 
-![Dashboard on desktop](docs/screenshots/desktop-1440.png)
+![Overview](docs/screenshots/overview-1440.png)
+![Map](docs/screenshots/map-impact-1440.png)
+![Advisories](docs/screenshots/advisories-1440.png)
 
-<img src="docs/screenshots/phone-390.png" alt="Dashboard on a phone" width="220"> <img src="docs/screenshots/tablet-820.png" alt="Dashboard on a tablet" width="330">
+### Deployment
 
-The screenshots come from `scripts/test_web.py`. The last run held 120 fps on a ProMotion Mac; frame rate depends on the display and browser, so treat that as a measurement, not a promise.
+One Cloud Run service (`Dockerfile`) serves the API and the built web app from the same address. The live weather is rebuilt every 3 hours by the Cloud Run job `surgesight-live-refresh`, started by Cloud Scheduler, and published to Cloud Storage (`LIVE_BUCKET`); each instance picks up the newest copy. Gemini runs through Vertex AI under a dedicated service account; the Maps server key is in Secret Manager. Dispatch runs in dry-run mode on the public deployment.
+
+```bash
+npm --prefix frontend run build && gcloud run deploy surgesight --source . --region asia-south1
+```
 
 ## Project layout
 
@@ -115,7 +136,7 @@ The screenshots come from `scripts/test_web.py`. The last run held 120 fps on a 
 services/   models and integrations (risk, ensemble, hazards, agent, dispatch, cap, voice, maps)
 api/        FastAPI wrappers over the services, including the streaming agent
 ui/ app.py  Streamlit dashboard (an internal development harness)
-frontend/   React dashboard: GPU weather map, timeline, at-risk infrastructure (see above)
+frontend/   React web app: roles, overview, GPU weather map, facilities, areas, advisories (see above)
 config/     regions, departments, parametric triggers, CAP schema
 scripts/    data builds and the test suite (each test prints a SURGESIGHT_*_OK marker)
 docs/       architecture, the implementation plan and the original vision document

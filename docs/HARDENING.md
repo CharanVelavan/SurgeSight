@@ -17,7 +17,7 @@ The dashboard is read-only and used by officials during an event, so wrong or st
 
 ## Still to do by the owner
 
-1. **Restrict the Google Maps browser key** in the Cloud console: HTTP referrers = the deployed web address (and localhost for development), and only the Maps JavaScript API. Do this when the address is known (W10).
+1. **Restrict the Google Maps browser key** in the Cloud console: HTTP referrers `https://surgesight-221627601364.asia-south1.run.app/*` and `http://localhost:5173/*`, and only the Maps JavaScript API.
 2. **Review the alert thresholds** (`config/alert_thresholds.json`, `needs_expert_review` is still true) with a meteorologist or disaster official.
 3. **Have the five translations reviewed** by native speakers (they are drafts written without a translation service).
 4. **Walk through the app with a real responder** and note where wording or layout slows them down.

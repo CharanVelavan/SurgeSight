@@ -300,8 +300,10 @@ The dashboard is a read-only tool for **officials and responders** during a real
 | W7 weak network | Done |
 | W8 languages | Done (five drafts to be reviewed by native speakers) |
 | W9 hardening | Done, see `docs/HARDENING.md` |
-| W10 deploy | Not started |
+| W10 deploy | Done: Cloud Run service, scheduled live-weather job, Cloud Storage, Secret Manager |
 | W6 more storms | After W10 |
+
+After an owner review against Problem Statement 05 (2026-09-30), the read-only app gained what the brief names directly: an Advisories tab (Gemini advisories per department, audio, CAP alerts and the automatic dispatch pipeline, dry run in public), a storm-surge layer, and parametric payout triggers on the Overview. The app was also rebuilt around roles (welcome flow, navigation, Overview, Facilities, Affected areas, Guide, Settings, light and dark themes).
 
 ### 11.4 Order
 
