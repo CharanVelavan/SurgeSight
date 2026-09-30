@@ -4,6 +4,8 @@ import { RAIN_RAMP, RISK, WIND_RAMP, rampCss } from '@/lib/colors'
 import { formatCycle } from '@/lib/format'
 import { useTimeline } from '@/app/queries'
 import { INFRA_ZOOM } from '@/map/assetLayers'
+import { ZONE_HEX } from '@/alerts/field'
+import { ZONE_LABEL } from '@/alerts/zones'
 import { useUi } from '@/state/ui'
 import { useClock } from '@/timeline/clock'
 import { rainField, windField, type FieldPair } from '@/weather/field'
@@ -42,14 +44,14 @@ function Scale({ title, unit, stops, gradient, note, warn }: { title: string; un
 }
 
 export function Legend() {
-  const { wind, rain, rainSource } = useUi()
+  const { wind, rain, rainSource, zones } = useUi()
   const manifest = useWeather(s => s.manifest)
   const { time, cutoff } = useClock(s => ({ time: Math.floor(s.time / 3_600_000), cutoff: s.cutoff }), 250)
   const { data: timeline } = useTimeline()
   // Open by default from 640 px up; on phones it starts collapsed so it does not cover the storm.
   const [open, setOpen] = useState(() => matchMedia('(min-width: 640px)').matches)
   const anyInfra = useUi(s => Object.values(s.infra).some(Boolean) && s.zoom >= INFRA_ZOOM)
-  if (!manifest || (!wind && !rain && !anyInfra)) return null
+  if (!manifest || (!zones && !wind && !rain && !anyInfra)) return null
   const ms = time * 3_600_000
   const w = windField(manifest, ms, cutoff)
   const r = rainField(manifest, ms, cutoff, rainSource)
@@ -61,6 +63,23 @@ export function Legend() {
       </button>
       <div className="hidden text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase sm:block">What am I seeing?</div>
       <div className={`flex flex-col gap-2.5 ${open ? '' : 'max-sm:hidden'}`}>
+      {zones && (
+        <div>
+          <div className="flex items-baseline justify-between text-[11px]">
+            <span className="font-medium">Alert zones</span>
+            <span className="text-muted-foreground">wind and rain</span>
+          </div>
+          <div className="mt-1 flex gap-3 text-[11px]">
+            {['Safe', 'Watch', 'Warning', 'Severe'].map((name, i) => (
+              <span key={name} className="flex items-center gap-1">
+                <span className="inline-block size-2.5 rounded-sm" style={{ background: ZONE_HEX[i] }} aria-hidden />
+                {name}
+              </span>
+            ))}
+          </div>
+          <p className="mt-1 text-[10px] leading-snug text-muted-foreground">{ZONE_LABEL}</p>
+        </div>
+      )}
       {wind && (
         <Scale title="Wind" unit="m/s" stops={WIND_RAMP.map(([v]) => v)} gradient={rampCss(WIND_RAMP)} note={sourceLabel(w, 'wind')} warn={!w} />
       )}

@@ -12,6 +12,7 @@
       "google.maps"
     ],
     "allowArbitraryExtensions": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -26,6 +27,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@config/*": [
+        "../config/*"
       ]
     }
   },

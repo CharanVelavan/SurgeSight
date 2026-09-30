@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "label": "Screening levels from SurgeSight's own thresholds. Not an IMD warning.",
+  "needs_expert_review": true,
+  "levels": ["green", "yellow", "orange", "red"],
+  "wind_kmh": [40, 62, 89],
+  "rain_mm_h": [2.7, 4.8, 8.5],
+  "notes": {
+    "wind_kmh": "Sustained 10 m wind. 62 and 89 km/h are the IMD cyclonic storm and severe cyclonic storm limits; 40 km/h is where damage to weak structures begins.",
+    "rain_mm_h": "IMD heavy (64.5), very heavy (115.6) and extremely heavy (204.4) mm per day, divided by 24 h. Instantaneous rates run higher, so treat as a floor."
+  },
+  "test_table": [
+    [0, 0, 0],
+    [39.9, 2.6, 0],
+    [40, 0, 1],
+    [10, 2.7, 1],
+    [62, 0, 2],
+    [10, 4.8, 2],
+    [88.9, 4.7, 2],
+    [89, 0, 3],
+    [10, 8.5, 3],
+    [120, 20, 3],
+    [45, 5, 2]
+  ]
+}

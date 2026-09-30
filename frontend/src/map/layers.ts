@@ -7,6 +7,10 @@ import { weatherStore } from '@/weather/atlas'
 import { rainField, tileRect, windField } from '@/weather/field'
 import { RainLayer } from '@/layers/rain/RainLayer'
 import { WindParticleLayer } from '@/layers/wind/WindParticleLayer'
+import { BitmapLayer } from '@deck.gl/layers'
+import { stormAt } from '@/alerts/storm'
+import { zoneImage } from '@/alerts/store'
+import { trackStore } from '@/data/track'
 import { buildAssetLayers } from './assetLayers'
 import { buildTrackLayers } from './trackLayers'
 import { quality } from './quality'
@@ -50,6 +54,18 @@ export function buildLayers(now: number): Layer[] {
         opacity: 0.85,
       }),
     )
+  }
+
+  if (ui.zones) {
+    const { timeline, forecast } = trackStore.getState()
+    const image = zoneImage(manifest, time, cutoff, ui.rainSource, stormAt(timeline?.track, forecast, time, cutoff))
+    if (image)
+      layers.push(
+        new BitmapLayer({
+          id: 'alert-zones', image, bounds: [west - step / 2, south - step / 2, east + step / 2, north + step / 2],
+          textureParameters: { minFilter: 'linear', magFilter: 'linear' }, pickable: false,
+        }),
+      )
   }
 
   const wind = ui.wind ? windField(manifest, time, cutoff) : null

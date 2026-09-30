@@ -7,7 +7,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   envDir: '..',
-  resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src') } },
-  server: { port: 5173, proxy: { '/api': 'http://127.0.0.1:8000' } },
+  resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src'), '@config': path.resolve(import.meta.dirname, '../config') } },
+  server: { port: 5173, fs: { allow: ['..'] }, proxy: { '/api': 'http://127.0.0.1:8000' } },
   build: { chunkSizeWarningLimit: 1500 },
 })

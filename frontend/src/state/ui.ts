@@ -14,6 +14,7 @@ const infraDefault: Record<AssetType, boolean> = {
 
 interface UiState {
   wind: boolean
+  zones: boolean
   rain: boolean
   rainSource: RainSource
   basemap: Basemap
@@ -34,6 +35,7 @@ interface UiState {
 
 export const useUi = create<UiState>(set => ({
   wind: true,
+  zones: true,
   rain: true,
   rainSource: 'forecast',
   basemap: 'dark',

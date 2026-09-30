@@ -24,7 +24,7 @@ const Heading = ({ children }: { children: string }) => (
 )
 
 export function LayerCard() {
-  const { wind, rain, rainSource, basemap, infra, set } = useUi()
+  const { zones, wind, rain, rainSource, basemap, infra, set } = useUi()
   // On phones the card is a bottom sheet opened from a button; from 640 px up it floats top-left.
   const [sheet, setSheet] = useState(false)
   return (
@@ -45,6 +45,7 @@ export function LayerCard() {
         <X className="size-4" />
       </button>
       <Heading>Weather</Heading>
+      <Row label="Alert zones" hint="screening" checked={zones} onChange={v => set({ zones: v })} />
       <Row label="Wind" hint="10 m" checked={wind} onChange={v => set({ wind: v })} />
       <Row label="Rain" hint="mm/h" checked={rain} onChange={v => set({ rain: v })} />
       <ToggleGroup

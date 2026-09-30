@@ -42,7 +42,7 @@ const layerIds = () => page.evaluate(() => window.__overlay._deck.layerManager.g
 const a = await mapState()
 check(a.rt === 'vector-interleaved', `rendering type ${a.rt}`)
 const ids = await layerIds()
-for (const need of ['rain', 'wind', 'track-observed', 'forecast-wind']) check(ids.includes(need), `layer ${need} missing`)
+for (const need of ['alert-zones', 'rain', 'wind', 'track-observed', 'forecast-wind']) check(ids.includes(need), `layer ${need} missing`)
 check(!ids.some((i) => i.startsWith('assets-')), 'infrastructure should be hidden in the national view')
 
 // 2. the national frame: free zoom and pan, but never outside the boundary or further out than the frame
@@ -123,6 +123,7 @@ if (shots) {
 }
 
 check(errors.length === 0, `console errors: ${errors.slice(0, 3).join(' || ')}`)
-console.log(JSON.stringify({ ok: failures.length === 0, failures, fps, forecastMs, zoom: { india: +a.zoom.toFixed(2), impact: +c.zoom.toFixed(2) } }))
+const zoneMs = await page.evaluate(() => window.__zoneMs ?? null)
+console.log(JSON.stringify({ ok: failures.length === 0, failures, fps, forecastMs, zoneMs, zoom: { india: +a.zoom.toFixed(2), impact: +c.zoom.toFixed(2) } }))
 await browser.close()
 process.exit(failures.length ? 1 : 0)
