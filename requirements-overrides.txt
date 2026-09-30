@@ -1,0 +1,3 @@
+# google-adk pins opentelemetry <=1.42.1; google-api-core needs >=1.44. ADK works with 1.45 (see requirements.txt).
+opentelemetry-api==1.45.0
+opentelemetry-sdk==1.45.0

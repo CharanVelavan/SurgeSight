@@ -89,7 +89,9 @@ LIVE_STALE_HOURS = 12
 
 
 def live_dir():
-    return PROJECT_ROOT / "data" / "processed" / "live"
+    from services.live_store import live_dir as current
+
+    return current()
 
 
 @router.get("/api/live/manifest")

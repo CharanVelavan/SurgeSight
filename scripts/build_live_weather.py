@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import json
 import math
+import os
 from pathlib import Path
 import sys
 
@@ -27,7 +28,7 @@ from scripts.build_weather_frames import GFS, P, U, V, fetch, gfs, rain_rate_3h,
 from services import weather_frames as wf
 from services.earth_engine import init_ee
 
-LIVE_DIR = PROJECT_ROOT / "data" / "processed" / "live"
+LIVE_DIR = Path(os.getenv("LIVE_BUILD_DIR", str(PROJECT_ROOT / "data" / "processed" / "live")))
 CLOUD, TEMP, RH = "total_cloud_cover_entire_atmosphere", "temperature_2m_above_ground", "relative_humidity_2m_above_ground"
 TEMP_MIN, TEMP_MAX = -30.0, 50.0
 
@@ -57,6 +58,11 @@ def newest_complete_cycle() -> pd.Timestamp:
 
 
 def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--upload", default=os.getenv("LIVE_BUCKET"), help="gs://bucket/prefix to publish to (default: LIVE_BUCKET)")
+    args = parser.parse_args()
     LIVE_DIR.mkdir(parents=True, exist_ok=True)
     init_ee()
     cycle = newest_complete_cycle()
@@ -105,6 +111,10 @@ def main() -> None:
     (LIVE_DIR / "manifest.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
     size = sum(f.stat().st_size for f in LIVE_DIR.iterdir()) / 1e6
     print(f"live weather written: cycle {wf.iso(cycle)}, {size:.1f} MB")
+    if args.upload:
+        from services.live_store import upload
+
+        print(f"uploaded {upload(LIVE_DIR, args.upload)} files to {args.upload}")
 
 
 if __name__ == "__main__":

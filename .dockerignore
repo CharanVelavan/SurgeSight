@@ -1,0 +1,11 @@
+.env
+.venv
+**/__pycache__
+frontend/node_modules
+node_modules
+data/raw
+!data/raw/sample_michaung_bulletin.txt
+!data/raw/wind
+data/runs
+cache
+.git

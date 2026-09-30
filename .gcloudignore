@@ -1,0 +1,22 @@
+# Upload only what the image needs (the Dockerfile copies these). Parent folders are re-included, then
+# their other contents excluded again.
+*
+!Dockerfile
+!requirements.txt
+!requirements-overrides.txt
+!api/
+!services/
+!config/
+!scripts/
+!data/
+data/*
+!data/processed/
+!data/raw/
+data/raw/*
+!data/raw/sample_michaung_bulletin.txt
+!data/raw/wind/
+!frontend/
+frontend/*
+!frontend/dist/
+**/__pycache__/
+.env
