@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Layers, X } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { ASSET_ORDER, ASSET_TYPES } from '@/data/assets'
+import { ASSET_ORDER } from '@/data/assets'
+import { useT, type Key } from '@/i18n'
 import { useUi, type Basemap, type SurfaceField } from '@/state/ui'
 import type { RainSource } from '@/weather/field'
 
@@ -24,6 +25,7 @@ const Heading = ({ children }: { children: string }) => (
 )
 
 export function LayerCard() {
+  const t = useT()
   const { zones, wind, rain, rainSource, basemap, infra, mode, field, set } = useUi()
   const live = mode === 'live'
   // On phones the card is a bottom sheet opened from a button; from 640 px up it floats top-left.
@@ -33,30 +35,30 @@ export function LayerCard() {
     <button
       type="button"
       onClick={() => setSheet(true)}
-      aria-label="Open layers"
+      aria-label={t('layers.open')}
       className="panel pointer-events-auto absolute top-16 left-3 z-10 grid size-10 place-items-center sm:hidden"
     >
       <Layers className="size-5" />
     </button>
     <section
-      aria-label="Layers"
+      aria-label={t('layers.aria')}
       className={`panel pointer-events-auto absolute top-16 left-3 z-10 w-60 p-3 max-sm:fixed max-sm:inset-x-3 max-sm:top-auto max-sm:bottom-3 max-sm:z-40 max-sm:max-h-[70dvh] max-sm:w-auto max-sm:overflow-y-auto max-sm:pb-[max(0.75rem,env(safe-area-inset-bottom))] ${sheet ? '' : 'max-sm:hidden'}`}
     >
-      <button type="button" onClick={() => setSheet(false)} aria-label="Close layers" className="absolute top-2 right-2 grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-accent sm:hidden">
+      <button type="button" onClick={() => setSheet(false)} aria-label={t('layers.close')} className="absolute top-2 right-2 grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-accent sm:hidden">
         <X className="size-4" />
       </button>
-      <Heading>Weather</Heading>
-      <Row label="Alert zones" hint="screening" checked={zones} onChange={v => set({ zones: v })} />
-      <Row label="Wind" hint="10 m" checked={wind} onChange={v => set({ wind: v })} />
-      <Row label="Rain" hint="mm/h" checked={rain} onChange={v => set({ rain: v })} />
+      <Heading>{t('layers.weather')}</Heading>
+      <Row label={t('layers.zones')} hint={t('layers.zonesHint')} checked={zones} onChange={v => set({ zones: v })} />
+      <Row label={t('layers.wind')} hint={t('layers.windHint')} checked={wind} onChange={v => set({ wind: v })} />
+      <Row label={t('layers.rain')} hint={t('layers.rainHint')} checked={rain} onChange={v => set({ rain: v })} />
       {live ? (
         <>
           <div className="my-3 h-px bg-[var(--hairline)]" />
-          <Heading>Colour the map by</Heading>
-          <ToggleGroup type="single" size="sm" variant="outline" spacing={0} className="w-full flex-wrap" value={field} onValueChange={v => set({ field: (v || 'none') as SurfaceField })} aria-label="Surface field">
+          <Heading>{t('layers.colourBy')}</Heading>
+          <ToggleGroup type="single" size="sm" variant="outline" spacing={0} className="w-full flex-wrap" value={field} onValueChange={v => set({ field: (v || 'none') as SurfaceField })} aria-label={t('layers.surface')}>
             {(['none', 'cloud', 'temperature', 'humidity'] as const).map(f => (
-              <ToggleGroupItem key={f} value={f} className="flex-1 text-[11px] capitalize data-[state=on]:bg-accent data-[state=on]:text-foreground">
-                {f === 'temperature' ? 'Temp' : f === 'humidity' ? 'Humid.' : f}
+              <ToggleGroupItem key={f} value={f} className="flex-1 text-[11px] data-[state=on]:bg-accent data-[state=on]:text-foreground">
+                {t(`layers.${f === 'none' ? 'none' : f}` as Key)}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
@@ -72,13 +74,13 @@ export function LayerCard() {
         value={rainSource}
         disabled={!rain}
         onValueChange={v => v && set({ rainSource: v as RainSource })}
-        aria-label="Rain after the cutoff"
+        aria-label={t('layers.rainAfter')}
       >
-        <ToggleGroupItem value="forecast" className="flex-1 text-[11px] data-[state=on]:bg-accent data-[state=on]:text-foreground" title="GFS forecast as issued at the cutoff (no hindsight)">
-          Forecast
+        <ToggleGroupItem value="forecast" className="flex-1 text-[11px] data-[state=on]:bg-accent data-[state=on]:text-foreground" title={t('layers.forecastTip')}>
+          {t('layers.forecast')}
         </ToggleGroupItem>
-        <ToggleGroupItem value="observed" className="flex-1 text-[11px] data-[state=on]:bg-accent data-[state=on]:text-foreground" title="IMERG satellite rain after the cutoff: validation only, not knowable at the cutoff">
-          Observed · validation
+        <ToggleGroupItem value="observed" className="flex-1 text-[11px] data-[state=on]:bg-accent data-[state=on]:text-foreground" title={t('layers.observedTip')}>
+          {t('layers.observed')}
         </ToggleGroupItem>
       </ToggleGroup>
         </>
@@ -87,16 +89,16 @@ export function LayerCard() {
       {!live && (
         <>
       <div className="my-3 h-px bg-[var(--hairline)]" />
-      <Heading>Infrastructure</Heading>
-      <p className="mb-1 text-[11px] text-muted-foreground">Appears when you zoom into the coast.</p>
-      {ASSET_ORDER.map(t => (
-        <Row key={t} label={ASSET_TYPES[t].label} checked={infra[t]} onChange={v => set({ infra: { ...infra, [t]: v } })} />
+      <Heading>{t('layers.infra')}</Heading>
+      <p className="mb-1 text-[11px] text-muted-foreground">{t('layers.infraHint')}</p>
+      {ASSET_ORDER.map(a => (
+        <Row key={a} label={t(`asset.${a}` as Key)} checked={infra[a]} onChange={v => set({ infra: { ...infra, [a]: v } })} />
       ))}
         </>
       )}
 
       <div className="my-3 h-px bg-[var(--hairline)]" />
-      <Heading>Map</Heading>
+      <Heading>{t('layers.map')}</Heading>
       <ToggleGroup
         type="single"
         size="sm"
@@ -105,11 +107,11 @@ export function LayerCard() {
         className="w-full"
         value={basemap}
         onValueChange={v => v && set({ basemap: v as Basemap })}
-        aria-label="Basemap"
+        aria-label={t('layers.basemap')}
       >
         {(['dark', 'satellite', 'terrain'] as const).map(b => (
-          <ToggleGroupItem key={b} value={b} className="flex-1 text-[11px] capitalize data-[state=on]:bg-accent data-[state=on]:text-foreground">
-            {b}
+          <ToggleGroupItem key={b} value={b} className="flex-1 text-[11px] data-[state=on]:bg-accent data-[state=on]:text-foreground">
+            {t(`layers.${b}` as Key)}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>

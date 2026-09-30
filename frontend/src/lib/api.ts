@@ -100,7 +100,7 @@ export const api = {
   catalog: () => get<{ tiles: CatalogTile[] }>('/api/catalog'),
   timeline: () => get<Timeline>('/api/timeline'),
   forecast: (cutoff: string) => get<ExperimentalForecast>(`/api/forecast/experimental?cutoff=${encodeURIComponent(cutoff)}`),
-  explain: (element: string, id: number, time: string, cutoff: string, narrative: boolean) =>
-    post<AssetExplanation>(`/api/assets/${element}/${id}/explain?time=${encodeURIComponent(time)}&cutoff=${encodeURIComponent(cutoff)}&narrative=${narrative}`),
+  explain: (element: string, id: number, time: string, cutoff: string, narrative: boolean, language: string) =>
+    post<AssetExplanation>(`/api/assets/${element}/${id}/explain?time=${encodeURIComponent(time)}&cutoff=${encodeURIComponent(cutoff)}&narrative=${narrative}&language=${language}`),
   assets: () => get<AssetColumns>('/api/assets?format=columnar'),
 }

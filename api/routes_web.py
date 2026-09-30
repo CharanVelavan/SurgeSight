@@ -54,7 +54,8 @@ def regions() -> dict[str, Any]:
 def explain_asset(element: Literal["node", "way", "relation"], osm_id: int, request: Request, region: str | None = None,
                   time: str | None = Query(None, description="UTC valid time for the distance to the storm"),
                   cutoff: str | None = Query(None, description="UTC bulletin cutoff"),
-                  narrative: bool = Query(False, description="Also write the short text (uses Gemini unless offline)")) -> dict[str, Any]:
+                  narrative: bool = Query(False, description="Also write the short text (uses Gemini unless offline)"),
+                  language: Language = Query("English", description="Language of the written text")) -> dict[str, Any]:
     """Facts behind an asset's ranking, and optionally a short text written from those facts only."""
     from services import asset_explain as ax
     from services.departments import score_all_assets
@@ -73,7 +74,7 @@ def explain_asset(element: Literal["node", "way", "relation"], osm_id: int, requ
     body: dict[str, Any] = {"facts": facts, "text": None, "text_source": None}
     if narrative:
         limit_narrative(request)
-        text, source = ax.cached_narrative(facts)
+        text, source = ax.cached_narrative(facts, language=language)
         body.update(text=text.model_dump(), text_source=source)
     return jsonable(body)
 

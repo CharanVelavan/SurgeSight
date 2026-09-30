@@ -30,6 +30,13 @@ check(await page.getByText(/not an official warning/).isVisible(), 'landing page
   check(bad.length === 0, `axe (landing): ${bad.map((v) => v.id).join(', ')}`)
   if (shots) await page.screenshot({ path: `${shots}/landing-1440.png` })
 }
+// language: Tamil renders, html lang follows, and it switches back
+await page.getByRole('combobox', { name: 'Language' }).selectOption('ta')
+await page.getByText('புயல் கரையைத் தொடும் முன்பே').waitFor({ timeout: 5000 })
+check((await page.evaluate(() => document.documentElement.lang)) === 'ta', 'html lang did not follow the language')
+if (shots) await page.screenshot({ path: `${shots}/landing-ta-1440.png` })
+await page.getByRole('combobox', { name: 'மொழி' }).selectOption('en')
+await page.getByText('Cyclone impact, before it lands').waitFor({ timeout: 5000 })
 await page.getByRole('link', { name: /Cyclone Michaung/ }).click()
 await page.waitForURL('**/storm/michaung_2023')
 await page.waitForFunction(() => window.__overlay?._deck?.layerManager?.getLayers().some((l) => l.id === 'wind'), null, { timeout: 30000 })

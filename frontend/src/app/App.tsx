@@ -15,6 +15,7 @@ import { AtRisk } from '@/panels/AtRisk'
 import { AssetPopover } from '@/panels/AssetPopover'
 import { AssetWhy } from '@/panels/AssetWhy'
 import { Intro } from '@/panels/Intro'
+import { useT } from '@/i18n'
 import { Landing } from './Landing'
 import { SavedNotice } from '@/panels/SavedNotice'
 import { LiveBanner } from '@/panels/LiveBanner'
@@ -30,14 +31,15 @@ const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1, ref
 const showPerf = new URLSearchParams(location.search).has('perf')
 
 function LoadingNote() {
+  const t = useT()
   const loaded = useWeather(s => s.loaded)
   const total = useWeather(s => s.total)
   const error = useWeather(s => s.error)
-  if (error) return <div className="panel absolute top-16 left-1/2 z-30 -translate-x-1/2 px-3 py-1.5 text-xs text-[#E0B34A]">Weather frames unavailable: {error}</div>
+  if (error) return <div className="panel absolute top-16 left-1/2 z-30 -translate-x-1/2 px-3 py-1.5 text-xs text-[#E0B34A]">{t('app.weatherError', { error })}</div>
   if (!total || loaded >= total) return null
   return (
     <div className="panel num absolute top-16 left-1/2 z-30 -translate-x-1/2 px-3 py-1.5 text-xs text-muted-foreground">
-      Loading weather {loaded}/{total}
+      {t('app.loadingWeather', { loaded, total })}
     </div>
   )
 }
@@ -82,12 +84,13 @@ function Dashboard({ mode }: { mode: 'replay' | 'live' }) {
   )
 }
 
-function NotAvailable({ what }: { what: string }) {
+function NotAvailable({ what }: { what: 'live' | 'storm' }) {
+  const t = useT()
   return (
     <main className="grid h-full place-items-center bg-background px-6 text-center">
       <div>
-        <p className="text-lg font-semibold">{what} is not available yet</p>
-        <a href="/" onClick={e => onLinkClick(e, '/')} className="mt-3 inline-block text-sm text-primary underline">Back to all views</a>
+        <p className="text-lg font-semibold">{what === 'live' ? t('app.unavailableLive') : t('app.unavailableStorm')}</p>
+        <a href="/" onClick={e => onLinkClick(e, '/')} className="mt-3 inline-block text-sm text-primary underline">{t('app.back')}</a>
       </div>
     </main>
   )
@@ -95,11 +98,12 @@ function NotAvailable({ what }: { what: string }) {
 
 /** Opens a view only when the catalog says its data is ready; anything else says so and links back. */
 function Gate({ id, kind }: { id: string; kind: 'live' | 'storm' }) {
+  const t = useT()
   const { data, isError } = useQuery({ queryKey: ['catalog'], queryFn: api.catalog, staleTime: 60_000 })
   const mode = kind === 'live' ? 'live' : 'replay'
   if (isError && kind === 'storm') return <Dashboard mode="replay" />
-  if (!data && !isError) return <main className="grid h-full place-items-center bg-background text-sm text-muted-foreground">Loading…</main>
-  if (!data?.tiles.some(t => t.id === id && t.kind === kind && t.status === 'available')) return <NotAvailable what={kind === 'live' ? 'Live weather' : 'This storm'} />
+  if (!data && !isError) return <main className="grid h-full place-items-center bg-background text-sm text-muted-foreground">{t('app.loading')}</main>
+  if (!data?.tiles.some(t => t.id === id && t.kind === kind && t.status === 'available')) return <NotAvailable what={kind} />
   return <Dashboard mode={mode} />
 }
 

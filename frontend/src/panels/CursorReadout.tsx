@@ -1,3 +1,4 @@
+import { useT, type Key } from '@/i18n'
 import { formatLatLon, windFrom } from '@/lib/format'
 import { useUi } from '@/state/ui'
 import { useClock } from '@/timeline/clock'
@@ -8,6 +9,7 @@ import { useWeather } from '@/weather/useWeather'
 
 /** Wind and rain under the pointer for the frame on screen (bilinear sample of the CPU copy). */
 export function CursorReadout() {
+  const t = useT()
   const cursor = useUi(s => s.cursor)
   const overAsset = useUi(s => s.hoverAsset !== null)
   const { wind: showWind, rain: showRain, rainSource, field } = useUi()
@@ -34,19 +36,19 @@ export function CursorReadout() {
       {w && (
         <div>
           <span className="text-foreground">{(speed * 3.6).toFixed(0)} km/h</span>
-          <span className="text-muted-foreground"> {windFrom(w.u, w.v)} · {speed.toFixed(1)} m/s</span>
+          <span className="text-muted-foreground"> {t('readout.windDir', { dir: windFrom(w.u, w.v) })} · {speed.toFixed(1)} m/s</span>
         </div>
       )}
       {sv != null && surface && (
         <div>
           <span className="text-foreground">{sv.toFixed(surface.digits)} {surface.unit}</span>
-          <span className="text-muted-foreground"> {surface.label.toLowerCase()}</span>
+          <span className="text-muted-foreground"> {t(`field.${field}` as Key)}</span>
         </div>
       )}
       {r != null && (
         <div>
           <span className="text-foreground">{r < 0.1 ? '0' : r.toFixed(r < 10 ? 1 : 0)} mm/h</span>
-          <span className="text-muted-foreground"> rain{rp?.kind === 'validation' ? ' · validation' : ''}</span>
+          <span className="text-muted-foreground"> {t('readout.rain')}{rp?.kind === 'validation' ? ` · ${t('readout.validation')}` : ''}</span>
         </div>
       )}
     </div>

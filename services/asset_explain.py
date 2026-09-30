@@ -127,7 +127,7 @@ def offline() -> bool:
     return os.getenv("SURGESIGHT_OFFLINE") == "1"
 
 
-def narrate(facts: dict[str, Any], generate=None) -> tuple[Narrative, str]:
+def narrate(facts: dict[str, Any], generate=None, language: str = "English") -> tuple[Narrative, str]:
     """(text, source). ``generate`` is injected in tests; by default Gemini via generate_structured."""
     if generate is None:
         if offline():
@@ -137,7 +137,8 @@ def narrate(facts: dict[str, Any], generate=None) -> tuple[Narrative, str]:
         def generate(prompt: str) -> Narrative:  # type: ignore[misc]
             return generate_structured(contents=prompt, schema=Narrative, system_instruction=SYSTEM_INSTRUCTION,
                                        max_output_tokens=600)
-    prompt = f"Explain this ranking.\n\n<FACTS>\n{json.dumps(facts, ensure_ascii=False, indent=1)}\n</FACTS>"
+    style = "" if language == "English" else f"Write in {language}, but keep every number in Latin digits 0-9 exactly as given.\n"
+    prompt = f"Explain this ranking.\n{style}\n<FACTS>\n{json.dumps(facts, ensure_ascii=False, indent=1)}\n</FACTS>"
     try:
         text = generate(prompt)
     except Exception:
@@ -151,10 +152,10 @@ def narrate(facts: dict[str, Any], generate=None) -> tuple[Narrative, str]:
 _CACHE: dict[str, tuple[Narrative, str]] = {}
 
 
-def cached_narrative(facts: dict[str, Any], generate=None) -> tuple[Narrative, str]:
-    key = hashlib.sha1(json.dumps(facts, sort_keys=True, default=str).encode()).hexdigest()
+def cached_narrative(facts: dict[str, Any], generate=None, language: str = "English") -> tuple[Narrative, str]:
+    key = hashlib.sha1(json.dumps([facts, language], sort_keys=True, default=str).encode()).hexdigest()
     if key not in _CACHE:
-        _CACHE[key] = narrate(facts, generate)
+        _CACHE[key] = narrate(facts, generate, language)
     return _CACHE[key]
 
 

@@ -1,9 +1,11 @@
 import { AlertTriangle } from 'lucide-react'
+import { useT } from '@/i18n'
 import { formatCycle } from '@/lib/format'
 import { useWeather } from '@/weather/useWeather'
 
 /** Which model run the live view shows, how old it is, and a warning when it is too old to rely on. */
 export function LiveBanner() {
+  const t = useT()
   const live = useWeather(s => s.manifest?.live)
   if (!live) return null
   const age = Math.round(live.age_hours)
@@ -14,15 +16,9 @@ export function LiveBanner() {
     >
       {live.stale && <AlertTriangle className="size-4 shrink-0" aria-hidden />}
       <span>
-        {live.stale ? (
-          <>
-            This forecast is {age} h old (older than {live.stale_after_hours} h). Do not use it for current conditions; check IMD.
-          </>
-        ) : (
-          <>
-            NOAA GFS model run {formatCycle(Date.parse(live.cycle))} · {age} h old · forecast, not observation
-          </>
-        )}
+        {live.stale
+          ? t('live.stale', { age, limit: live.stale_after_hours })
+          : t('live.fresh', { cycle: formatCycle(Date.parse(live.cycle)), age })}
       </span>
     </div>
   )

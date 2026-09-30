@@ -11,6 +11,7 @@ import { useUi, type Basemap } from '@/state/ui'
 import { onFrame } from '@/timeline/clock'
 import { buildLayers } from './layers'
 import { INTRO_MS, INDIA, IMPACT, IMPACT_LIMIT, easeInOutCubic, fitCamera, introSeen, markIntroSeen, nationalBox } from './view'
+import { currentLang } from '@/i18n'
 import { setMapFailed } from '@/lib/net'
 import { recordFrame } from './quality'
 
@@ -208,7 +209,7 @@ export function MapCanvas() {
     )
   }
   return (
-    <APIProvider apiKey={API_KEY} onError={() => setMapFailed()}>
+    <APIProvider apiKey={API_KEY} language={currentLang()} onError={() => setMapFailed()}>
       <Map
         className="absolute inset-0"
         mapId={MAP_ID}

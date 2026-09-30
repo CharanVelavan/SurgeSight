@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useStore } from 'zustand'
-import { assetsStore, ASSET_TYPES, type AssetType } from '@/data/assets'
+import { assetsStore, type AssetType } from '@/data/assets'
+import { useT, type Key } from '@/i18n'
 import { RISK, type RiskClass } from '@/lib/colors'
 import { formatInt } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -12,6 +13,7 @@ const TOP = 8
 
 /** Read-only summary of the screened infrastructure: counts by risk class and the highest-scoring assets. */
 export function AtRisk() {
+  const t = useT()
   const data = useStore(assetsStore, s => s.data)
   const infra = useUi(s => s.infra)
   const set = useUi(s => s.set)
@@ -35,12 +37,12 @@ export function AtRisk() {
   const max = Math.max(1, ...CLASSES.map(c => summary.counts[c] ?? 0))
 
   return (
-    <section aria-label="At-risk infrastructure" className="panel pointer-events-auto absolute top-28 right-3 z-10 w-64 p-3 max-md:hidden">
+    <section aria-label={t('atrisk.aria')} className="panel pointer-events-auto absolute top-28 right-3 z-10 w-64 p-3 max-md:hidden">
       <button type="button" onClick={() => setOpen(o => !o)} className="flex w-full items-center justify-between text-left" aria-expanded={open}>
         <span>
-          <span className="text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">At risk</span>
+          <span className="text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">{t('atrisk.title')}</span>
           <span className="num ml-2 text-[15px]">{formatInt(summary.total)}</span>
-          <span className="ml-1 text-[11px] text-muted-foreground">assets</span>
+          <span className="ml-1 text-[11px] text-muted-foreground">{t('atrisk.assets')}</span>
         </span>
         <ChevronDown className={cn('size-4 text-muted-foreground transition-transform', open && 'rotate-180')} />
       </button>
@@ -51,7 +53,7 @@ export function AtRisk() {
             {CLASSES.map(c => (
               <div key={c} className="flex items-center gap-2 text-[12px]">
                 <span className="w-4 text-center" style={{ color: RISK[c].color }} aria-hidden>{RISK[c].symbol}</span>
-                <span className="w-16 text-muted-foreground">{RISK[c].label}</span>
+                <span className="w-16 text-muted-foreground">{t(`risk.${c}` as Key)}</span>
                 <span className="h-1.5 flex-1 rounded-full bg-white/[0.06]">
                   <span className="block h-full rounded-full" style={{ width: `${((summary.counts[c] ?? 0) / max) * 100}%`, background: RISK[c].color }} />
                 </span>
@@ -60,7 +62,7 @@ export function AtRisk() {
             ))}
           </div>
 
-          <div className="mt-3 mb-1 text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">Highest score</div>
+          <div className="mt-3 mb-1 text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">{t('atrisk.top')}</div>
           <ul className="-mx-1">
             {summary.top.map(i => {
               const cls = (data.riskClass[i] in RISK ? data.riskClass[i] : 'LOW') as RiskClass
@@ -77,8 +79,8 @@ export function AtRisk() {
                   >
                     <span style={{ color: RISK[cls].color }} aria-hidden>{RISK[cls].symbol}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate">{data.name[i] || 'Unnamed'}</span>
-                      <span className="block truncate text-[11px] text-muted-foreground">{ASSET_TYPES[data.type[i] as AssetType]?.label.replace(/s$/, '')}</span>
+                      <span className="block truncate">{data.name[i] || t('asset.unnamed')}</span>
+                      <span className="block truncate text-[11px] text-muted-foreground">{t(`asset1.${data.type[i]}` as Key)}</span>
                     </span>
                     <span className="num text-[11px] text-muted-foreground">{data.riskScore[i].toFixed(2)}</span>
                   </button>

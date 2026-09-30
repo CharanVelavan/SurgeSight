@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Loader2, X } from 'lucide-react'
 import { useStore } from 'zustand'
-import { ASSET_TYPES, assetsStore, type AssetType } from '@/data/assets'
+import { assetsStore } from '@/data/assets'
+import { currentApiLanguage, useT, t, type Key } from '@/i18n'
 import { api, type AssetFacts } from '@/lib/api'
 import { RISK, type RiskClass } from '@/lib/colors'
 import { formatIST } from '@/lib/format'
@@ -11,7 +12,7 @@ import { cutoffParam } from '@/app/queries'
 import { clock } from '@/timeline/clock'
 
 const isCritical = (cls: string) => cls === 'CRITICAL' || cls === 'HIGH'
-const fmt = (v: number | null | undefined, unit: string) => (v === null || v === undefined ? 'not available' : `${v} ${unit}`)
+const fmt = (v: number | null | undefined, unit: string) => (v === null || v === undefined ? t('why.notAvailable') : `${v} ${unit}`)
 
 function Row({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
@@ -25,27 +26,40 @@ function Row({ label, value, note }: { label: string; value: string; note?: stri
   )
 }
 
+const NOTE_KEYS: Record<string, Key> = {
+  'distance to the observed storm centre at the selected time': 'why.noteObserved',
+  "the storm's position after the cutoff is a forecast, so no distance is given": 'why.noteForecast',
+  'outside the observed track': 'why.noteOutside',
+  'no time selected': 'why.noteNone',
+}
+
 function FactTable({ f, askedAt }: { f: AssetFacts; askedAt: number }) {
+  const t = useT()
   const d = f.distance
+  const level = t(`why.level.${f.waterlogging.level}` as Key)
+  const noteKey = NOTE_KEYS[d.distance_at_time_note]
   return (
     <dl>
-      <Row label="Elevation" value={fmt(f.elevation_m, 'm above sea level')} />
-      <Row label="Waterlogging" value={f.waterlogging.level} note={`${fmt(f.waterlogging.rain_forecast_mm, 'mm')} forecast rain, terrain score ${f.waterlogging.terrain_flood_score ?? '—'}`} />
-      <Row label="Peak wind" value={fmt(f.wind_peak_kmh, 'km/h')} />
-      <Row label="Storm surge" value={fmt(f.surge_m, 'm')} />
-      <Row label="Closest approach" value={`${d.closest_approach_km} km`} note={`at ${d.closest_approach_time_utc.replace('T', ' ').replace('Z', ' UTC')}`} />
-      <Row label={`Distance at ${formatIST(askedAt)}`} value={d.distance_at_time_km === null ? 'not shown' : `${d.distance_at_time_km} km`} note={d.distance_at_time_note} />
+      <Row label={t('why.elevation')} value={f.elevation_m === null ? t('why.notAvailable') : t('why.elevationValue', { m: f.elevation_m })} />
+      <Row label={t('why.waterlogging')} value={level} note={t('why.waterloggingNote', { mm: f.waterlogging.rain_forecast_mm ?? '—', score: f.waterlogging.terrain_flood_score ?? '—' })} />
+      <Row label={t('why.wind')} value={fmt(f.wind_peak_kmh, 'km/h')} />
+      <Row label={t('why.surge')} value={fmt(f.surge_m, 'm')} />
+      <Row label={t('why.closest')} value={`${d.closest_approach_km} km`} note={t('why.closestAt', { time: d.closest_approach_time_utc.replace('T', ' ').replace('Z', '') })} />
+      <Row label={t('why.distanceAt', { time: formatIST(askedAt) })} value={d.distance_at_time_km === null ? t('why.notShown') : `${d.distance_at_time_km} km`} note={noteKey ? t(noteKey) : d.distance_at_time_note} />
       <Row
-        label="What drives the score"
-        value={Object.entries(f.hazard_contributions).map(([k, v]) => `${k} ${v}`).join(' · ')}
-        note="wind, surge and rain flooding, weighted"
+        label={t('why.drives')}
+        value={Object.entries(f.hazard_contributions).map(([k, v]) => `${t(`hazard.${HAZARD_KEY[k] ?? 'none'}` as Key)} ${v}`).join(' · ')}
+        note={t('why.drivesNote')}
       />
     </dl>
   )
 }
 
+const HAZARD_KEY: Record<string, string> = { wind: 'wind', 'storm surge': 'surge', 'rain flooding': 'rain_flood' }
+
 /** Opens when a marker is clicked. The button fetches the facts behind the ranking, then a short text written from them. */
 export function AssetWhy() {
+  const t = useT()
   const i = useUi(s => s.selectedAsset)
   const set = useUi(s => s.set)
   const data = useStore(assetsStore, s => s.data)
@@ -54,37 +68,37 @@ export function AssetWhy() {
   const key = data && i !== null ? [data.osmElement[i], data.osmId[i]] : null
   const args = asked && key ? { time: cutoffParam(asked.time), cutoff: cutoffParam(asked.cutoff) } : null
   const facts = useQuery({
-    queryKey: ['why', key, args, false],
-    queryFn: () => api.explain(String(key![0]), Number(key![1]), args!.time, args!.cutoff, false),
+    queryKey: ['why', key, args, false, currentApiLanguage()],
+    queryFn: () => api.explain(String(key![0]), Number(key![1]), args!.time, args!.cutoff, false, currentApiLanguage()),
     enabled: !!args && !!key,
     staleTime: Infinity,
     retry: 0,
   })
   const text = useQuery({
-    queryKey: ['why', key, args, true],
-    queryFn: () => api.explain(String(key![0]), Number(key![1]), args!.time, args!.cutoff, true),
+    queryKey: ['why', key, args, true, currentApiLanguage()],
+    queryFn: () => api.explain(String(key![0]), Number(key![1]), args!.time, args!.cutoff, true, currentApiLanguage()),
     enabled: !!args && !!key && facts.isSuccess,
     staleTime: Infinity,
     retry: 0,
   })
   if (i === null || !data) return null
   const cls = (data.riskClass[i] in RISK ? data.riskClass[i] : 'LOW') as RiskClass
-  const type = ASSET_TYPES[data.type[i] as AssetType]?.label.replace(/s$/, '') ?? data.type[i]
+  const type = t(`asset1.${data.type[i]}` as Key)
   const critical = isCritical(cls)
   return (
-    <section aria-label="Why this ranking" className="panel pointer-events-auto absolute top-28 right-3 z-20 flex max-h-[calc(100dvh-14rem)] w-80 flex-col overflow-y-auto p-3 max-md:fixed max-md:inset-x-3 max-md:top-auto max-md:bottom-3 max-md:max-h-[65dvh] max-md:w-auto">
+    <section aria-label={t('why.aria')} className="panel pointer-events-auto absolute top-28 right-3 z-20 flex max-h-[calc(100dvh-14rem)] w-80 flex-col overflow-y-auto p-3 max-md:fixed max-md:inset-x-3 max-md:top-auto max-md:bottom-3 max-md:max-h-[65dvh] max-md:w-auto">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="truncate text-[13px] font-medium">{data.name[i] || 'Unnamed'}</div>
+          <div className="truncate text-[13px] font-medium">{data.name[i] || t('asset.unnamed')}</div>
           <div className="text-[11px] text-muted-foreground">{type}</div>
         </div>
-        <button type="button" onClick={() => set({ selectedAsset: null })} aria-label="Close details" className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground hover:bg-accent">
+        <button type="button" onClick={() => set({ selectedAsset: null })} aria-label={t('why.close')} className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground hover:bg-accent">
           <X className="size-4" />
         </button>
       </div>
       <div className="mt-1.5 flex items-center gap-1.5 text-[12px]">
         <span style={{ color: RISK[cls].color }} aria-hidden>{RISK[cls].symbol}</span>
-        {RISK[cls].label} risk
+        {t('risk.suffix', { level: t(`risk.${cls}` as Key) })}
         <span className="num ml-auto text-muted-foreground">{data.riskScore[i].toFixed(2)}</span>
       </div>
 
@@ -94,21 +108,21 @@ export function AssetWhy() {
           onClick={() => setAsked({ time: clock.getState().time, cutoff: clock.getState().cutoff })}
           className="mt-3 rounded-lg bg-primary/15 px-3 py-2 text-[13px] font-medium text-primary hover:bg-primary/25"
         >
-          {critical ? 'Why is this critical?' : 'Why is this not critical?'}
+          {critical ? t('why.button.critical') : t('why.button.notCritical')}
         </button>
       )}
 
       {asked && (
         <div className="mt-3">
-          {facts.isPending && <div className="flex items-center gap-2 text-[12px] text-muted-foreground"><Loader2 className="size-4 animate-spin" aria-hidden />Working out the numbers…</div>}
-          {facts.isError && <div role="alert" className="text-[12px] text-[#E0B34A]">The numbers could not be loaded. Check the connection and try again.</div>}
+          {facts.isPending && <div className="flex items-center gap-2 text-[12px] text-muted-foreground"><Loader2 className="size-4 animate-spin" aria-hidden />{t('why.working')}</div>}
+          {facts.isError && <div role="alert" className="text-[12px] text-[#E0B34A]">{t('why.error')}</div>}
           {facts.data && (
             <>
-              <div className="mb-1 text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">The numbers</div>
+              <div className="mb-1 text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">{t('why.numbers')}</div>
               <FactTable f={facts.data.facts} askedAt={asked.time} />
-              <div className="mt-3 mb-1 text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">In words</div>
-              {text.isPending && <div className="flex items-center gap-2 text-[12px] text-muted-foreground"><Loader2 className="size-4 animate-spin" aria-hidden />Writing a short explanation…</div>}
-              {text.isError && <div className="text-[12px] text-muted-foreground">The written summary is unavailable. The numbers above are complete.</div>}
+              <div className="mt-3 mb-1 text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">{t('why.words')}</div>
+              {text.isPending && <div className="flex items-center gap-2 text-[12px] text-muted-foreground"><Loader2 className="size-4 animate-spin" aria-hidden />{t('why.writing')}</div>}
+              {text.isError && <div className="text-[12px] text-muted-foreground">{t('why.textError')}</div>}
               {text.data?.text && (
                 <div className="text-[12px] leading-relaxed">
                   <p>{text.data.text.summary}</p>
@@ -118,11 +132,11 @@ export function AssetWhy() {
                     </ul>
                   )}
                   <p className="mt-2 text-[10px] text-muted-foreground">
-                    {text.data.text_source === 'gemini' ? 'Written by Gemini from these numbers only; numbers checked against the table.' : 'Standard wording over the numbers above.'}
+                    {text.data.text_source === 'gemini' ? t('why.fromGemini') : t('why.fromTemplate')}
                   </p>
                 </div>
               )}
-              <p className="mt-2 text-[10px] leading-snug text-muted-foreground">{facts.data.facts.disclaimer}</p>
+              <p className="mt-2 text-[10px] leading-snug text-muted-foreground">{t('why.disclaimer')}</p>
             </>
           )}
         </div>

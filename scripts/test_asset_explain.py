@@ -42,6 +42,9 @@ def test_narrative(facts: dict) -> None:
     def boom(prompt):
         raise RuntimeError("quota")
     assert ax.narrate(facts, generate=boom)[1] == "template", "a Gemini failure falls back to the template"
+    seen: list[str] = []
+    ax.narrate(facts, generate=lambda prompt: seen.append(prompt) or ax.Narrative(summary="x", reasons=[]), language="Tamil")
+    assert "Write in Tamil" in seen[0] and "Latin digits" in seen[0], "the language must reach the prompt"
     template = ax.template_text(facts)
     assert not ax.grounding_guard.check(" ".join([template.summary, *template.reasons]), [{"data": facts}]), "the template itself must be grounded"
     print("narrative ok")

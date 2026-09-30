@@ -11,6 +11,7 @@ import { formatCycle, formatDay, formatIST } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { HOUR, cycleForCutoff, toMs } from '@/weather/manifest'
 import { useWeather } from '@/weather/useWeather'
+import { useT } from '@/i18n'
 import { useUi } from '@/state/ui'
 import { SPEEDS, clock, clockActions, useClock } from './clock'
 
@@ -20,6 +21,7 @@ const IST_OFFSET = 5.5 * HOUR
 const pct = (t: number, start: number, end: number) => `${(((t - start) / (end - start)) * 100).toFixed(3)}%`
 
 export function Timeline() {
+  const t = useT()
   const { data: timeline } = useTimeline()
   const manifest = useWeather(s => s.manifest)
   const { start, end, cutoff, playing, speed } = useClock(s => ({ start: s.start, end: s.end, cutoff: s.cutoff, playing: s.playing, speed: s.speed }), 100)
@@ -104,8 +106,8 @@ export function Timeline() {
     target.addEventListener('pointerup', up)
     target.addEventListener('pointercancel', up)
   }
-  const scrub = (t: number) => clockActions.setTime(Math.round(t / (HOUR / 4)) * (HOUR / 4))
-  const moveCutoff = (t: number) => !live && clockActions.setCutoff(Math.round(t / CUTOFF_STEP) * CUTOFF_STEP)
+  const scrub = (ms: number) => clockActions.setTime(Math.round(ms / (HOUR / 4)) * (HOUR / 4))
+  const moveCutoff = (ms: number) => !live && clockActions.setCutoff(Math.round(ms / CUTOFF_STEP) * CUTOFF_STEP)
 
   const cycle = manifest ? cycleForCutoff(manifest, cutoff) : null
   const forecastEnd = cycle ? Math.min(end, toMs(cycle.frames[cycle.frames.length - 1])) : cutoff
@@ -116,17 +118,17 @@ export function Timeline() {
   const landfall = !live && timeline?.first_over_land ? toMs(timeline.first_over_land.time) : null
 
   return (
-    <section aria-label="Timeline" className="panel pointer-events-auto absolute inset-x-3 bottom-8 z-20 px-3 pt-2 pb-2.5 select-none">
+    <section aria-label={t('timeline.aria')} className="panel pointer-events-auto absolute inset-x-3 bottom-8 z-20 px-3 pt-2 pb-2.5 select-none">
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={clockActions.toggle}
-          aria-label={playing ? 'Pause' : 'Play'}
+          aria-label={playing ? t('timeline.pause') : t('timeline.play')}
           className="grid size-8 place-items-center rounded-lg bg-secondary text-foreground transition-colors hover:bg-accent"
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
         </button>
-        <div className="flex rounded-lg bg-secondary p-0.5" role="radiogroup" aria-label="Playback speed">
+        <div className="flex rounded-lg bg-secondary p-0.5" role="radiogroup" aria-label={t('timeline.speed')}>
           {SPEEDS.map(s => (
             <button
               key={s}
@@ -143,11 +145,11 @@ export function Timeline() {
         <div className="num ml-1 text-[13px]">{formatIST(time)}</div>
         <div className="ml-auto flex items-center gap-3 text-[11px] text-muted-foreground max-sm:hidden">
           <span>
-            {live ? 'Model run' : 'Cutoff'} <span className="num text-foreground">{formatIST(cutoff)}</span>
+            {live ? t('timeline.run') : t('timeline.cutoff')} <span className="num text-foreground">{formatIST(cutoff)}</span>
           </span>
-          <span>{cycle ? `GFS ${formatCycle(toMs(cycle.cycle))}` : 'no forecast issued yet'}</span>
-          <span className="max-lg:hidden" title="Space play · ←/→ 1 h (Shift 6 h) · [ / ] move cutoff 12 h">
-            Keys: space ← → [ ]
+          <span>{cycle ? `GFS ${formatCycle(toMs(cycle.cycle))}` : t('timeline.noForecast')}</span>
+          <span className="max-lg:hidden" title={t('timeline.keysTip')}>
+            {t('timeline.keys')}
           </span>
         </div>
       </div>
@@ -161,7 +163,7 @@ export function Timeline() {
         <div
           role="slider"
           tabIndex={0}
-          aria-label="Valid time"
+          aria-label={t('timeline.validTime')}
           aria-valuemin={start}
           aria-valuemax={end}
           aria-valuenow={time}
@@ -190,7 +192,7 @@ export function Timeline() {
           <div
             className="absolute top-[9px] size-2.5 -translate-x-1/2 rotate-45 border border-[#E0B34A] bg-background"
             style={{ left: pct(landfall, start, end) }}
-            title={`First observed track point over land · ${formatIST(landfall)}`}
+            title={t('timeline.landfall', { time: formatIST(landfall) })}
           />
         )}
 
@@ -198,7 +200,7 @@ export function Timeline() {
         <div
           role="slider"
           tabIndex={0}
-          aria-label={live ? 'Model run' : 'Bulletin cutoff'}
+          aria-label={live ? t('timeline.run') : t('timeline.cutoffAria')}
           aria-valuenow={cutoff}
           aria-valuetext={formatIST(cutoff)}
           onPointerDown={e => !live && drag(e, moveCutoff)}
@@ -214,14 +216,14 @@ export function Timeline() {
         >
           <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-foreground/80" />
           <div className="num absolute -top-0.5 left-1/2 -translate-x-1/2 rounded-sm bg-foreground px-1 text-[9px] leading-3 font-semibold tracking-wider text-background group-focus-visible:ring-2 group-focus-visible:ring-ring">
-            {live ? 'RUN' : 'NOW'}
+            {live ? t('timeline.runTag') : t('timeline.now')}
           </div>
         </div>
 
         {live && Date.now() > start && Date.now() < end && (
-          <div className="absolute top-[3px] z-10 h-5 w-0" style={{ left: pct(Date.now(), start, end) }} title="Current time">
+          <div className="absolute top-[3px] z-10 h-5 w-0" style={{ left: pct(Date.now(), start, end) }} title={t('timeline.nowTip')}>
             <div className="absolute inset-y-0 w-px -translate-x-1/2 bg-[#3FB27F]" />
-            <div className="num absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-[#3FB27F] px-1 text-[9px] leading-3 font-semibold tracking-wider text-background">NOW</div>
+            <div className="num absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-[#3FB27F] px-1 text-[9px] leading-3 font-semibold tracking-wider text-background">{t('timeline.now')}</div>
           </div>
         )}
 
