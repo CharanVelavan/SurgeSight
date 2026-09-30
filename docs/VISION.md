@@ -1,4 +1,6 @@
-# SurgeSight
+# SurgeSight: vision
+
+> **Original vision document.** It describes the full ambition, including a public citizen experience that is not built. For what actually works today, read the [README](../README.md) and [ARCHITECTURE](ARCHITECTURE.md).
 
 Track-Based Cyclone Impact, Infrastructure Vulnerability and Public Safety Intelligence
 
@@ -1624,7 +1626,7 @@ Without activating the environment:
 Project ID:
 
 ```text
-gen-lang-client-0679887739
+<project-id>
 ```
 
 Enabled / validated components include:
@@ -1646,7 +1648,7 @@ gemini-3.7-flash
 TTS service identity:
 
 ```text
-surgesight-dev@gen-lang-client-0679887739.iam.gserviceaccount.com
+<service-account>@<project-id>.iam.gserviceaccount.com
 ```
 
 Secrets must never be committed.

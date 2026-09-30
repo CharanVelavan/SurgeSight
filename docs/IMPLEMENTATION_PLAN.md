@@ -826,7 +826,7 @@ GET  /runs/{run_id}                        full stored payload
 
 **Estimate:** 2 h.
 
-- [ ] README: ≤ ~200 lines (pitch, live URL, screenshots, architecture diagram, Google services table, key results, limitations, quickstart). Move planning, demo script and roadmap to `docs/`. Remove project ID / service-account email.
+- [x] README: ≤ ~200 lines (pitch, live URL, screenshots, architecture diagram, Google services table, key results, limitations, quickstart). Move planning, demo script and roadmap to `docs/`. Remove project ID / service-account email. **Done 2026-09-30:** `README.md` (about 110 lines: pitch, architecture diagram in Mermaid, Google services table with built/not-built state, measured results with an honest reading, quickstart, limitations), `docs/ARCHITECTURE.md`, and the old 2,527-line README moved to `docs/VISION.md` with a banner and the project ID and service-account email removed. NOT done: screenshots, and the live URL (nothing is deployed). The Mermaid diagrams render on GitHub and GitLab but were not rendered locally.
 - [ ] Deck: 10–12 slides.
 - [ ] Demo video 3–5 min: bulletin → Gemini agent trace → impact (v1 vs v2, rain, surge) → +30 km what-if → ensemble ranking → satellite validation → department advisory in Tamil with audio → CAP + dispatch approval → Fani/Odisha → close.
 - [ ] Record rough screen captures as each WP lands (backup footage).
