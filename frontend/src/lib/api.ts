@@ -208,8 +208,17 @@ export interface CatalogTile {
   states?: string
 }
 
+export interface NowCity {
+  city: string
+  condition: string | null
+  temperature_c: number | null
+  rain_probability_pct: number | null
+  wind_kmh: number | null
+  gust_kmh: number | null
+}
+
 export const api = {
-  advisory: (department: string, language: string) => postJson<{ run_id: string; advisory: Advisory }>('/api/advisory', { department, language }),
+  advisory: (department: string, language: string, run_id?: string | null) => postJson<{ run_id: string; advisory: Advisory }>('/api/advisory', { department, language, run_id }),
   dispatches: () => get<DispatchItem[]>('/api/dispatch'),
   parametric: () => postJson<{ run_id: string; data: Parametric }>('/api/parametric/baseline', { members: 40 }),
   capUrl: (runId: string) => `/api/cap/${encodeURIComponent(runId)}`,
@@ -218,6 +227,7 @@ export const api = {
     if (!res.ok) throw new Error(`speech: HTTP ${res.status}`)
     return URL.createObjectURL(await res.blob())
   },
+  liveNow: () => get<{ cities: NowCity[]; source: string }>('/api/live/now'),
   catalog: () => get<{ tiles: CatalogTile[] }>('/api/catalog'),
   timeline: () => get<Timeline>('/api/timeline'),
   forecast: (cutoff: string) => get<ExperimentalForecast>(`/api/forecast/experimental?cutoff=${encodeURIComponent(cutoff)}`),

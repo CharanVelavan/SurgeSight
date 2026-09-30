@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any, Literal
-
+import os
 from pydantic import BaseModel, Field
 
 from services.config import get_settings
@@ -41,8 +41,21 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def get_department_recipients(department: str) -> list[str]:
+    try:
+        from services.departments import get_department
+        dept_id = get_department(department).id
+        return get_store().get(f"recipients-{dept_id}")["payload"]["recipients"]
+    except KeyError:
+        return []
+
+def save_department_recipients(department: str, recipients: list[str]) -> None:
+    from services.departments import get_department
+    dept_id = get_department(department).id
+    get_store().put(f"recipients-{dept_id}", "recipient_list", {"recipients": recipients})
+
 def allowed_recipients(department: str) -> set[str]:
-    return {r.lower() for r in get_settings().dispatch_allowlist} | {r.lower() for r in get_department(department).recipients}
+    return {r.lower() for r in get_settings().dispatch_allowlist} | {r.lower() for r in get_department(department).recipients} | set(get_department_recipients(department))
 
 
 def _save(dispatch: Dispatch) -> Dispatch:
@@ -117,7 +130,24 @@ def send(dispatch_id: str) -> Dispatch:
             if not dispatch.recipients or outside:
                 update.update(status="blocked", detail={"reason": "recipients not on the test allow-list", "recipients": outside or ["(none)"]})
             else:
-                update.update(status="sent", detail=gmail.send_email(dispatch.recipients, dispatch.subject, dispatch.body, dispatch.attachments))
+                from datetime import datetime, timedelta, timezone
+                now = datetime.now(timezone.utc)
+                hour_ago = (now - timedelta(hours=1)).isoformat()
+                recent = [d for d in list_dispatches("sent", limit=500) if (d.sent_at_utc or d.created_at_utc) > hour_ago]
+                if len(recent) >= 100:
+                    raise PermissionError("Global rate limit exceeded (100 per hour)")
+                dept_recent = [d for d in recent if d.department == dispatch.department]
+                if len(dept_recent) >= 10:
+                    raise PermissionError(f"Department rate limit exceeded (10 per hour for {dispatch.department})")
+                
+                provider = os.getenv("EMAIL_PROVIDER", "gmail").lower()
+                if provider == "gmail":
+                    update.update(status="sent", detail=gmail.send_email(dispatch.recipients, dispatch.subject, dispatch.body, dispatch.attachments))
+                else:
+                    from services.dispatch import cloud_email
+                    update.update(status="sent", detail=cloud_email.send_email(dispatch.recipients, dispatch.subject, dispatch.body, dispatch.attachments))
+        if update.get("status") == "sent":
+            get_store().log_event("approvals", f"{dispatch_id}-sent", {"dispatch_id": dispatch_id, "decision": "sent", "by": dispatch.decided_by, "department": dispatch.department, "recipients_count": len(dispatch.recipients)})
     except Exception as exc:
         update.update(status="failed", detail={"error": f"{type(exc).__name__}: {exc}"})
     return _save(dispatch.model_copy(update=update))

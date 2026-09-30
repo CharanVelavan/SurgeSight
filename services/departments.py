@@ -31,7 +31,8 @@ class Department:
     default_channels: tuple[str, ...] = ()
     recipients: tuple[str, ...] = ()
     facility_quality: tuple[str, ...] = field(default=())
-
+    auto_send: bool = False
+    auto_send_min_severity: str = "HIGH"
 
 @lru_cache(maxsize=1)
 def load_departments() -> dict[str, Department]:
@@ -42,6 +43,8 @@ def load_departments() -> dict[str, Department]:
             advisory_focus=v["advisory_focus"], key_questions=tuple(v.get("key_questions", ())),
             default_channels=tuple(v.get("default_channels", ())), recipients=tuple(v.get("recipients", ())),
             facility_quality=tuple(v.get("facility_quality", ())),
+            auto_send=bool(v.get("auto_send", False)),
+            auto_send_min_severity=str(v.get("auto_send_min_severity", "HIGH")),
         )
         for key, v in data.items()
     }

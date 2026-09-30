@@ -74,19 +74,41 @@ def _bulletin_track(bulletin_ref: str) -> tuple[pd.DataFrame, dict[str, Any]]:
     return built.track_df, {"parsed": parsed.data, "flags": list(built.flags)}
 
 
-def _department_draft(name: str, language: str, frame: pd.DataFrame) -> dict[str, Any]:
+def _department_draft(name: str, language: str, frame: pd.DataFrame, prev_severity: str | None = None, dept_diff: dict[str, int] | None = None) -> dict[str, Any]:
     from services.advisory import generate_role_advisory
     from services.cap import build_cap_alert
-    from services.dispatch.router import queue_dispatch
+    from services.dispatch.router import queue_dispatch, approve, send
 
     dept = get_department(name)
     advisory = generate_role_advisory(dept.display_name, language, frame)
-    cap = build_cap_alert(advisory, language, frame=frame)
-    body = "\n\n".join(p for p in (advisory.situation_summary, advisory.instruction, "\n".join(f"- {a}" for a in advisory.priority_actions), advisory.disclaimer) if p)
-    channel = dept.default_channels[0] if dept.default_channels else "chat"
-    dispatch = queue_dispatch(dept.display_name, channel, advisory.headline or dept.display_name, body,
-                              attachments=[{"name": "alert.cap.xml", "mime": "application/xml", "text": cap}])
-    return {"department": dept.display_name, "severity": advisory.severity, "headline": advisory.headline, "dispatch_id": dispatch.id}
+    
+    changed = True
+    if prev_severity is not None and dept_diff is not None:
+        facilities_changed = dept_diff.get("newly_high_or_critical", 0) > 0 or dept_diff.get("no_longer_high", 0) > 0
+        if advisory.severity == prev_severity and not facilities_changed:
+            changed = False
+            
+    res = {"department": dept.display_name, "severity": advisory.severity, "headline": advisory.headline, "queued": changed}
+    if changed:
+        cap = build_cap_alert(advisory, language, frame=frame)
+        body = "\n\n".join(p for p in (advisory.situation_summary, advisory.instruction, "\n".join(f"- {a}" for a in advisory.priority_actions), advisory.disclaimer) if p)
+        channel = dept.default_channels[0] if dept.default_channels else "chat"
+        dispatch = queue_dispatch(dept.display_name, channel, advisory.headline or dept.display_name, body,
+                                  attachments=[{"name": "alert.cap.xml", "mime": "application/xml", "text": cap}])
+        res["dispatch_id"] = dispatch.id
+        
+        if dept.auto_send:
+            severities = ["UNKNOWN", "LOW", "MODERATE", "HIGH", "CRITICAL"]
+            try:
+                idx_current = severities.index(advisory.severity.upper())
+                idx_min = severities.index(dept.auto_send_min_severity.upper())
+                if idx_current >= idx_min:
+                    approve(dispatch.id, by="auto")
+                    send(dispatch.id)
+                    res["auto_sent"] = True
+            except ValueError:
+                pass
+    return res
 
 
 def process(bulletin_ref: str, *, languages: dict[str, str] | None = None, departments: list[str] | None = None,
@@ -99,24 +121,67 @@ def process(bulletin_ref: str, *, languages: dict[str, str] | None = None, depar
     track, info = _bulletin_track(bulletin_ref)
     frame = score_all_assets(track)
     previous = next(iter(store.list(KIND, 1)), None)
+    
+    diff_result = None
+    prev_summary = {}
+    if previous:
+        diff_result = diff_runs(previous["run_id"], "temp", _new_frame=frame)
+        prev_summary = store.get(previous["run_id"])["payload"]
+        
     run_id = new_run_id("monitor")
     store.put_frame(run_id, "assets", frame)
     names = departments or [d.display_name for d in load_departments().values()]
     languages = languages or {}
+    
+    def _draft_worker(n):
+        lang = languages.get(get_department(n).id, "English")
+        prev_sev = None
+        dept_diff = None
+        if diff_result:
+            dept_diff = diff_result["by_department"].get(get_department(n).display_name, {})
+        if prev_summary and "drafts" in prev_summary:
+            for d in prev_summary["drafts"]:
+                if d["department"] == get_department(n).display_name:
+                    prev_sev = d.get("severity")
+                    break
+        return _department_draft(n, lang, frame, prev_sev, dept_diff)
+        
     with ThreadPoolExecutor(max_workers=draft_workers) as pool:
-        drafts = list(pool.map(lambda n: _department_draft(n, languages.get(get_department(n).id, "English"), frame), names))
+        drafts = list(pool.map(_draft_worker, names))
+        
     parametric = with_crore(evaluate(track, members=members))
+    
+    queued_count = sum(1 for d in drafts if d.get("queued"))
+    if queued_count > 0:
+        from services.config import get_settings
+        approvers = get_settings().dispatch_allowlist
+        if approvers:
+            provider = os.getenv("EMAIL_PROVIDER", "gmail").lower()
+            subj = f"SurgeSight: {queued_count} drafts waiting for approval"
+            link = os.getenv("PUBLIC_URL", "http://localhost:5173") + "/advisories"
+            body = f"{queued_count} drafts are waiting in the queue.\nReview them here: {link}"
+            try:
+                if provider == "gmail":
+                    from services.dispatch import gmail
+                    if gmail.is_configured():
+                        gmail.send_email(approvers, subj, body)
+                else:
+                    from services.dispatch import cloud_email
+                    cloud_email.send_email(approvers, subj, body)
+            except Exception as e:
+                pass # don't fail the whole run if summary email fails
+
     summary = {
         "bulletin_ref": bulletin_ref, "cyclone": info["parsed"].get("cyclone_name"), "track_flags": info["flags"],
         "track_points": int(len(track)),
         "class_counts": {str(k): int(v) for k, v in frame["class_v2"].value_counts().items()},
-        "drafts": drafts, "dispatch_ids": [d["dispatch_id"] for d in drafts],
+        "drafts": drafts, "dispatch_ids": [d["dispatch_id"] for d in drafts if d.get("dispatch_id")],
         "parametric_total_payout_crore": parametric["total_payout_crore"],
         "parametric_expected_payout_crore": parametric.get("ensemble", {}).get("expected_total_payout_crore"),
         "label": "Drafts are queued for human approval. Nothing has been sent. Parametric figures are illustrative.",
     }
-    if previous:
-        summary["diff_vs_previous"] = diff_runs(previous["run_id"], run_id, _new_frame=frame)
+    if diff_result:
+        summary["diff_vs_previous"] = diff_result
     store.put(run_id, KIND, summary)
     return {"run_id": run_id, **summary}
 

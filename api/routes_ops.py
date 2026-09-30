@@ -6,12 +6,13 @@ import asyncio
 import json
 from typing import Any, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import Response
+import re
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
+from fastapi.responses import Response, JSONResponse
 from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
-from api.auth import LOCAL_PRINCIPAL, Principal, require_approver
+from api.auth import LOCAL_PRINCIPAL, Principal, require_approver, get_principal, _serializer
 from api.deps import call_tool, require_task_caller, run_frame, stored, tool_payload
 from services.agent.builtin_tools import jsonable
 from services.store import get_store, new_run_id
@@ -20,6 +21,8 @@ router = APIRouter()
 Department = Literal["District Collector / Disaster Management", "Health Department", "Fire & Rescue Services", "Electricity Board",
                      "Police / Traffic", "Water & Sewage Board", "Fisheries Department"]
 Language = Literal["English", "Tamil", "Telugu", "Hindi", "Odia", "Bengali"]
+
+EMAIL_REGEX = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
 
 class AdvisoryBody(BaseModel):
@@ -37,14 +40,32 @@ def advisory(body: AdvisoryBody) -> dict[str, Any]:
         if stored(body.run_id)["kind"] != "riskv2":
             raise HTTPException(status_code=422, detail="Advisories need a risk_v2 run_id")
         frame = run_frame(body.run_id)
+        
+        # Check cache
+        cache_key = f"advisory-cache-{body.department}-{body.language}-{body.run_id}"
+        try:
+            cached = get_store().get(cache_key)
+            if cached["kind"] == "advisory_cache":
+                return cached["payload"]
+        except KeyError:
+            pass
+
     try:
         result = generate_role_advisory(body.department, body.language, frame)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Advisory generation failed: {exc}") from None
+    
     payload = jsonable(result.model_dump()) | {"language": body.language}
     run_id = new_run_id("advisory")
     get_store().put(run_id, "advisory", payload)
-    return {"run_id": run_id, "advisory": payload}
+    
+    res = {"run_id": run_id, "advisory": payload}
+    
+    if body.run_id:
+        cache_key = f"advisory-cache-{body.department}-{body.language}-{body.run_id}"
+        get_store().put(cache_key, "advisory_cache", res)
+        
+    return res
 
 
 class TtsBody(BaseModel):
@@ -142,6 +163,48 @@ def dispatch_list(status: str | None = None) -> list[dict[str, Any]]:
     return [d.model_dump(exclude={"attachments"}) | {"attachment_names": [a["name"] for a in d.attachments]} for d in dispatcher.list_dispatches(status)]
 
 
+@router.get("/api/dispatch/mode")
+def dispatch_mode() -> dict[str, Any]:
+    from services.config import get_settings
+    import os
+    provider = os.getenv("EMAIL_PROVIDER", "gmail")
+    return {"mode": get_settings().dispatch_mode, "provider_configured": provider}
+
+
+class RecipientBody(BaseModel):
+    department: str
+    email: str
+
+@router.get("/api/recipients")
+def get_recipients(department: str) -> list[str]:
+    from services.dispatch.router import get_department_recipients
+    return get_department_recipients(department)
+
+@router.post("/api/recipients")
+def add_recipient(body: RecipientBody, principal: Principal = Depends(require_approver)) -> list[str]:
+    from services.dispatch.router import get_department_recipients, save_department_recipients
+    email = body.email.strip().lower()
+    if not EMAIL_REGEX.match(email):
+        raise HTTPException(status_code=422, detail="Invalid email address format")
+    current = get_department_recipients(body.department)
+    if email not in current:
+        if len(current) >= 20:
+            raise HTTPException(status_code=400, detail="Maximum of 20 recipients per department reached")
+        current.append(email)
+        save_department_recipients(body.department, current)
+    return current
+
+@router.delete("/api/recipients")
+def remove_recipient(department: str, email: str, principal: Principal = Depends(require_approver)) -> list[str]:
+    from services.dispatch.router import get_department_recipients, save_department_recipients
+    email = email.strip().lower()
+    current = get_department_recipients(department)
+    if email in current:
+        current.remove(email)
+        save_department_recipients(department, current)
+    return current
+
+
 @router.post("/api/dispatch")
 def dispatch_queue(body: DispatchBody) -> dict[str, Any]:
     """Queue only. The message waits for a human to approve it."""
@@ -179,6 +242,38 @@ def dispatch_send(dispatch_id: str, principal: Principal = Depends(require_appro
         return d.send(dispatch_id).model_dump(exclude={"attachments"})
     except PermissionError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from None
+
+@router.post("/api/dispatch/simulate")
+def dispatch_simulate(principal: Principal = Depends(require_approver)) -> dict[str, Any]:
+    from services.monitor import poll_once, process
+    import os
+    sample = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "raw", "sample_michaung_bulletin.txt")
+    with open(sample, "r", encoding="utf-8") as f:
+        text = f.read()
+    polled = poll_once(text=text)
+    if not polled.get("bulletin_ref"):
+        raise HTTPException(status_code=400, detail="Failed to register sample bulletin")
+    return jsonable(process(polled["bulletin_ref"]))
+
+class LoginBody(BaseModel):
+    passcode: str
+
+@router.post("/api/login")
+def login(body: LoginBody) -> Response:
+    import os
+    expected = os.getenv("APPROVER_PASSCODE")
+    if not expected or body.passcode != expected:
+        raise HTTPException(status_code=401, detail="Invalid passcode")
+    token = _serializer().dumps("approver")
+    response = JSONResponse(content={"status": "ok"})
+    response.set_cookie(key="approver_session", value=token, httponly=True, samesite="lax", max_age=43200)
+    return response
+
+@router.post("/api/logout")
+def logout() -> Response:
+    response = JSONResponse(content={"status": "ok"})
+    response.delete_cookie(key="approver_session")
+    return response
 
 
 class AgentBody(BaseModel):

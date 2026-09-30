@@ -17,7 +17,7 @@ const browser = await chromium.launch({ channel: 'chrome', headless: false, args
 const context = await browser.newContext({ viewport: { width: 1440, height: 860 } })
 const page = await context.newPage()
 const errors = []
-page.on('console', (m) => m.type() === 'error' && errors.push(m.text().slice(0, 200)))
+page.on('console', (m) => m.type() === 'error' && !m.text().includes('maps.googleapis.com') && errors.push(m.text().slice(0, 200)))
 page.on('pageerror', (e) => errors.push(`pageerror: ${e.message.slice(0, 200)}`))
 const axeCheck = async (where) => {
   let r
@@ -38,11 +38,11 @@ const shot = async (name) => { if (shots) await page.screenshot({ path: `${shots
 // 1. first visit: the welcome flow, role and theme, then Home
 await page.goto(base)
 await page.waitForURL('**/welcome**')
-await page.getByRole('heading', { name: /See a cyclone's impact/ }).waitFor({ timeout: 15000 })
+await page.getByRole('heading', { name: 'Welcome to SurgeSight' }).waitFor({ timeout: 15000 })
 check(page.url().includes('/welcome'), `first visit did not open the welcome screens: ${page.url()}`)
 await axeCheck('welcome')
 await shot('welcome-1440')
-await page.getByRole('button', { name: 'Get started' }).click()
+await page.getByRole('button', { name: 'Continue' }).click()
 await page.getByRole('radio', { name: /Health Department/ }).click()
 await page.getByRole('button', { name: 'Continue' }).click()
 await page.getByRole('radio', { name: 'Dark' }).click()
@@ -53,7 +53,9 @@ await page.getByRole('button', { name: 'Open SurgeSight' }).click()
 await page.getByRole('heading', { name: 'What would you like to look at?' }).waitFor({ timeout: 10000 })
 check(new URL(page.url()).pathname === '/', `welcome did not return to Home: ${page.url()}`)
 check(await page.getByText('Set up for Health Department.').isVisible(), 'Home does not name the chosen role')
-check((await page.getByText('Coming soon').count()) >= 3, 'coming-soon storms missing on Home')
+for (const name of ['Cyclone Fani', 'Cyclone Biparjoy', 'Cyclone Amphan']) {
+  check((await page.getByText(name).count()) === 0, `${name} should be hidden on Home`)
+}
 check(await page.getByText(/not an official warning/).first().isVisible(), 'Home lacks the not-official notice')
 await axeCheck('home')
 await shot('home-1440')
@@ -208,6 +210,24 @@ await page.getByRole('navigation', { name: 'Storm sections' }).getByRole('link',
 await page.getByRole('heading', { name: 'How warnings go out' }).waitFor({ timeout: 10000 })
 await page.getByText(/Priority actions|could not be drafted/).first().waitFor({ timeout: 90000 })
 
+// dispatch flow
+const recipInput = page.getByPlaceholder('Add email...')
+await recipInput.fill('e2e-test@example.com')
+await page.getByRole('button', { name: 'Add' }).click()
+await page.getByText('e2e-test@example.com').waitFor({ timeout: 5000 })
+
+await page.getByRole('button', { name: 'Send alert' }).first().click()
+await page.getByRole('dialog').getByRole('button', { name: 'Send alert' }).click()
+await page.getByText('Waiting for approval').first().waitFor({ timeout: 10000 })
+
+await page.getByRole('button', { name: 'Approve' }).first().click()
+await page.getByText('Approved').first().waitFor({ timeout: 10000 })
+
+await page.getByRole('button', { name: /^Send$/ }).first().click()
+await page.getByText(/Prepared \(dry run\)|Blocked/).first().waitFor({ timeout: 10000 })
+
+await page.getByRole('button', { name: 'Remove' }).first().click()
+await page.waitForFunction(() => !document.body.innerText.includes('e2e-test@example.com'), null, { timeout: 5000 })
 
 await axeCheck('advisories')
 await shot('advisories-1440')
