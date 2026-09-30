@@ -20,7 +20,16 @@ const errors = []
 page.on('console', (m) => m.type() === 'error' && errors.push(m.text().slice(0, 200)))
 page.on('pageerror', (e) => errors.push(`pageerror: ${e.message.slice(0, 200)}`))
 const axeCheck = async (where) => {
-  const r = await new AxeBuilder({ page }).analyze()
+  let r
+  for (let i = 0; i < 3; i++) {
+    try {
+      r = await new AxeBuilder({ page }).analyze()
+      break
+    } catch (e) {
+      if (i === 2 || !e.message.includes('Execution context was destroyed')) throw e
+      await page.waitForTimeout(500)
+    }
+  }
   const bad = r.violations.filter((v) => ['serious', 'critical'].includes(v.impact))
   check(bad.length === 0, `axe (${where}): ${bad.map((v) => `${v.id}(${v.nodes.length})`).join(', ')}`)
 }
@@ -28,6 +37,7 @@ const shot = async (name) => { if (shots) await page.screenshot({ path: `${shots
 
 // 1. first visit: the welcome flow, role and theme, then Home
 await page.goto(base)
+await page.waitForURL('**/welcome**')
 await page.getByRole('heading', { name: /See a cyclone's impact/ }).waitFor({ timeout: 15000 })
 check(page.url().includes('/welcome'), `first visit did not open the welcome screens: ${page.url()}`)
 await axeCheck('welcome')
@@ -74,7 +84,10 @@ await page.getByRole('navigation', { name: 'Storm sections' }).getByRole('link',
 await page.waitForURL('**/storm/michaung_2023/map')
 await page.waitForFunction(() => window.__overlay?._deck?.layerManager?.getLayers().some((l) => l.id === 'alert-zones'), null, { timeout: 30000 })
 await page.waitForTimeout(2500)
-const mapState = () => page.evaluate(() => { const m = window.__overlay._map; const c = m.getCenter(); return { zoom: m.getZoom(), lat: c.lat(), lng: c.lng(), gesture: m.get('gestureHandling'), rt: document.documentElement.dataset.renderingType } })
+const mapState = async () => {
+  await page.waitForFunction(() => window.__overlay?._map?.getCenter(), null, { timeout: 10000 })
+  return page.evaluate(() => { const m = window.__overlay._map; const c = m.getCenter(); return { zoom: m.getZoom(), lat: c.lat(), lng: c.lng(), gesture: m.get('gestureHandling'), rt: document.documentElement.dataset.renderingType } })
+}
 const layerIds = () => page.evaluate(() => window.__overlay._deck.layerManager.getLayers().map((l) => l.id))
 const a = await mapState()
 check(await page.getByRole('button', { name: 'Expand menu' }).isVisible(), 'the side rail should be collapsed on the map')
@@ -171,9 +184,31 @@ await page.getByRole('navigation', { name: 'Storm sections' }).getByRole('link',
 await page.waitForFunction(() => document.querySelectorAll('tbody tr th').length >= 5, null, { timeout: 30000 })
 await axeCheck('areas')
 await shot('areas-1440')
+
+// 8a. roads: page, layer switch and a picked road's details
+await page.getByRole('navigation', { name: 'Storm sections' }).getByRole('link', { name: 'Roads' }).click()
+await page.waitForURL('**/storm/michaung_2023/roads')
+await page.getByRole('heading', { name: 'Road exposure' }).waitFor({ timeout: 15000 })
+await page.getByRole('region', { name: 'Road kilometres by screening level' }).waitFor({ timeout: 15000 })
+await axeCheck('roads')
+await page.getByRole('button', { name: 'Show on map' }).first().click()
+await page.waitForURL('**/storm/michaung_2023/map')
+await page.getByRole('complementary', { name: 'Road details' }).waitFor({ timeout: 15000 })
+await page.getByRole('button', { name: 'Close details' }).click()
+await page.getByRole('switch', { name: 'Road exposure' }).click()
+await page.waitForTimeout(400)
+check(!(await layerIds()).includes('roads'), 'roads switch did not remove the roads layer')
+await page.getByRole('switch', { name: 'Road exposure' }).click()
+await page.waitForFunction(() => window.__overlay._deck.layerManager.getLayers().some((l) => l.id === 'roads'), null, { timeout: 10000 })
+await page.evaluate(() => window.__overlay._deck.layerManager.getLayers().find((l) => l.id === 'roads').props.onClick({ index: 0 }))
+await page.getByRole('complementary', { name: 'Road details' }).waitFor({ timeout: 5000 })
+await axeCheck('road details')
+
 await page.getByRole('navigation', { name: 'Storm sections' }).getByRole('link', { name: 'Advisories' }).click()
 await page.getByRole('heading', { name: 'How warnings go out' }).waitFor({ timeout: 10000 })
 await page.getByText(/Priority actions|could not be drafted/).first().waitFor({ timeout: 90000 })
+
+
 await axeCheck('advisories')
 await shot('advisories-1440')
 await page.getByRole('link', { name: 'Guide' }).click()
