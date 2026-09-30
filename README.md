@@ -9,7 +9,7 @@
 
 **Status:** working prototype, live on Cloud Run at https://surgesight-221627601364.asia-south1.run.app. See [Limitations](#responsible-use-and-limitations).
 
-**Team Echo:** Charan and Vishal. The pitch deck (light, dark and original editions, PPTX and PDF) is in [`docs/pitch/`](docs/pitch/); the demo video is linked from the deck, and the scripts that record it from the running app are in [`docs/pitch/video_v2/`](docs/pitch/video_v2/).
+**Team Echo:** Charan and Vishal. **Demo video:** https://youtu.be/BeFNW2ZWFQM · **Pitch deck:** [`docs/pitch/SurgeSight_TeamEcho.pdf`](docs/pitch/SurgeSight_TeamEcho.pdf) (light and dark editions are alongside). The scripts that record the demo from the running app are in [`docs/pitch/video_v2/`](docs/pitch/video_v2/).
 
 ## What it does
 
