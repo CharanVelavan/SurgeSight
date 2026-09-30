@@ -33,6 +33,14 @@ GRID = {"dimensions": {"width": wf.WIDTH, "height": wf.HEIGHT}, "crsCode": "EPSG
                             "shearY": 0, "scaleY": -0.25, "translateY": wf.BOUNDS["north"] + 0.125}}
 
 
+def cached(path: Path) -> np.ndarray | None:
+    """Raw array from the cache, or None when missing or built for a different grid."""
+    if not path.exists():
+        return None
+    arr = np.load(path)
+    return arr if arr.shape[-2:] == (wf.HEIGHT, wf.WIDTH) else None
+
+
 def ms(t: pd.Timestamp) -> int:
     return int(pd.Timestamp(t).tz_localize("UTC").timestamp() * 1000)
 
@@ -56,8 +64,8 @@ def analysis_sources() -> list[tuple[pd.Timestamp, pd.Timestamp, int]]:
 
 def wind_analysis() -> np.ndarray:
     path = RAW / "analysis_wind.npy"
-    if path.exists():
-        return np.load(path)
+    if (arr := cached(path)) is not None:
+        return arr
 
     def one(src):
         _, cycle, hour = src
@@ -80,8 +88,8 @@ def rain_rate_3h(cycle: pd.Timestamp, step: int) -> np.ndarray:
 
 def forecast_cycle(cycle: pd.Timestamp) -> np.ndarray:
     path = RAW / f"forecast_{wf.cycle_id(cycle)}.npy"
-    if path.exists():
-        return np.load(path)
+    if (arr := cached(path)) is not None:
+        return arr
     steps = wf.forecast_steps()
     with ThreadPoolExecutor(6) as pool:
         uv = list(pool.map(lambda s: fetch(gfs(cycle, s).select([U, V]), [U, V]), steps))
@@ -93,8 +101,8 @@ def forecast_cycle(cycle: pd.Timestamp) -> np.ndarray:
 
 def imerg_hourly() -> np.ndarray:
     path = RAW / "imerg_rain.npy"
-    if path.exists():
-        return np.load(path)
+    if (arr := cached(path)) is not None:
+        return arr
     proj = ee.Projection("EPSG:4326", [0.25, 0, wf.BOUNDS["west"] - 0.125, 0, -0.25, wf.BOUNDS["north"] + 0.125])
     hours = pd.date_range(wf.WINDOW_START, wf.WINDOW_END, freq="1h")
 

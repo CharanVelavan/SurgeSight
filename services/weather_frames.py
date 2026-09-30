@@ -18,8 +18,10 @@ from PIL import Image
 WEATHER_DIR = Path(__file__).resolve().parents[1] / "data" / "processed" / "weather"
 WIND_MAX = 40.0
 RAIN_MAX = 200.0
-BOUNDS = {"west": 72.0, "east": 100.0, "south": 0.0, "north": 25.0, "step": 0.25}
-WIDTH, HEIGHT = 113, 101
+# All of India plus the Arabian Sea from Oman, north past Jammu & Kashmir, east to Myanmar.
+BOUNDS = {"west": 50.0, "east": 100.0, "south": 0.0, "north": 38.0, "step": 0.25}
+WIDTH = round((BOUNDS["east"] - BOUNDS["west"]) / BOUNDS["step"]) + 1
+HEIGHT = round((BOUNDS["north"] - BOUNDS["south"]) / BOUNDS["step"]) + 1
 WINDOW_START, WINDOW_END = pd.Timestamp("2023-11-30 00:00"), pd.Timestamp("2023-12-07 00:00")
 CYCLE_EVERY_H, FORECAST_STEP_H, FORECAST_LEAD_H = 12, 3, 72
 

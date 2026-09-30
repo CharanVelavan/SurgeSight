@@ -1,14 +1,14 @@
 {
  "bounds": {
-  "west": 72.0,
+  "west": 50.0,
   "east": 100.0,
   "south": 0.0,
-  "north": 25.0,
+  "north": 38.0,
   "step": 0.25
  },
  "tile": {
-  "width": 113,
-  "height": 101
+  "width": 201,
+  "height": 153
  },
  "encoding": {
   "wind": {
