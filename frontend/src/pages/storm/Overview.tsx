@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
-import { ArrowRight, Compass, Gauge, MapPinned, Navigation, ShieldAlert, Waves } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { ArrowRight, Compass, Landmark, Gauge, MapPinned, Navigation, ShieldAlert, Waves } from 'lucide-react'
 import { useStore } from 'zustand'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -13,11 +14,65 @@ import { usePrefs } from '@/app/prefs'
 import { assetsStore } from '@/data/assets'
 import { inRole, priorityRank, roleById } from '@/data/roles'
 import { useT, type Key } from '@/i18n'
+import { api } from '@/lib/api'
 import { compass, formatInt, formatIST, formatLatLon } from '@/lib/format'
 import { stormStatus } from '@/lib/storm'
 import { useUi } from '@/state/ui'
 import { useClock } from '@/timeline/clock'
 import { useWeather } from '@/weather/useWeather'
+
+const crore = (v: number) => `₹${formatInt(v)} cr`
+
+/** Illustrative parametric cover: which triggers the forecast breaches and what would pay out, before landfall. */
+function Parametric() {
+  const t = useT()
+  const { data, isPending, isError } = useQuery({ queryKey: ['parametric'], queryFn: api.parametric, staleTime: Infinity, retry: 0 })
+  const p = data?.data
+  return (
+    <section aria-labelledby="param" className="mt-5 rounded-xl border border-border bg-card">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border p-4">
+        <div>
+          <h2 id="param" className="flex items-center gap-2 text-[15px] font-semibold"><Landmark className="size-4 text-primary" aria-hidden />{t('param.title')}</h2>
+          <p className="mt-0.5 max-w-2xl text-[13px] text-muted-foreground">{t('param.lead')}</p>
+        </div>
+        {p && (
+          <div className="text-right">
+            <div className="num text-[20px] font-semibold">{crore(p.total_payout_crore)}</div>
+            <div className="text-[12px] text-muted-foreground">{t('param.of', { total: crore(p.total_sum_insured_crore) })}</div>
+          </div>
+        )}
+      </div>
+      {isPending ? (
+        <div className="grid gap-3 p-4 md:grid-cols-2">{[0, 1].map(i => <Skeleton key={i} className="h-24" />)}</div>
+      ) : isError || !p ? (
+        <p role="alert" className="p-4 text-[13px] text-warn">{t('param.error')}</p>
+      ) : (
+        <ul className="grid gap-px bg-border md:grid-cols-2">
+          {p.portfolios.map(pf => (
+            <li key={pf.id} className="bg-card p-4">
+              <div className="flex items-start justify-between gap-3">
+                <span className="text-[13.5px] font-medium">{pf.districts.join(', ')}</span>
+                <span className="num shrink-0 text-[13.5px] font-semibold">{crore(pf.payout_crore)}</span>
+              </div>
+              <ul className="mt-2 flex flex-col gap-1 text-[12.5px]">
+                {pf.triggers.map(tr => (
+                  <li key={tr.id} className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-1.5 text-muted-foreground">
+                      <span aria-hidden className={`inline-block size-2 rounded-full ${tr.breached ? 'bg-destructive' : 'bg-muted-foreground/40'}`} />
+                      {['wind', 'rain_24h', 'surge'].includes(tr.id) ? t(`param.trig.${tr.id}` as Key) : tr.label}
+                    </span>
+                    <span className="num">{tr.breached ? t('param.breached', { pct: tr.payout_pct }) : t('param.notBreached')}</span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="border-t border-border px-4 py-2.5 text-[11.5px] leading-snug text-muted-foreground">{t('param.note')}</p>
+    </section>
+  )
+}
 
 function Stat({ icon: Icon, label, value, note, tone }: { icon: typeof Gauge; label: string; value: React.ReactNode; note?: React.ReactNode; tone?: 'warn' }) {
   return (
@@ -177,6 +232,7 @@ export function Overview({ id }: { id: string }) {
           </Button>
         </div>
       </div>
+      <Parametric />
       <p className="mt-6 text-[12px] text-muted-foreground">{t('overview.asOf', { time: formatIST(cutoff) })}</p>
     </Page>
   )

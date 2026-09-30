@@ -90,6 +90,66 @@ async function post<T>(path: string): Promise<T> {
   return (await res.json()) as T
 }
 
+export interface AdvisoryAsset {
+  name: string
+  asset_type: string
+  risk_class?: string
+  [key: string]: unknown
+}
+
+export interface Advisory {
+  audience: string
+  severity: string
+  headline: string
+  situation_summary: string
+  instruction: string
+  priority_actions: string[]
+  critical_assets: AdvisoryAsset[]
+  monitoring_priorities: string[]
+  disclaimer: string
+  language: string
+}
+
+export interface DispatchItem {
+  id: string
+  department: string
+  channel: 'chat' | 'email' | 'push'
+  subject: string
+  status: string
+  created_at_utc: string
+  sent_at_utc: string | null
+  mode: string | null
+  attachment_names: string[]
+}
+
+export interface ParametricTrigger { id: string; label: string; index_value: number; breached: boolean; payout_pct: number; probability?: number }
+export interface ParametricPortfolio {
+  id: string
+  name: string
+  districts: string[]
+  insured_sites: number
+  triggers: ParametricTrigger[]
+  payout_pct: number
+  sum_insured_crore: number
+  payout_crore: number
+  expected_payout_crore?: number
+  payout_p10_crore?: number
+  payout_p90_crore?: number
+}
+export interface Parametric {
+  label: string
+  portfolios: ParametricPortfolio[]
+  ensemble?: { members: number; expected_total_payout_crore: number }
+  total_payout_crore: number
+  total_sum_insured_crore: number
+}
+
+async function postJson<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+  if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`)
+  return (await res.json()) as T
+}
+
 export interface CatalogTile {
   id: string
   kind: 'live' | 'storm'
@@ -103,6 +163,15 @@ export interface CatalogTile {
 }
 
 export const api = {
+  advisory: (department: string, language: string) => postJson<{ run_id: string; advisory: Advisory }>('/api/advisory', { department, language }),
+  dispatches: () => get<DispatchItem[]>('/api/dispatch'),
+  parametric: () => postJson<{ run_id: string; data: Parametric }>('/api/parametric/baseline', { members: 40 }),
+  capUrl: (runId: string) => `/api/cap/${encodeURIComponent(runId)}`,
+  speech: async (runId: string, language: string) => {
+    const res = await fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ advisory_run_id: runId, language }) })
+    if (!res.ok) throw new Error(`speech: HTTP ${res.status}`)
+    return URL.createObjectURL(await res.blob())
+  },
   catalog: () => get<{ tiles: CatalogTile[] }>('/api/catalog'),
   timeline: () => get<Timeline>('/api/timeline'),
   forecast: (cutoff: string) => get<ExperimentalForecast>(`/api/forecast/experimental?cutoff=${encodeURIComponent(cutoff)}`),

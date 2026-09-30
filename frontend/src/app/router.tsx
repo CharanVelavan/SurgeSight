@@ -2,8 +2,8 @@
 
 import { useSyncExternalStore } from 'react'
 
-export type StormTab = 'overview' | 'map' | 'facilities' | 'areas'
-export const STORM_TABS: StormTab[] = ['overview', 'map', 'facilities', 'areas']
+export type StormTab = 'overview' | 'map' | 'facilities' | 'areas' | 'advisories'
+export const STORM_TABS: StormTab[] = ['overview', 'map', 'facilities', 'areas', 'advisories']
 
 export type Route =
   | { name: 'home' }

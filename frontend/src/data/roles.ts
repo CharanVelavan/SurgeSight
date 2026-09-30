@@ -11,18 +11,20 @@ export interface Role {
   id: RoleId
   icon: LucideIcon
   types: AssetType[]
+  /** Department name the API uses (config/departments.toml display_name). */
+  department: string
   /** Only real hospitals (not clinics) count for this role, as in departments.toml facility_quality. */
   hospitalsOnly?: boolean
 }
 
 export const ROLES: Role[] = [
-  { id: 'collector', icon: Landmark, types: ['shelter', 'hospital', 'substation', 'school', 'fire_station', 'police_station', 'water_facility', 'fishing_harbour'] },
-  { id: 'health', icon: HeartPulse, types: ['hospital'] },
-  { id: 'fire_rescue', icon: Flame, types: ['fire_station', 'hospital'], hospitalsOnly: true },
-  { id: 'electricity', icon: Zap, types: ['substation'] },
-  { id: 'police', icon: ShieldHalf, types: ['police_station'] },
-  { id: 'water', icon: Droplets, types: ['water_facility'] },
-  { id: 'fisheries', icon: Anchor, types: ['fishing_harbour'] },
+  { id: 'collector', department: 'District Collector / Disaster Management', icon: Landmark, types: ['shelter', 'hospital', 'substation', 'school', 'fire_station', 'police_station', 'water_facility', 'fishing_harbour'] },
+  { id: 'health', department: 'Health Department', icon: HeartPulse, types: ['hospital'] },
+  { id: 'fire_rescue', department: 'Fire & Rescue Services', icon: Flame, types: ['fire_station', 'hospital'], hospitalsOnly: true },
+  { id: 'electricity', department: 'Electricity Board', icon: Zap, types: ['substation'] },
+  { id: 'police', department: 'Police / Traffic', icon: ShieldHalf, types: ['police_station'] },
+  { id: 'water', department: 'Water & Sewage Board', icon: Droplets, types: ['water_facility'] },
+  { id: 'fisheries', department: 'Fisheries Department', icon: Anchor, types: ['fishing_harbour'] },
 ]
 
 export const roleById = (id: RoleId): Role => ROLES.find(r => r.id === id) ?? ROLES[0]

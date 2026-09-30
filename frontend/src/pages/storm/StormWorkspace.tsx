@@ -7,6 +7,7 @@ import { usePrefs } from '@/app/prefs'
 import type { StormTab } from '@/app/router'
 import { ASSET_ORDER, loadAssets, type AssetType } from '@/data/assets'
 import { roleById } from '@/data/roles'
+import { loadSurge } from '@/data/surge'
 import { useT, type Key } from '@/i18n'
 import { FacilityDetails } from '@/panels/FacilityDetails'
 import { useUi } from '@/state/ui'
@@ -14,6 +15,7 @@ import { clockActions } from '@/timeline/clock'
 import { loadWeather } from '@/weather/atlas'
 import { MapView } from '../MapView'
 import { showOnMap } from './actions'
+import { Advisories } from './Advisories'
 import { Areas } from './Areas'
 import { Facilities } from './Facilities'
 import { Overview } from './Overview'
@@ -41,13 +43,14 @@ export function StormWorkspace({ id, tab }: { id: string; tab: StormTab }) {
     const prefs = usePrefs.getState()
     const role = roleById(prefs.role)
     useUi.getState().set({
-      mode: 'replay', field: 'none', view: 'india', zones: true, track: true, wind: prefs.stormWind, rain: prefs.stormRain,
+      mode: 'replay', field: 'none', view: 'india', zones: true, track: true, surge: true, wind: prefs.stormWind, rain: prefs.stormRain,
       rainSource: 'forecast', hoverAsset: null, selectedAsset: null,
       infra: Object.fromEntries(ASSET_ORDER.map(a => [a, role.types.includes(a)])) as Record<AssetType, boolean>,
     })
     clockActions.resetReplay()
     void loadWeather('replay')
     void loadAssets()
+    void loadSurge()
   }, [id])
   // A facility opened on one tab should not pop up over the next one (the map keeps it: it shows it inline).
   useEffect(() => {
@@ -60,6 +63,7 @@ export function StormWorkspace({ id, tab }: { id: string; tab: StormTab }) {
       {tab === 'map' && <MapView mode="replay" />}
       {tab === 'facilities' && <Facilities id={id} />}
       {tab === 'areas' && <Areas />}
+      {tab === 'advisories' && <Advisories />}
       {tab !== 'map' && <FacilitySheet id={id} />}
     </AppShell>
   )

@@ -13,7 +13,9 @@ import { ZoneLayer } from '@/layers/zones/ZoneLayer'
 import { stormAt } from '@/alerts/storm'
 import { zoneImage } from '@/alerts/store'
 import { trackStore } from '@/data/track'
-import { buildAssetLayers } from './assetLayers'
+import { ScatterplotLayer } from '@deck.gl/layers'
+import { surgeStore, type SurgeData } from '@/data/surge'
+import { INFRA_ZOOM, buildAssetLayers } from './assetLayers'
 import { buildTrackLayers } from './trackLayers'
 import { quality } from './quality'
 
@@ -34,6 +36,17 @@ function bitmaps(atlases: Map<string, { bitmap: ImageBitmap }>): ImageBitmap[] {
     bitmapList = [...atlases.values()].map(a => a.bitmap)
   }
   return bitmapList
+}
+
+type SurgeBinary = { length: number; attributes: Record<string, { value: Float32Array | Uint8Array; size: number }> }
+const surgeCache = new WeakMap<SurgeData, SurgeBinary>()
+function surgeBinary(d: SurgeData) {
+  let b = surgeCache.get(d)
+  if (!b) {
+    b = { length: d.count, attributes: { getPosition: { value: d.positions, size: 2 }, getFillColor: { value: d.colors, size: 4 } } }
+    surgeCache.set(d, b)
+  }
+  return b
 }
 
 export function buildLayers(now: number): Layer[] {
@@ -118,6 +131,16 @@ export function buildLayers(now: number): Layer[] {
       }),
     )
   }
-  if (ui.mode === 'replay') layers.push(...(ui.track ? buildTrackLayers() : []), ...buildAssetLayers())
+  if (ui.mode === 'replay') {
+    const surge = surgeStore.getState().data
+    if (ui.surge && surge && ui.zoom >= INFRA_ZOOM)
+      layers.push(
+        new ScatterplotLayer({
+          id: 'surge', data: surgeBinary(surge) as never, radiusUnits: 'meters', getRadius: 4000, radiusMinPixels: 9, stroked: false,
+          pickable: false, parameters: { depthCompare: 'always' },
+        }),
+      )
+    layers.push(...(ui.track ? buildTrackLayers() : []), ...buildAssetLayers())
+  }
   return layers
 }

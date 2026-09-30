@@ -3,7 +3,8 @@
  * So the panel always answers "what am I seeing?" for exactly what is on the map.
  */
 
-import { CloudRain, Layers3, MapPinned, Palette, Route as RouteIcon, ShieldAlert, Wind } from 'lucide-react'
+import { CloudRain, Layers3, MapPinned, Palette, Route as RouteIcon, ShieldAlert, Waves, Wind } from 'lucide-react'
+import { SURGE_STOPS } from '@/data/surge'
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ZONE_HEX } from '@/alerts/field'
@@ -165,6 +166,12 @@ export function MapPanel() {
       {!live && (
         <Section id="track" icon={RouteIcon} title={t('map.track')} checked={ui.track} onChange={v => set({ track: v })}>
           <TrackKey />
+        </Section>
+      )}
+
+      {!live && (
+        <Section id="surge" icon={Waves} title={t('map.surge')} checked={ui.surge} onChange={v => set({ surge: v })}>
+          <Scale unit="m" stops={SURGE_STOPS.map(([v]) => v)} gradient={`linear-gradient(90deg, ${SURGE_STOPS.map(([, c]) => c).join(', ')})`} note={t('map.surgeNote')} />
         </Section>
       )}
 

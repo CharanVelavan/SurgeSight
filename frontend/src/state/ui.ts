@@ -22,6 +22,7 @@ interface UiState {
   wind: boolean
   zones: boolean
   track: boolean
+  surge: boolean
   rain: boolean
   rainSource: RainSource
   basemap: Basemap
@@ -48,6 +49,7 @@ export const useUi = create<UiState>(set => ({
   wind: true,
   zones: true,
   track: true,
+  surge: true,
   rain: true,
   rainSource: 'forecast',
   basemap: 'dark',
