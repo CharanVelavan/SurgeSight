@@ -407,6 +407,8 @@ const hi: Record<Key, string> = {
   'param.trig.rain_24h': "सबसे गीले 24 घंटे की बारिश",
   'param.trig.surge': "तूफ़ानी लहर",
   'guide.s.advisories': "परामर्श: हर विभाग के लिए Gemini का परामर्श, ऑडियो और CAP चेतावनी के साथ, और चेतावनियाँ कैसे भेजी जाती हैं।",
+  'nav.expand': "मेन्यू फैलाएँ",
+  'nav.collapse': "मेन्यू समेटें",
 }
 
 export default hi

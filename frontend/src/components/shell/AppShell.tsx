@@ -11,13 +11,16 @@ import { Sidebar } from './Sidebar'
 export function AppShell({ title, badge, fill = false, children }: { title: string; badge?: React.ReactNode; fill?: boolean; children: React.ReactNode }) {
   const t = useT()
   const [menu, setMenu] = useState(false)
+  // Map screens start with the rail folded to icons so the map gets the width; the user can open it again.
+  const [collapsed, setCollapsed] = useState(fill)
+  useEffect(() => setCollapsed(fill), [fill])
   useEffect(() => {
     document.title = `${title} · SurgeSight`
   }, [title])
   return (
     <div className="flex h-full bg-background">
-      <aside className="hidden w-60 shrink-0 border-r border-sidebar-border bg-sidebar lg:block">
-        <Sidebar />
+      <aside className={`hidden shrink-0 border-r border-sidebar-border bg-sidebar transition-[width] duration-200 lg:block ${collapsed ? 'w-16' : 'w-60'}`}>
+        <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(c => !c)} />
       </aside>
       <Sheet open={menu} onOpenChange={setMenu}>
         <SheetContent side="left" className="w-72 bg-sidebar p-0" aria-describedby={undefined}>

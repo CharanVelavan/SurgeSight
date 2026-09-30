@@ -407,6 +407,8 @@ const te: Record<Key, string> = {
   'param.trig.rain_24h': "అత్యధిక వర్షపు 24 గంటలు",
   'param.trig.surge': "తుఫాను ఉప్పెన",
   'guide.s.advisories': "సూచనలు: ప్రతి విభాగానికి Gemini సూచన, ఆడియో మరియు CAP హెచ్చరికతో, హెచ్చరికలు ఎలా పంపబడతాయో కూడా.",
+  'nav.expand': "మెనూ విస్తరించు",
+  'nav.collapse': "మెనూ కుదించు",
 }
 
 export default te

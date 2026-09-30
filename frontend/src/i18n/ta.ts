@@ -407,6 +407,8 @@ const ta: Record<Key, string> = {
   'param.trig.rain_24h': "அதிக மழை பெய்த 24 மணி நேரம்",
   'param.trig.surge': "புயல் அலை எழுச்சி",
   'guide.s.advisories': "அறிவுரைகள்: ஒவ்வொரு துறைக்குமான Gemini அறிவுரை, ஒலி மற்றும் CAP எச்சரிக்கையுடன், எச்சரிக்கைகள் எப்படி அனுப்பப்படுகின்றன என்பதும்.",
+  'nav.expand': "பட்டியை விரி",
+  'nav.collapse': "பட்டியைச் சுருக்கு",
 }
 
 export default ta

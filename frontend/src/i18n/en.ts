@@ -421,6 +421,8 @@ export const en = {
   'param.trig.rain_24h': "Rain in the wettest 24 h",
   'param.trig.surge': "Storm surge",
   'guide.s.advisories': "Advisories: Gemini's advisory for each department, with audio and a CAP alert, and how warnings go out.",
+  'nav.expand': "Expand menu",
+  'nav.collapse': "Collapse menu",
 } as const
 
 export type Key = keyof typeof en

@@ -407,6 +407,8 @@ const or: Record<Key, string> = {
   'param.trig.rain_24h': "ସର୍ବାଧିକ ବର୍ଷାର 24 ଘଣ୍ଟା",
   'param.trig.surge': "ଝଡ଼ ଜୁଆର",
   'guide.s.advisories': "ପରାମର୍ଶ: ପ୍ରତ୍ୟେକ ବିଭାଗ ପାଇଁ Geminiର ପରାମର୍ଶ, ଅଡିଓ ଓ CAP ଚେତାବନୀ ସହ, ଏବଂ ଚେତାବନୀ କିପରି ପଠାଯାଏ।",
+  'nav.expand': "ମେନୁ ବିସ୍ତାର କରନ୍ତୁ",
+  'nav.collapse': "ମେନୁ ସଙ୍କୁଚିତ କରନ୍ତୁ",
 }
 
 export default or

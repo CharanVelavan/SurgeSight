@@ -407,6 +407,8 @@ const bn: Record<Key, string> = {
   'param.trig.rain_24h': "সবচেয়ে ভেজা 24 ঘণ্টার বৃষ্টি",
   'param.trig.surge': "ঝড়ের জলোচ্ছ্বাস",
   'guide.s.advisories': "পরামর্শ: প্রতিটি বিভাগের জন্য Gemini-র পরামর্শ, অডিও ও CAP সতর্কবার্তা সহ, আর সতর্কবার্তা কীভাবে পাঠানো হয়।",
+  'nav.expand': "মেনু খুলে দিন",
+  'nav.collapse': "মেনু গুটিয়ে নিন",
 }
 
 export default bn
