@@ -792,6 +792,8 @@ GET  /runs/{run_id}                        full stored payload
 
 **Estimate:** 5 h. **Depends on:** WP9.
 
+> **Superseded 2026-09-30 by [`UI_PLAN.md`](UI_PLAN.md)** (Windy-style map-first UI on Google Maps + deck.gl, animated GFS/IMERG weather, Firebase Auth, full i18n; about 23 h in vertical slices S0–S8). Streamlit is kept as a dev harness, not retired. The outline below is kept for history.
+
 - **Stack:** Vite + React + TypeScript · Tailwind + shadcn/ui · `@vis.gl/react-google-maps` + deck.gl `GoogleMapsOverlay` · TanStack Query · `EventSource` for agent SSE · Firebase Auth (department login) · Firebase Hosting with `/api/**` rewrite to Cloud Run.
 - **Design:** dark control-room theme, map-centric, risk colours consistent (LOW/MODERATE/HIGH/CRITICAL), colour-blind-safe palette, every number shows its source on hover.
 - **Screens:**
