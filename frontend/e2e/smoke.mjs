@@ -19,7 +19,19 @@ const errors = []
 page.on('console', (m) => m.type() === 'error' && errors.push(m.text().slice(0, 200)))
 page.on('pageerror', (e) => errors.push(`pageerror: ${e.message.slice(0, 200)}`))
 await page.addInitScript(() => sessionStorage.setItem('surgesight.intro', '1'))
+// landing page: tiles, a working storm link, and the not-official notice
 await page.goto(base)
+await page.getByRole('link', { name: /Cyclone Michaung/ }).waitFor({ timeout: 15000 })
+check((await page.getByText('Coming soon').count()) >= 3, 'coming soon tiles missing on the landing page')
+check(await page.getByText(/not an official warning/).isVisible(), 'landing page lacks the not-official notice')
+{
+  const landing = await new AxeBuilder({ page }).disableRules(['color-contrast']).analyze()
+  const bad = landing.violations.filter((v) => ['serious', 'critical'].includes(v.impact))
+  check(bad.length === 0, `axe (landing): ${bad.map((v) => v.id).join(', ')}`)
+  if (shots) await page.screenshot({ path: `${shots}/landing-1440.png` })
+}
+await page.getByRole('link', { name: /Cyclone Michaung/ }).click()
+await page.waitForURL('**/storm/michaung_2023')
 await page.waitForFunction(() => window.__overlay?._deck?.layerManager?.getLayers().some((l) => l.id === 'wind'), null, { timeout: 30000 })
 await page.waitForTimeout(3000)
 
@@ -28,7 +40,6 @@ const layerIds = () => page.evaluate(() => window.__overlay._deck.layerManager.g
 
 // 1. interleaved vector map, weather and assets present
 const a = await mapState()
-void (JSON.stringify(await page.evaluate(() => { const m = window.__overlay._map; return { min: m.get('minZoom'), max: m.get('maxZoom'), z: m.getZoom(), w: m.getDiv().clientWidth, h: m.getDiv().clientHeight, r: m.get('restriction') } })))
 check(a.rt === 'vector-interleaved', `rendering type ${a.rt}`)
 const ids = await layerIds()
 for (const need of ['rain', 'wind', 'track-observed', 'forecast-wind']) check(ids.includes(need), `layer ${need} missing`)

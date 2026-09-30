@@ -1,0 +1,40 @@
+# Tiles on the landing page. A storm tile is "available" when config/regions/<region>.toml exists;
+# the live tile is "available" when data/processed/live/manifest.json exists.
+
+[[tile]]
+id = "live"
+kind = "live"
+name = "Live weather"
+blurb = "Wind, rain, cloud, temperature and humidity across India right now."
+
+[[tile]]
+id = "michaung_2023"
+kind = "storm"
+name = "Cyclone Michaung"
+year = 2023
+blurb = "Replay of the December 2023 landfall near Chennai, with forecasts as they stood at each bulletin."
+region = "michaung_2023"
+
+[[tile]]
+id = "fani_2019"
+kind = "storm"
+name = "Cyclone Fani"
+year = 2019
+blurb = "Extremely severe cyclone that made landfall in Odisha in May 2019."
+region = "fani_2019"
+
+[[tile]]
+id = "biparjoy_2023"
+kind = "storm"
+name = "Cyclone Biparjoy"
+year = 2023
+blurb = "Very severe cyclone that made landfall in Gujarat in June 2023."
+region = "biparjoy_2023"
+
+[[tile]]
+id = "amphan_2020"
+kind = "storm"
+name = "Cyclone Amphan"
+year = 2020
+blurb = "Super cyclonic storm that made landfall in West Bengal in May 2020."
+region = "amphan_2020"

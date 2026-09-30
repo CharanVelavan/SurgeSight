@@ -54,7 +54,17 @@ async function get<T>(path: string): Promise<T> {
   return (await res.json()) as T
 }
 
+export interface CatalogTile {
+  id: string
+  kind: 'live' | 'storm'
+  name: string
+  year?: number
+  blurb: string
+  status: 'available' | 'soon'
+}
+
 export const api = {
+  catalog: () => get<{ tiles: CatalogTile[] }>('/api/catalog'),
   timeline: () => get<Timeline>('/api/timeline'),
   forecast: (cutoff: string) => get<ExperimentalForecast>(`/api/forecast/experimental?cutoff=${encodeURIComponent(cutoff)}`),
   assets: () => get<AssetColumns>('/api/assets?format=columnar'),

@@ -18,7 +18,7 @@ from api.deps import require_region
 from api.routes_ops import Language
 from services import weather_frames as wf
 from services.agent.builtin_tools import jsonable
-from services.config import load_region
+from services.config import PROJECT_ROOT, list_regions, load_region
 
 router = APIRouter()
 IMMUTABLE = {"Cache-Control": "public, max-age=31536000, immutable"}
@@ -33,6 +33,21 @@ def atlas_version() -> str:
         st = f.stat()
         h.update(f"{f.name}:{st.st_size}:{st.st_mtime_ns}".encode())
     return h.hexdigest()[:10]
+
+
+@router.get("/api/catalog")
+def regions() -> dict[str, Any]:
+    """Landing page tiles: the live weather view and each storm, with whether its data is ready."""
+    import tomllib
+
+    catalog = tomllib.loads((PROJECT_ROOT / "config" / "catalog.toml").read_text(encoding="utf-8"))
+    known = set(list_regions())
+    live_ready = (PROJECT_ROOT / "data" / "processed" / "live" / "manifest.json").is_file()
+    tiles = []
+    for tile in catalog["tile"]:
+        ready = live_ready if tile["kind"] == "live" else tile.get("region") in known
+        tiles.append({**tile, "status": "available" if ready else "soon"})
+    return {"tiles": tiles}
 
 
 @router.get("/api/weather/manifest")

@@ -1,3 +1,4 @@
+import { onLinkClick } from '@/app/router'
 import { useTimeline } from '@/app/queries'
 import { imdClass, trackAt } from '@/lib/imd'
 import { formatIST } from '@/lib/format'
@@ -11,13 +12,13 @@ export function TopBar() {
 
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex h-12 items-center gap-3 px-3 pt-[env(safe-area-inset-top)]">
-      <div className="panel pointer-events-auto flex h-9 items-center gap-2 px-3">
+      <a href="/" onClick={e => onLinkClick(e, '/')} aria-label="SurgeSight, all views" className="panel pointer-events-auto flex h-9 items-center gap-2 px-3 hover:bg-white/[0.06]">
         <svg viewBox="0 0 32 32" className="size-5" aria-hidden>
           <path d="M6 19c4-6 8-6 10-2s6 4 10-2" fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" />
           <path d="M6 24c4-4 8-4 10-1s6 3 10-1" fill="none" stroke="var(--primary)" strokeOpacity=".5" strokeWidth="2" strokeLinecap="round" />
         </svg>
         <span className="text-sm font-semibold tracking-tight">SurgeSight</span>
-      </div>
+      </a>
 
       <div className="panel pointer-events-auto flex h-9 min-w-0 items-center gap-2.5 px-3 text-[13px]">
         <span className="font-semibold tracking-wide">{timeline?.cyclone ?? '…'}</span>

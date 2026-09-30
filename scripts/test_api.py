@@ -32,7 +32,7 @@ EXPECTED = {
     "/api/ensemble", "/api/forecast/experimental", "/api/hazards/{run_id}", "/api/exposure/{run_id}", "/api/validation/satellite/{run_id}",
     "/api/advisory", "/api/tts", "/api/cap/{item_id}", "/api/parametric/{run_id}", "/api/dispatch", "/api/dispatch/{dispatch_id}/approve",
     "/api/dispatch/{dispatch_id}/reject", "/api/agent", "/tasks/poll", "/tasks/process", "/runs/{run_id}", "/healthz",
-    "/api/weather/manifest", "/api/weather/{file}", "/api/timeline", "/api/layers/{name}", "/api/me", "/api/voice/ask",
+    "/api/catalog", "/api/weather/manifest", "/api/weather/{file}", "/api/timeline", "/api/layers/{name}", "/api/me", "/api/voice/ask",
 }
 
 
@@ -68,6 +68,8 @@ def test_assets() -> None:
 
 
 def test_web_routes() -> None:
+    tiles = {t["id"]: t for t in ok(client.get("/api/catalog")).json()["tiles"]}
+    assert tiles["michaung_2023"]["status"] == "available" and tiles["fani_2019"]["status"] == "soon" and tiles["live"]["kind"] == "live"
     manifest = ok(client.get("/api/weather/manifest")).json()
     assert manifest["analysis_wind"]["frames"] and len(manifest["forecast"]) == 15
     assert len(manifest["version"]) == 10 and client.get("/api/weather/manifest").headers["cache-control"] == "no-cache", "the manifest must carry a version and never be cached"
