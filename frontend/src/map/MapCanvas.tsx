@@ -10,7 +10,7 @@ import { SurgeMapsOverlay } from './overlay'
 import { useUi, type Basemap } from '@/state/ui'
 import { onFrame } from '@/timeline/clock'
 import { buildLayers } from './layers'
-import { INTRO_MS, IMPACT, IMPACT_LIMIT, INDIA, easeInOutCubic, fitCamera, introSeen, markIntroSeen } from './view'
+import { INTRO_MS, IMPACT, IMPACT_LIMIT, easeInOutCubic, fitCamera, introSeen, markIntroSeen, nationalBox } from './view'
 import { recordFrame } from './quality'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined
@@ -32,7 +32,7 @@ function ViewController() {
       return
     }
     const div = map.getDiv()
-    const to = fitCamera(INDIA, div.clientWidth, div.clientHeight)
+    const to = fitCamera(nationalBox(div.clientWidth, div.clientHeight), div.clientWidth, div.clientHeight)
     const from = { lat: 24, lng: 80, zoom: Math.max(2, to.zoom - 2.4) }
     useUi.getState().set({ intro: true })
     map.setOptions({ restriction: null, minZoom: 1, maxZoom: 21, gestureHandling: 'none' })
@@ -73,7 +73,7 @@ function ViewController() {
       if (useUi.getState().intro) return
       const w = div.clientWidth, h = div.clientHeight
       if (!w || !h) return
-      const cam = fitCamera(view === 'india' ? INDIA : IMPACT, w, h)
+      const cam = fitCamera(view === 'india' ? nationalBox(w, h) : IMPACT, w, h)
       map.setOptions({ restriction: null, minZoom: 1, maxZoom: 21 })
       map.moveCamera({ center: cam.center, zoom: cam.zoom })
       map.setOptions(

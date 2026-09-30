@@ -207,6 +207,20 @@ Phase A stop condition: `SURGESIGHT_WEATHER_FRAMES_OK` and `SURGESIGHT_API_OK` p
 - **Measurement method:** these numbers come from the Chrome DevTools harness. The Playwright version of this check belongs to S8.
 - **Byte-exact check:** the browser decodes the atlases byte-for-byte as `services/weather_frames.py` does (same checksum).
 
+### 7.3 Phase C progress (2026-09-30)
+
+Done and tested (`scripts/test_web.py` prints `SURGESIGHT_WEB_OK`; 120 fps, forecast re-issued in 77 ms, axe clean):
+
+- **S3:** observed track to the cutoff (after it only with the validation toggle), experimental forecast for the cutoff (both Kalman models, +6/12/24 h labels, 90% radius), storm marker, skippable once-per-session fly-in, at-risk summary with click-to-fly. **Not built: ensemble spaghetti**, because `/api/ensemble` returns per-asset probabilities, not member tracks; drawing member tracks needs a backend addition.
+- **S7:** phone bottom sheet for layers, collapsible legend, portrait frame, no horizontal overflow at 390/820/1440; `prefers-reduced-motion` freezes particles and skips the intro. **Not built: long-press touch readout.**
+- **S8:** `scripts/test_web.py` (build, Vitest, real-Chrome run, screenshots in `docs/screenshots/`), registered in `run_all_tests.py` as a live test.
+
+Waiting on the owner (each needs an approval or a console step):
+
+- **S4 sign-in and i18n:** Firebase providers must be enabled; the six-language UI needs the one-off Gemini translation run approved. As a read-only dashboard, sign-in could be dropped or made optional.
+- **S5 agent dock:** every check calls Gemini (cost); decide whether a question box belongs on a viewing dashboard.
+- **S6 drawers:** Departments advisories/audio and Validation charts need model runs; the read-only Alerts view has no dispatch buttons.
+
 **Total ≈ 23 h** (the original WP10 estimate of 5 h did not include animated weather, auth or full i18n).
 
 ## 8. Tests

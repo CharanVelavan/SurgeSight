@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { RAIN_RAMP, RISK, WIND_RAMP, rampCss } from '@/lib/colors'
 import { formatCycle } from '@/lib/format'
 import { useTimeline } from '@/app/queries'
@@ -43,6 +45,8 @@ export function Legend() {
   const manifest = useWeather(s => s.manifest)
   const { time, cutoff } = useClock(s => ({ time: Math.floor(s.time / 3_600_000), cutoff: s.cutoff }), 250)
   const { data: timeline } = useTimeline()
+  // Open by default from 640 px up; on phones it starts collapsed so it does not cover the storm.
+  const [open, setOpen] = useState(() => matchMedia('(min-width: 640px)').matches)
   const anyInfra = useUi(s => Object.values(s.infra).some(Boolean))
   if (!manifest || (!wind && !rain && !anyInfra)) return null
   const ms = time * 3_600_000
@@ -50,6 +54,11 @@ export function Legend() {
   const r = rainField(manifest, ms, cutoff, rainSource)
   return (
     <section aria-label="Legend" className="panel pointer-events-auto absolute bottom-[132px] left-3 z-10 flex w-72 flex-col gap-2.5 p-3 max-sm:bottom-[140px] max-sm:w-[calc(100%-24px)]">
+      <button type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} className="flex items-center justify-between text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase sm:hidden">
+        Legend
+        <ChevronDown className={`size-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      <div className={`flex flex-col gap-2.5 ${open ? '' : 'max-sm:hidden'}`}>
       {wind && (
         <Scale title="Wind" unit="m/s" stops={WIND_RAMP.map(([v]) => v)} gradient={rampCss(WIND_RAMP)} note={sourceLabel(w, 'wind')} warn={!w} />
       )}
@@ -79,6 +88,7 @@ export function Legend() {
           </div>
         </div>
       )}
+      </div>
     </section>
   )
 }

@@ -28,13 +28,14 @@ export function TopBar() {
         ) : (
           <span className="text-muted-foreground max-sm:hidden">outside observed track</span>
         )}
-        <span className="num text-foreground/90">{formatIST(time)}</span>
+        <span className="num text-foreground/90 max-sm:hidden">{formatIST(time)}</span>
       </div>
 
       <div className="ml-auto flex items-center gap-2">
         <span className="panel pointer-events-auto flex h-9 items-center gap-1.5 px-3 text-[11px] font-medium tracking-[0.12em] text-muted-foreground">
           <span className="size-1.5 rounded-full bg-muted-foreground" aria-hidden />
-          REPLAY
+          <span className="max-sm:hidden">REPLAY</span>
+          <span className="sr-only sm:hidden">Replay</span>
         </span>
       </div>
     </header>

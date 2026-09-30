@@ -150,16 +150,20 @@ export function Timeline() {
 
       <div
         ref={barRef}
-        role="slider"
-        tabIndex={0}
-        aria-label="Valid time"
-        aria-valuemin={start}
-        aria-valuemax={end}
-        aria-valuenow={time}
-        aria-valuetext={formatIST(time)}
         onPointerDown={e => drag(e, scrub)}
-        className="relative mt-2 h-9 cursor-pointer touch-none rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+        className="relative mt-2 h-9 cursor-pointer touch-none rounded-md"
       >
+        {/* the accessible slider sits beside the cutoff slider, not around it */}
+        <div
+          role="slider"
+          tabIndex={0}
+          aria-label="Valid time"
+          aria-valuemin={start}
+          aria-valuemax={end}
+          aria-valuenow={time}
+          aria-valuetext={formatIST(time)}
+          className="pointer-events-none absolute inset-0 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+        />
         {/* track: observed past (solid), forecast window (dashed), beyond forecast (faint) */}
         <div className="absolute inset-x-0 top-3 h-1.5 rounded-full bg-white/[0.06]" />
         <div className="absolute top-3 h-1.5 rounded-l-full bg-primary/55" style={{ left: 0, width: pct(cutoff, start, end) }} />

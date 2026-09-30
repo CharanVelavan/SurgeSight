@@ -47,6 +47,7 @@ TESTS: list[tuple[str, list[str], bool]] = [
     ("scripts/test_search_grounding.py", ["SURGESIGHT_SEARCH_GROUNDING_OK"], True),
     ("scripts/test_maps_tools.py", ["SURGESIGHT_MAPS_TOOLS_OK"], True),
     ("scripts/test_api.py", ["SURGESIGHT_API_OK"], True),
+    ("scripts/test_web.py", ["SURGESIGHT_WEB_OK"], True),
     ("scripts/test_stt.py", ["SURGESIGHT_STT_OK"], True),
     ("scripts/test_live.py", ["SURGESIGHT_LIVE_OK"], True),
     ("scripts/test_agent.py", ["SURGESIGHT_AGENT_OK"], True),

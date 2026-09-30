@@ -92,14 +92,32 @@ python scripts/run_all_tests.py --live   # also calls Google APIs (uses quota or
 
 `.env` (never committed): `GOOGLE_CLOUD_PROJECT`, `GOOGLE_GENAI_USE_VERTEXAI=true`, `GOOGLE_CLOUD_LOCATION=global`, `GEMINI_API_KEY` (optional fallback), `GOOGLE_MAPS_API_KEY`, `DISPATCH_MODE=dry_run` (default; `live` sends only to `DISPATCH_ALLOWLIST`), and the `FIREBASE_*` web settings.
 
+## Web dashboard
+
+A read-only React dashboard (`frontend/`) shows the weather and the at-risk infrastructure for the storm on a locked map of India. Wind particles and rain run on the GPU inside the Google vector map; the timeline splits the observed past from the forecast issued at a movable cutoff, so nothing after the cutoff leaks into the forecast view. An **Impact area** button zooms to the affected coast, where hospitals, power substations, police and fire stations, shelters and other assets show as risk-coloured markers.
+
+```bash
+uvicorn api.main:app --port 8000          # API
+cd frontend && npm install && npm run dev  # http://localhost:5173  (set VITE_GOOGLE_MAPS_API_KEY and VITE_GOOGLE_MAP_ID in .env)
+python scripts/build_weather_frames.py     # rebuilds the wind and rain images from Earth Engine (cached)
+python scripts/test_web.py                 # build, unit tests and a real-Chrome check (needs the Maps API online)
+```
+
+![Dashboard on desktop](docs/screenshots/desktop-1440.png)
+
+<img src="docs/screenshots/phone-390.png" alt="Dashboard on a phone" width="220"> <img src="docs/screenshots/tablet-820.png" alt="Dashboard on a tablet" width="330">
+
+The screenshots come from `scripts/test_web.py`. The last run held 120 fps on a ProMotion Mac; frame rate depends on the display and browser, so treat that as a measurement, not a promise.
+
 ## Project layout
 
 ```
 services/   models and integrations (risk, ensemble, hazards, agent, dispatch, cap, voice, maps)
 api/        FastAPI wrappers over the services, including the streaming agent
-ui/ app.py  Streamlit dashboard (a development harness that a React app is meant to replace)
+ui/ app.py  Streamlit dashboard (an internal development harness)
+frontend/   React dashboard: GPU weather map, timeline, at-risk infrastructure (see above)
 config/     regions, departments, parametric triggers, CAP schema
-scripts/    data builds and the test suite (27 scripts, each printing a SURGESIGHT_*_OK marker)
+scripts/    data builds and the test suite (each test prints a SURGESIGHT_*_OK marker)
 docs/       architecture, the implementation plan and the original vision document
 ```
 

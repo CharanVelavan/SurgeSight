@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { Layers, X } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ASSET_ORDER, ASSET_TYPES } from '@/data/assets'
@@ -23,8 +25,25 @@ const Heading = ({ children }: { children: string }) => (
 
 export function LayerCard() {
   const { wind, rain, rainSource, basemap, infra, set } = useUi()
+  // On phones the card is a bottom sheet opened from a button; from 640 px up it floats top-left.
+  const [sheet, setSheet] = useState(false)
   return (
-    <section aria-label="Layers" className="panel pointer-events-auto absolute top-16 left-3 z-10 w-60 p-3 max-sm:hidden">
+    <>
+    <button
+      type="button"
+      onClick={() => setSheet(true)}
+      aria-label="Open layers"
+      className="panel pointer-events-auto absolute top-16 left-3 z-10 grid size-10 place-items-center sm:hidden"
+    >
+      <Layers className="size-5" />
+    </button>
+    <section
+      aria-label="Layers"
+      className={`panel pointer-events-auto absolute top-16 left-3 z-10 w-60 p-3 max-sm:fixed max-sm:inset-x-3 max-sm:top-auto max-sm:bottom-3 max-sm:z-40 max-sm:max-h-[70dvh] max-sm:w-auto max-sm:overflow-y-auto max-sm:pb-[max(0.75rem,env(safe-area-inset-bottom))] ${sheet ? '' : 'max-sm:hidden'}`}
+    >
+      <button type="button" onClick={() => setSheet(false)} aria-label="Close layers" className="absolute top-2 right-2 grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-accent sm:hidden">
+        <X className="size-4" />
+      </button>
       <Heading>Weather</Heading>
       <Row label="Wind" hint="10 m" checked={wind} onChange={v => set({ wind: v })} />
       <Row label="Rain" hint="mm/h" checked={rain} onChange={v => set({ rain: v })} />
@@ -72,5 +91,6 @@ export function LayerCard() {
         ))}
       </ToggleGroup>
     </section>
+    </>
   )
 }
