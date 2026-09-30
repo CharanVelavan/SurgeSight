@@ -26,7 +26,7 @@ describe('locales', () => {
   }
 
   it('every locale differs from English for the headline text', () => {
-    for (const dict of Object.values(locales)) expect(dict['landing.tagline']).not.toBe(en['landing.tagline'])
+    for (const dict of Object.values(locales)) expect(dict['welcome.title']).not.toBe(en['welcome.title'])
   })
 })
 

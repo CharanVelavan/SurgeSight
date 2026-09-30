@@ -3,25 +3,27 @@
  * frame time stays over budget for two seconds. `?particles=N` pins the count for measurements.
  */
 
+import { usePrefs } from '@/app/prefs'
+
 const params = new URLSearchParams(location.search)
 const pinned = Number(params.get('particles')) || 0
 
 function initialBudget(): number {
   if (pinned) return pinned
   // Spawned only inside the visible part of the domain, so density stays constant as the map zooms.
-  // 65k (the plan's first figure) ran at 75 fps but read as a solid carpet; ~22k gives the Windy look.
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return 6000
+  // Kept light on purpose: the wind is context for the storm, not the subject of the screen.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || usePrefs.getState().lite) return 5000
   const w = Math.min(screen.width, innerWidth)
-  if (w < 640) return 6000
-  if (w < 1100) return 12000
-  return 22000
+  if (w < 640) return 5000
+  if (w < 1100) return 9000
+  return 14000
 }
 
 export const quality = {
   particles: initialBudget(),
   trail: innerWidth < 640 ? 14 : 20,
   width: innerWidth < 640 ? 0.7 : 0.5,
-  reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+  reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches || usePrefs.getState().lite,
 }
 
 /** Rolling frame stats; also read by the ?perf=1 overlay and by the fps check in tests. */

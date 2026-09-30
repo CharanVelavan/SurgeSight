@@ -88,7 +88,7 @@ def main() -> int:
             raise AssertionError(f"e2e produced no result:\n{(proc.stdout + proc.stderr)[-2500:]}")
         result = json.loads(lines[-1])
         assert result["ok"], f"e2e failures: {result['failures']}"
-        print(f"e2e ok: fps={result['fps']} forecast={result["forecastMs"]} ms zones={result["zoneMs"]} ms live={result["live"]} zoom={result['zoom']}")
+        print(f"e2e ok: fps={result['fps']} forecast={result["forecastMs"]} ms live={result["live"]} zoom={result['zoom']}")
     finally:
         for proc in started:
             proc.terminate()

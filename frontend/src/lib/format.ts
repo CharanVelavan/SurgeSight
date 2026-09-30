@@ -46,3 +46,8 @@ export function windFrom(u: number, v: number): string {
 export function formatLatLon(lat: number, lon: number): string {
   return `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? 'N' : 'S'} ${Math.abs(lon).toFixed(2)}°${lon >= 0 ? 'E' : 'W'}`
 }
+
+/** Compass point for a bearing in degrees (the direction something moves towards). */
+export function compass(deg: number): string {
+  return COMPASS[Math.round((((deg % 360) + 360) % 360) / 22.5) % 16]
+}

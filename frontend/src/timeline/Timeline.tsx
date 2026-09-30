@@ -20,7 +20,7 @@ const IST_OFFSET = 5.5 * HOUR
 
 const pct = (t: number, start: number, end: number) => `${(((t - start) / (end - start)) * 100).toFixed(3)}%`
 
-export function Timeline() {
+export function Timeline({ className = '' }: { className?: string }) {
   const t = useT()
   const { data: timeline } = useTimeline()
   const manifest = useWeather(s => s.manifest)
@@ -118,13 +118,13 @@ export function Timeline() {
   const landfall = !live && timeline?.first_over_land ? toMs(timeline.first_over_land.time) : null
 
   return (
-    <section aria-label={t('timeline.aria')} className="panel pointer-events-auto absolute inset-x-3 bottom-8 z-20 px-3 pt-2 pb-2.5 select-none">
+    <section aria-label={t('timeline.aria')} className={`panel pointer-events-auto absolute z-20 px-3 pt-2 pb-2.5 select-none sm:px-4 ${className}`}>
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={clockActions.toggle}
           aria-label={playing ? t('timeline.pause') : t('timeline.play')}
-          className="grid size-8 place-items-center rounded-lg bg-secondary text-foreground transition-colors hover:bg-accent"
+          className="grid size-9 place-items-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-90"
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
         </button>
@@ -171,26 +171,26 @@ export function Timeline() {
           className="pointer-events-none absolute inset-0 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
         />
         {/* track: observed past (solid), forecast window (dashed), beyond forecast (faint) */}
-        <div className="absolute inset-x-0 top-3 h-1.5 rounded-full bg-white/[0.06]" />
+        <div className="absolute inset-x-0 top-3 h-1.5 rounded-full bg-muted" />
         <div className="absolute top-3 h-1.5 rounded-l-full bg-primary/55" style={{ left: 0, width: pct(cutoff, start, end) }} />
         <div
           className="absolute top-3 h-1.5"
           style={{
             left: pct(cutoff, start, end),
             width: `calc(${pct(forecastEnd, start, end)} - ${pct(cutoff, start, end)})`,
-            background: 'repeating-linear-gradient(90deg, rgba(127,167,217,.55) 0 6px, transparent 6px 10px)',
+            background: 'repeating-linear-gradient(90deg, color-mix(in srgb, var(--primary) 55%, transparent) 0 6px, transparent 6px 10px)',
           }}
         />
 
         {days.map(d => (
-          <div key={d} className="absolute top-5 h-4 border-l border-white/10 pl-1 text-[10px] whitespace-nowrap text-muted-foreground" style={{ left: pct(d, start, end) }}>
+          <div key={d} className="absolute top-5 h-4 border-l border-border pl-1 text-[10px] whitespace-nowrap text-muted-foreground" style={{ left: pct(d, start, end) }}>
             <span className="num">{formatDay(d + IST_OFFSET / 2)}</span>
           </div>
         ))}
 
         {landfall && (
           <div
-            className="absolute top-[9px] size-2.5 -translate-x-1/2 rotate-45 border border-[#E0B34A] bg-background"
+            className="absolute top-[9px] size-2.5 -translate-x-1/2 rotate-45 border border-warn bg-background"
             style={{ left: pct(landfall, start, end) }}
             title={t('timeline.landfall', { time: formatIST(landfall) })}
           />
@@ -222,8 +222,8 @@ export function Timeline() {
 
         {live && Date.now() > start && Date.now() < end && (
           <div className="absolute top-[3px] z-10 h-5 w-0" style={{ left: pct(Date.now(), start, end) }} title={t('timeline.nowTip')}>
-            <div className="absolute inset-y-0 w-px -translate-x-1/2 bg-[#3FB27F]" />
-            <div className="num absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-[#3FB27F] px-1 text-[9px] leading-3 font-semibold tracking-wider text-background">{t('timeline.now')}</div>
+            <div className="absolute inset-y-0 w-px -translate-x-1/2 bg-ok" />
+            <div className="num absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-ok px-1 text-[9px] leading-3 font-semibold tracking-wider text-background">{t('timeline.now')}</div>
           </div>
         )}
 

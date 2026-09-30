@@ -3,7 +3,7 @@
 import type { Layer } from '@deck.gl/core'
 import { IconLayer, ScatterplotLayer } from '@deck.gl/layers'
 import { ASSET_ORDER, assetsStore, type AssetGroup } from '@/data/assets'
-import { assetIconAtlas } from '@/layers/assetIcons'
+import { assetIconAtlas, iconKey } from '@/layers/assetIcons'
 import { useUi } from '@/state/ui'
 
 /** Above this zoom the markers become glyphs; below it they are small dots so the coast reads as a patch. */
@@ -22,7 +22,7 @@ const select = (group: AssetGroup) => (info: { index: number }) => {
 }
 
 type BinaryData = { length: number; attributes: Record<string, { value: Float32Array | Uint8Array; size: number }> }
-type Cached = { icon: BinaryData; dot: BinaryData; halo: BinaryData }
+type Cached = { icon: BinaryData; dot: BinaryData }
 
 /** Binary layer data, built once per group so deck.gl sees the same object every frame and never re-uploads. */
 const binaryCache = new WeakMap<AssetGroup, Cached>()
@@ -32,9 +32,8 @@ function binaryData(g: AssetGroup) {
     const getPosition = { value: g.positions, size: 2 }
     const color = { value: g.colors, size: 4 }
     b = {
-      icon: { length: g.count, attributes: { getPosition, getColor: color } },
+      icon: { length: g.count, attributes: { getPosition } },
       dot: { length: g.count, attributes: { getPosition, getFillColor: color } },
-      halo: { length: g.count, attributes: { getPosition } },
     }
     binaryCache.set(g, b)
   }
@@ -42,39 +41,33 @@ function binaryData(g: AssetGroup) {
 }
 
 /** Small at first sight of the coast so clusters stay readable, growing to a full glyph when zoomed in. */
-const markerSize = (zoom: number) => Math.round(Math.min(30, 10 + (zoom - MARKER_ZOOM) * 4))
+const markerSize = (zoom: number) => Math.round(Math.min(34, 20 + (zoom - MARKER_ZOOM) * 4))
 
 export function buildAssetLayers(): Layer[] {
   const { data } = assetsStore.getState()
   if (!data) return []
   const { infra, zoom } = useUi.getState()
   if (zoom < INFRA_ZOOM) return []
-  const icons = zoom >= MARKER_ZOOM
-  const atlas = icons ? assetIconAtlas() : null
+  const atlas = zoom >= MARKER_ZOOM ? assetIconAtlas() : null
   const layers: Layer[] = []
   for (const type of ASSET_ORDER) {
     const g = data.groups.get(type)
     if (!g || !infra[type]) continue
     const binary = binaryData(g)
-    if (icons)
-      layers.push(
-        new ScatterplotLayer({
-          id: `assets-halo-${type}`, data: binary.halo, radiusUnits: 'pixels', getRadius: markerSize(zoom) / 2 + 1.5,
-          getFillColor: [11, 13, 16, 200], stroked: false, pickable: false, parameters: { depthCompare: 'always' },
-        }),
-      )
     layers.push(
-      icons
+      atlas
         ? new IconLayer({
             id: `assets-icon-${type}`,
             data: binary.icon,
-            iconAtlas: atlas!.url,
-            iconMapping: atlas!.mapping,
-            getIcon: () => type,
+            iconAtlas: atlas.url,
+            iconMapping: atlas.mapping,
+            getIcon: (_: unknown, { index }: { index: number }) => iconKey(type, g.classes[index]),
             sizeUnits: 'pixels',
             getSize: markerSize(zoom),
-            sizeMinPixels: 7,
+            sizeMinPixels: 14,
             pickable: true,
+            autoHighlight: true,
+            highlightColor: [255, 255, 255, 60],
             onHover: hover(g),
             onClick: select(g),
             parameters: { depthCompare: 'always' },
@@ -83,8 +76,11 @@ export function buildAssetLayers(): Layer[] {
             id: `assets-dot-${type}`,
             data: binary.dot,
             radiusUnits: 'pixels',
-            getRadius: 2.4,
-            stroked: false,
+            getRadius: 3.2,
+            stroked: true,
+            getLineColor: [255, 255, 255, 230],
+            lineWidthUnits: 'pixels',
+            getLineWidth: 1,
             pickable: false,
             parameters: { depthCompare: 'always' },
           }),

@@ -33,6 +33,14 @@ export const CLOUD_RAMP: readonly Stop[] = [
   [100, '#F5F8FC', 0.62],
 ]
 
+/** Cloud cover on the light map: white cloud would vanish there, so it is drawn in slate. */
+export const CLOUD_RAMP_LIGHT: readonly Stop[] = [
+  [15, '#5E6B7D', 0],
+  [40, '#5E6B7D', 0.18],
+  [70, '#4A5667', 0.34],
+  [100, '#3A4454', 0.5],
+]
+
 /** 2 m air temperature, deg C. */
 export const TEMP_RAMP: readonly Stop[] = [
   [-10, '#4A6FD0', 0.6],

@@ -12,7 +12,7 @@ export function LiveBanner() {
   return (
     <div
       role="status"
-      className={`panel pointer-events-auto absolute top-16 left-1/2 z-20 flex max-w-[calc(100%-1.5rem)] -translate-x-1/2 items-center gap-2 px-3 py-1.5 text-[12px] ${live.stale ? 'text-[#E0B34A]' : 'text-muted-foreground'}`}
+      className={`panel pointer-events-auto absolute top-3 left-1/2 z-20 flex max-w-[calc(100%-1.5rem)] max-lg:top-14 -translate-x-1/2 items-center gap-2 px-3 py-2 text-[12.5px] ${live.stale ? 'border-warn/40 text-warn' : 'text-muted-foreground'}`}
     >
       {live.stale && <AlertTriangle className="size-4 shrink-0" aria-hidden />}
       <span>

@@ -8,15 +8,16 @@ import { createStore } from 'zustand/vanilla'
 import { api } from '@/lib/api'
 import { RISK, hexToRgb, type RiskClass } from '@/lib/colors'
 
+/** Facility types in display order. Icons live in data/assetIcon.tsx (lists) and layers/assetIcons.ts (map). */
 export const ASSET_TYPES = {
-  hospital: { label: 'Hospitals', glyph: 'cross' },
-  substation: { label: 'Power substations', glyph: 'bolt' },
-  police_station: { label: 'Police stations', glyph: 'shield' },
-  fire_station: { label: 'Fire stations', glyph: 'flame' },
-  shelter: { label: 'Shelters', glyph: 'house' },
-  school: { label: 'Schools', glyph: 'diamond' },
-  water_facility: { label: 'Water facilities', glyph: 'drop' },
-  fishing_harbour: { label: 'Fishing harbours', glyph: 'hex' },
+  hospital: {},
+  substation: {},
+  police_station: {},
+  fire_station: {},
+  shelter: {},
+  school: {},
+  water_facility: {},
+  fishing_harbour: {},
 } as const
 
 export type AssetType = keyof typeof ASSET_TYPES
@@ -30,6 +31,8 @@ export interface AssetGroup {
   positions: Float32Array
   /** RGBA bytes by risk class. */
   colors: Uint8Array
+  /** Risk class of each member, for the marker icon. */
+  classes: string[]
 }
 
 export interface AssetData {
@@ -45,6 +48,7 @@ export interface AssetData {
   lat: number[]
   tier: number[]
   hazard: string[]
+  quality: (string | null)[]
   groups: Map<AssetType, AssetGroup>
 }
 
@@ -77,11 +81,11 @@ export function groupAssets(cols: Awaited<ReturnType<typeof api.assets>>): Asset
       positions[j * 2 + 1] = cols.lat[src]
       colors.set(rgba(cols.risk_class[src]), j * 4)
     })
-    groups.set(type, { type, count: idx.length, indices: Int32Array.from(idx), positions, colors })
+    groups.set(type, { type, count: idx.length, indices: Int32Array.from(idx), positions, colors, classes: idx.map(src => cols.risk_class[src]) })
   }
   return {
     runId: cols.run_id, count: cols.count, name: cols.name, osmElement: cols.osm_element, osmId: cols.osm_id, type: cols.asset_type, riskClass: cols.risk_class,
-    riskScore: cols.risk_score, lon: cols.lon, lat: cols.lat, tier: cols.triage_tier, hazard: cols.dominant_hazard, groups,
+    riskScore: cols.risk_score, lon: cols.lon, lat: cols.lat, tier: cols.triage_tier, hazard: cols.dominant_hazard, quality: cols.facility_quality ?? cols.name.map(() => null), groups,
   }
 }
 

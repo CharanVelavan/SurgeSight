@@ -1,6 +1,7 @@
 /** Keeps the latest zone image for the frame loop, recomputing when the valid time moves an hour or an input changes. */
 
-import { alertField, renderZones } from './field'
+import { alertField } from './field'
+import { encodeSeverity } from '@/layers/zones/ZoneLayer'
 import type { StormState } from './zones'
 import type { Manifest } from '@/weather/manifest'
 import type { RainSource } from '@/weather/field'
@@ -16,9 +17,9 @@ export function zoneImage(m: Manifest, time: number, cutoff: number, rainSource:
     key = k
     pending = true
     const t0 = performance.now()
-    const img = renderZones(alertField(m, time, cutoff, rainSource, storm), m.tile.width, m.tile.height)
+    const img = encodeSeverity(alertField(m, time, cutoff, rainSource, storm), m.tile.width, m.tile.height)
     if (import.meta.env.DEV) (window as unknown as { __zoneMs: number }).__zoneMs = performance.now() - t0
-    createImageBitmap(img).then(b => {
+    createImageBitmap(img, { premultiplyAlpha: 'none', colorSpaceConversion: 'none' }).then(b => {
       bitmap?.close()
       bitmap = b
       pending = false

@@ -14,6 +14,9 @@ name = "Cyclone Michaung"
 year = 2023
 blurb = "Replay of the December 2023 landfall near Chennai, with forecasts as they stood at each bulletin."
 region = "michaung_2023"
+category = "SCS"
+month = "2023-12"
+states = "Tamil Nadu · Andhra Pradesh"
 
 [[tile]]
 id = "fani_2019"
@@ -22,6 +25,9 @@ name = "Cyclone Fani"
 year = 2019
 blurb = "Extremely severe cyclone that made landfall in Odisha in May 2019."
 region = "fani_2019"
+category = "ESCS"
+month = "2019-05"
+states = "Odisha"
 
 [[tile]]
 id = "biparjoy_2023"
@@ -30,6 +36,9 @@ name = "Cyclone Biparjoy"
 year = 2023
 blurb = "Very severe cyclone that made landfall in Gujarat in June 2023."
 region = "biparjoy_2023"
+category = "VSCS"
+month = "2023-06"
+states = "Gujarat"
 
 [[tile]]
 id = "amphan_2020"
@@ -38,3 +47,6 @@ name = "Cyclone Amphan"
 year = 2020
 blurb = "Super cyclonic storm that made landfall in West Bengal in May 2020."
 region = "amphan_2020"
+category = "SuCS"
+month = "2020-05"
+states = "West Bengal"

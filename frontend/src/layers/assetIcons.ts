@@ -1,119 +1,68 @@
-/** Glyph atlas for infrastructure markers, drawn once on a canvas: a ring around a solid glyph. */
+/**
+ * Marker atlas for the map: one disc per facility type and risk class, filled with the risk colour and
+ * carrying the facility's icon (the same Lucide icons the lists use). Built once as an SVG and rasterised.
+ */
 
-import { ASSET_ORDER, ASSET_TYPES, type AssetType } from '@/data/assets'
+import { Anchor, Cross, Droplet, Flame, GraduationCap, House, ShieldHalf, Zap, type IconNode } from 'lucide'
+import { ASSET_ORDER, type AssetType } from '@/data/assets'
+import { RISK, type RiskClass } from '@/lib/colors'
 
 const CELL = 64
-
-type Ctx = CanvasRenderingContext2D
-
-const GLYPHS: Record<(typeof ASSET_TYPES)[AssetType]['glyph'], (c: Ctx) => void> = {
-  cross: c => {
-    c.fillRect(27, 14, 10, 36)
-    c.fillRect(14, 27, 36, 10)
-  },
-  bolt: c => {
-    c.beginPath()
-    c.moveTo(36, 10)
-    c.lineTo(20, 35)
-    c.lineTo(30, 35)
-    c.lineTo(27, 54)
-    c.lineTo(44, 28)
-    c.lineTo(34, 28)
-    c.closePath()
-    c.fill()
-  },
-  shield: c => {
-    c.beginPath()
-    c.moveTo(32, 12)
-    c.lineTo(48, 18)
-    c.lineTo(46, 36)
-    c.quadraticCurveTo(44, 47, 32, 53)
-    c.quadraticCurveTo(20, 47, 18, 36)
-    c.lineTo(16, 18)
-    c.closePath()
-    c.fill()
-  },
-  flame: c => {
-    c.beginPath()
-    c.moveTo(32, 10)
-    c.quadraticCurveTo(52, 30, 44, 44)
-    c.quadraticCurveTo(38, 54, 32, 54)
-    c.quadraticCurveTo(24, 54, 20, 44)
-    c.quadraticCurveTo(14, 32, 32, 10)
-    c.fill()
-  },
-  house: c => {
-    c.beginPath()
-    c.moveTo(32, 12)
-    c.lineTo(52, 30)
-    c.lineTo(46, 30)
-    c.lineTo(46, 50)
-    c.lineTo(18, 50)
-    c.lineTo(18, 30)
-    c.lineTo(12, 30)
-    c.closePath()
-    c.fill()
-  },
-  diamond: c => {
-    c.beginPath()
-    c.moveTo(32, 12)
-    c.lineTo(51, 32)
-    c.lineTo(32, 52)
-    c.lineTo(13, 32)
-    c.closePath()
-    c.fill()
-  },
-  drop: c => {
-    c.beginPath()
-    c.moveTo(32, 10)
-    c.quadraticCurveTo(50, 32, 46, 42)
-    c.arc(32, 42, 14, 0, Math.PI, false)
-    c.quadraticCurveTo(14, 32, 32, 10)
-    c.fill()
-  },
-  hex: c => {
-    c.beginPath()
-    for (let i = 0; i < 6; i++) {
-      const a = (Math.PI / 3) * i - Math.PI / 6
-      c.lineTo(32 + 20 * Math.cos(a), 32 + 20 * Math.sin(a))
-    }
-    c.closePath()
-    c.fill()
-  },
+const CLASSES = Object.keys(RISK) as RiskClass[]
+const NODES: Record<AssetType, IconNode> = {
+  hospital: Cross, substation: Zap, police_station: ShieldHalf, fire_station: Flame,
+  shelter: House, school: GraduationCap, water_facility: Droplet, fishing_harbour: Anchor,
 }
+/** Dark glyphs on the light discs keep contrast; white on the strong ones. */
+const GLYPH: Record<RiskClass, string> = { LOW: '#1B2027', MODERATE: '#1B2027', HIGH: '#FFFFFF', CRITICAL: '#FFFFFF' }
 
 export interface IconMapping {
-  [type: string]: { x: number; y: number; width: number; height: number; mask: true }
+  [key: string]: { x: number; y: number; width: number; height: number; mask: false; anchorY: number }
 }
 
-let cached: { url: string; mapping: IconMapping } | null = null
+export const iconKey = (type: string, cls: string) => `${type}:${cls in RISK ? cls : 'LOW'}`
 
-export function assetIconAtlas(): { url: string; mapping: IconMapping } {
-  if (cached) return cached
-  const canvas = document.createElement('canvas')
-  canvas.width = CELL * ASSET_ORDER.length
-  canvas.height = CELL
-  const c = canvas.getContext('2d')!
+const escape = (v: string) => v.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+
+function svgAtlas(): { svg: string; mapping: IconMapping; width: number; height: number } {
+  const width = CELL * ASSET_ORDER.length
+  const height = CELL * CLASSES.length
   const mapping: IconMapping = {}
-  ASSET_ORDER.forEach((type, i) => {
-    c.save()
-    c.translate(i * CELL, 0)
-    c.fillStyle = '#fff'
-    c.strokeStyle = '#fff'
-    // ring + solid glyph, both tinted by the layer colour (mask icons)
-    c.lineWidth = 6
-    c.beginPath()
-    c.arc(32, 32, 27, 0, Math.PI * 2)
-    c.stroke()
-    c.save()
-    c.translate(32, 32)
-    c.scale(0.7, 0.7)
-    c.translate(-32, -32)
-    GLYPHS[ASSET_TYPES[type].glyph](c)
-    c.restore()
-    c.restore()
-    mapping[type] = { x: i * CELL, y: 0, width: CELL, height: CELL, mask: true }
+  const parts: string[] = []
+  CLASSES.forEach((cls, row) => {
+    ASSET_ORDER.forEach((type, col) => {
+      const x = col * CELL, y = row * CELL
+      const glyph = NODES[type].map(([tag, attrs]) => `<${tag} ${Object.entries(attrs).map(([k, v]) => `${k}="${escape(String(v))}"`).join(' ')}/>`).join('')
+      parts.push(
+        `<g transform="translate(${x} ${y})">` +
+          `<circle cx="32" cy="32" r="29" fill="rgba(0,0,0,0.28)"/>` +
+          `<circle cx="32" cy="31" r="27" fill="${RISK[cls].color}" stroke="#FFFFFF" stroke-width="3.5"/>` +
+          `<g transform="translate(17 16) scale(1.25)" fill="none" stroke="${GLYPH[cls]}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${glyph}</g>` +
+          `</g>`,
+      )
+      mapping[iconKey(type, cls)] = { x, y, width: CELL, height: CELL, mask: false, anchorY: CELL / 2 }
+    })
   })
-  cached = { url: canvas.toDataURL('image/png'), mapping }
-  return cached
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${parts.join('')}</svg>`
+  return { svg, mapping, width, height }
+}
+
+let atlas: { url: string; mapping: IconMapping } | null = null
+let started = false
+
+/** The atlas once it has been rasterised; null for the first frames (the map shows dots until then). */
+export function assetIconAtlas(): { url: string; mapping: IconMapping } | null {
+  if (atlas || started) return atlas
+  started = true
+  const { svg, mapping, width, height } = svgAtlas()
+  const img = new Image()
+  img.onload = () => {
+    const canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+    canvas.getContext('2d')!.drawImage(img, 0, 0)
+    atlas = { url: canvas.toDataURL('image/png'), mapping }
+  }
+  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
+  return null
 }

@@ -9,3 +9,6 @@ export const cutoffParam = (ms: number) => new Date(ms).toISOString().slice(0, 1
 /** Experimental forecast issued at the cutoff. Cached per cutoff; a failure (too little track) just hides it. */
 export const useForecast = (cutoffMs: number) =>
   useQuery({ queryKey: ['forecast', cutoffMs], queryFn: () => api.forecast(cutoffParam(cutoffMs)), staleTime: Infinity, retry: 0, placeholderData: keep => keep })
+
+/** Tiles for Home and the sidebar: the live view and each storm, with whether its data is ready. */
+export const useCatalog = () => useQuery({ queryKey: ['catalog'], queryFn: api.catalog, staleTime: 60_000 })

@@ -28,6 +28,8 @@ export interface AssetColumns {
   risk_score: number[]
   triage_tier: number[]
   dominant_hazard: string[]
+  /** 'hospital' for real hospitals, otherwise clinics and other health facilities (hospital rows only). */
+  facility_quality?: (string | null)[]
 }
 
 export interface AssetFacts {
@@ -95,6 +97,9 @@ export interface CatalogTile {
   year?: number
   blurb: string
   status: 'available' | 'soon'
+  category?: string
+  month?: string
+  states?: string
 }
 
 export const api = {

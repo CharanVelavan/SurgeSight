@@ -21,6 +21,9 @@
     --font-sans: 'Geist Variable', 'Noto Sans Devanagari', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Bengali', 'Noto Sans Oriya', sans-serif;
     --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
     --color-panel: var(--panel);
+    --color-warn: var(--warn);
+    --color-warn-bg: var(--warn-bg);
+    --color-ok: var(--ok);
     --color-hairline: var(--hairline);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -62,70 +65,79 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* SurgeSight tokens. Light is the default; .dark is set from Settings (or the system preference). */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    --background: #F5F6F8;
+    --foreground: #151A21;
+    --card: #FFFFFF;
+    --card-foreground: #151A21;
+    --popover: #FFFFFF;
+    --popover-foreground: #151A21;
+    --primary: #2B63A6;
+    --primary-foreground: #FFFFFF;
+    --secondary: #ECEFF3;
+    --secondary-foreground: #151A21;
+    --muted: #ECEFF3;
+    --muted-foreground: #5A636E;
+    --accent: rgba(43, 99, 166, 0.10);
+    --accent-foreground: #151A21;
+    --destructive: #B42318;
+    --border: #E1E5EA;
+    --input: #D5DAE0;
+    --ring: #2B63A6;
+    --warn: #8A5A00;
+    --warn-bg: #FFF4DB;
+    --ok: #17663F;
+    --panel: rgba(255, 255, 255, 0.78);
+    --hairline: rgba(21, 26, 33, 0.10);
+    --shadow: 0 1px 2px rgba(21, 26, 33, 0.06), 0 4px 16px rgba(21, 26, 33, 0.08);
+    --chart-1: #2B63A6;
+    --chart-2: #3E9C8A;
+    --chart-3: #C9A227;
+    --chart-4: #D97A3A;
+    --chart-5: #B8322A;
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --sidebar: #FFFFFF;
+    --sidebar-foreground: #151A21;
+    --sidebar-primary: #2B63A6;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: #EEF2F7;
+    --sidebar-accent-foreground: #151A21;
+    --sidebar-border: #E1E5EA;
+    --sidebar-ring: #2B63A6;
 }
 
 .dark {
-    /* SurgeSight surfaces (docs/UI_PLAN.md §3): dark chrome over every basemap, one steel-blue accent */
     --background: #0B0D10;
     --foreground: #E6E8EB;
-    --panel: rgba(16, 19, 24, 0.72);
-    --hairline: rgba(255, 255, 255, 0.08);
-    --card: #101318;
+    --card: #12161B;
     --card-foreground: #E6E8EB;
-    --popover: #12161B;
+    --popover: #151A20;
     --popover-foreground: #E6E8EB;
     --primary: #7FA7D9;
     --primary-foreground: #0B0D10;
     --secondary: #1A1F26;
     --secondary-foreground: #E6E8EB;
     --muted: #1A1F26;
-    --muted-foreground: #8B939D;
+    --muted-foreground: #939BA5;
     --accent: rgba(127, 167, 217, 0.14);
     --accent-foreground: #E6E8EB;
-    --destructive: #B8322A;
-    --border: rgba(255, 255, 255, 0.08);
-    --input: rgba(255, 255, 255, 0.12);
+    --destructive: #E5484D;
+    --border: rgba(255, 255, 255, 0.09);
+    --input: rgba(255, 255, 255, 0.14);
     --ring: #7FA7D9;
+    --warn: #E0B34A;
+    --warn-bg: rgba(224, 179, 74, 0.12);
+    --ok: #4CC38A;
+    --panel: rgba(16, 19, 24, 0.72);
+    --hairline: rgba(255, 255, 255, 0.09);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
     --chart-1: #7FA7D9;
     --chart-2: #7CC4B0;
     --chart-3: #E6D3A3;
     --chart-4: #E08A6A;
-    --chart-5: #B8434A;
-    --radius: 0.75rem;
-    --sidebar: #101318;
+    --chart-5: #E5484D;
+    --sidebar: #0F1216;
     --sidebar-foreground: #E6E8EB;
     --sidebar-primary: #7FA7D9;
     --sidebar-primary-foreground: #0B0D10;
@@ -148,13 +160,21 @@
 }
 @layer components {
   /* Translucent floating chrome: quiet, no glow, no gradients */
+  /* Chrome floating over the map: solid enough to read on any basemap, one soft shadow */
   .panel {
     background: var(--panel);
     border: 1px solid var(--hairline);
-    border-radius: 12px;
+    border-radius: 10px;
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shadow);
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
   }
   .num {
     font-family: var(--font-mono);
@@ -167,4 +187,9 @@ html, body, #root {
   margin: 0;
   overflow: hidden;
   overscroll-behavior: none;
+}
+
+@keyframes splash {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
 }

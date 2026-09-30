@@ -12,9 +12,14 @@ import { clock } from '@/timeline/clock'
 
 type Pt = [number, number]
 
-const PRIMARY = hexToRgb('#7FA7D9')
-const AMBER = hexToRgb('#E0B34A')
-const GREY = hexToRgb('#8B939D')
+/** Track colours per theme: the light basemap needs darker lines to keep the same contrast. */
+const PALETTE = {
+  dark: { primary: hexToRgb('#7FA7D9'), amber: hexToRgb('#E0B34A'), grey: hexToRgb('#8B939D') },
+  light: { primary: hexToRgb('#1F4F8F'), amber: hexToRgb('#C07F00'), grey: hexToRgb('#6B7480') },
+}
+let PRIMARY = PALETTE.dark.primary
+let AMBER = PALETTE.dark.amber
+let GREY = PALETTE.dark.grey
 const dash = new PathStyleExtension({ dash: true })
 
 interface Memo<T> { key: string; value: T }
@@ -57,6 +62,10 @@ function segment(t: Timeline, fromMs: number, toMs: number): Pt[] {
 const HOUR_BUCKET = 15 * 60_000
 
 export function buildTrackLayers(): Layer[] {
+  const pal = document.documentElement.classList.contains('dark') ? PALETTE.dark : PALETTE.light
+  PRIMARY = pal.primary
+  AMBER = pal.amber
+  GREY = pal.grey
   const { timeline, forecast } = trackStore.getState()
   if (!timeline) return []
   const { time, cutoff } = clock.getState()

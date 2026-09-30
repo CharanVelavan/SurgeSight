@@ -6,10 +6,10 @@ import { clock } from '@/timeline/clock'
 import { weatherStore } from '@/weather/atlas'
 import { extField, rainField, tileRect, windField } from '@/weather/field'
 import { RainLayer } from '@/layers/rain/RainLayer'
-import { CLOUD_RAMP, HUMIDITY_RAMP, TEMP_RAMP } from '@/lib/colors'
+import { CLOUD_RAMP, CLOUD_RAMP_LIGHT, HUMIDITY_RAMP, TEMP_RAMP } from '@/lib/colors'
 import { makeScalarLayer } from '@/layers/scalar/ScalarLayer'
 import { WindParticleLayer } from '@/layers/wind/WindParticleLayer'
-import { BitmapLayer } from '@deck.gl/layers'
+import { ZoneLayer } from '@/layers/zones/ZoneLayer'
 import { stormAt } from '@/alerts/storm'
 import { zoneImage } from '@/alerts/store'
 import { trackStore } from '@/data/track'
@@ -21,6 +21,7 @@ type Vec4 = [number, number, number, number]
 
 const FIELD_LAYERS = {
   cloud: makeScalarLayer({ name: 'cloud', channel: 0, min: 0, max: 100, ramp: CLOUD_RAMP }),
+  cloudLight: makeScalarLayer({ name: 'cloudLight', channel: 0, min: 0, max: 100, ramp: CLOUD_RAMP_LIGHT }),
   temperature: makeScalarLayer({ name: 'temperature', channel: 1, min: -30, max: 50, ramp: TEMP_RAMP }),
   humidity: makeScalarLayer({ name: 'humidity', channel: 2, min: 0, max: 100, ramp: HUMIDITY_RAMP }),
 }
@@ -48,7 +49,8 @@ export function buildLayers(now: number): Layer[] {
   const extA = ext && atlases.get(ext.a.file)
   const extB = ext && atlases.get(ext.b.file)
   if (ui.field !== 'none' && ext && extA && extB) {
-    const Field = FIELD_LAYERS[ui.field]
+    const dark = document.documentElement.classList.contains('dark')
+    const Field = ui.field === 'cloud' && !dark ? FIELD_LAYERS.cloudLight : FIELD_LAYERS[ui.field]
     layers.push(
       new Field({
         id: ui.field,
@@ -83,7 +85,7 @@ export function buildLayers(now: number): Layer[] {
     const image = zoneImage(manifest, time, cutoff, ui.rainSource, stormAt(timeline?.track, forecast, time, cutoff))
     if (image)
       layers.push(
-        new BitmapLayer({
+        new ZoneLayer({
           id: 'alert-zones', image, bounds: [west - step / 2, south - step / 2, east + step / 2, north + step / 2],
           textureParameters: { minFilter: 'linear', magFilter: 'linear' }, pickable: false,
         }),
@@ -112,9 +114,10 @@ export function buildLayers(now: number): Layer[] {
         clockMs: now,
         animate: !quality.reducedMotion,
         preload: bitmaps(atlases),
+        opacity: 0.75,
       }),
     )
   }
-  if (ui.mode === 'replay') layers.push(...buildTrackLayers(), ...buildAssetLayers())
+  if (ui.mode === 'replay') layers.push(...(ui.track ? buildTrackLayers() : []), ...buildAssetLayers())
   return layers
 }
