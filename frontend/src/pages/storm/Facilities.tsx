@@ -49,8 +49,14 @@ export function Facilities({ id }: { id: string }) {
       if (q && !(data.name[i] || '').toLowerCase().includes(q)) continue
       out.push(i)
     }
-    return out.sort((a, b) => data.riskScore[b] - data.riskScore[a])
-  }, [data, types, minClass, q])
+    return out.sort((a, b) => {
+      if (levels) {
+        const diff = levels[b] - levels[a]
+        if (diff !== 0) return diff
+      }
+      return data.riskScore[b] - data.riskScore[a]
+    })
+  }, [data, types, minClass, q, levels])
 
   const mine = role.types.length === types.size && role.types.every(x => types.has(x))
   const toggle = (a: AssetType) => {

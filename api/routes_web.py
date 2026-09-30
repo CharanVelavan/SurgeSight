@@ -111,6 +111,37 @@ def live_manifest() -> JSONResponse:
     return JSONResponse({**manifest, "live": live, "version": h.hexdigest()[:10]}, headers=NO_CACHE)
 
 
+# Cities across the cyclone-prone coast, for the "right now" strip on Home.
+NOW_CITIES = (("Chennai", 13.083, 80.270), ("Visakhapatnam", 17.687, 83.218), ("Bhubaneswar", 20.296, 85.825),
+              ("Kolkata", 22.573, 88.364), ("Mumbai", 19.076, 72.878), ("Kochi", 9.931, 76.267))
+_NOW_TTL_S = 600
+_now_cache: dict[str, Any] = {"at": 0.0, "rows": []}
+
+
+@router.get("/api/live/now")
+def live_now() -> JSONResponse:
+    """Current conditions (Google Weather API) for a few coastal cities. Held in memory for ten minutes, never stored."""
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    from services import maps
+
+    if time.time() - _now_cache["at"] > _NOW_TTL_S:
+        def one(city: tuple[str, float, float]) -> dict[str, Any] | None:
+            try:
+                return {"city": city[0], **maps.current_conditions(city[1], city[2])}
+            except Exception:  # one city failing must not blank the strip
+                return None
+
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            rows = [r for r in pool.map(one, NOW_CITIES) if r]
+        if rows:
+            _now_cache.update(at=time.time(), rows=rows)
+    if not _now_cache["rows"]:
+        raise HTTPException(status_code=503, detail="Current conditions are unavailable right now")
+    return JSONResponse({"cities": _now_cache["rows"], "source": "Google Weather API"}, headers=NO_CACHE)
+
+
 @router.get("/api/live/{file}")
 def live_file(file: str) -> FileResponse:
     path = live_dir() / file

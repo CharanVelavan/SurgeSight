@@ -33,28 +33,47 @@ function ViewController() {
   useEffect(() => {
     if (!map) return
     const div = map.getDiv()
-    const apply = () => {
+    const apply = (forceJump = false) => {
       const w = div.clientWidth, h = div.clientHeight
       if (!w || !h) return
       const cam = fitCamera(view === 'india' ? nationalBox(w, h) : IMPACT, w, h)
       map.setOptions({ restriction: null, minZoom: 1, maxZoom: 21 })
-      map.moveCamera({ center: cam.center, zoom: cam.zoom })
-      // A strict limit made Google settle on a whole zoom (5 instead of the exact frame), so only the centre is kept inside.
+      const isInitial = map.getZoom() === undefined || forceJump
+      
       const limit = view === 'india' ? INDIA : IMPACT_LIMIT
-      map.setOptions({
-        gestureHandling: 'greedy',
-        keyboardShortcuts: false,
-        minZoom: cam.zoom,
-        maxZoom: view === 'india' ? 12 : 15,
-        restriction: { latLngBounds: { north: limit.north, south: limit.south, west: limit.west, east: limit.east }, strictBounds: false },
-      })
-      // Google can settle on a whole zoom during the first pass; moving again puts the camera on the exact frame.
-      for (const ms of [0, 400, 1200]) setTimeout(() => map.getZoom() !== cam.zoom && map.moveCamera({ center: cam.center, zoom: cam.zoom }), ms)
+      const applyLimits = () => {
+        map.setOptions({
+          gestureHandling: 'greedy',
+          keyboardShortcuts: false,
+          minZoom: cam.zoom,
+          maxZoom: view === 'india' ? 12 : 15,
+          restriction: { latLngBounds: { north: limit.north, south: limit.south, west: limit.west, east: limit.east }, strictBounds: false },
+        })
+      }
+
+      if (isInitial) {
+        map.moveCamera({ center: cam.center, zoom: cam.zoom })
+        applyLimits()
+        for (const ms of [0, 400, 1200]) setTimeout(() => map.getZoom() !== cam.zoom && map.moveCamera({ center: cam.center, zoom: cam.zoom }), ms)
+      } else {
+        const fromCenter = map.getCenter()!
+        const from = { lat: fromCenter.lat(), lng: fromCenter.lng(), zoom: map.getZoom() ?? cam.zoom }
+        const to = { lat: cam.center.lat, lng: cam.center.lng, zoom: cam.zoom }
+        const t0 = performance.now()
+        const frame = (now: number) => {
+          const t = Math.min(1, (now - t0) / 900)
+          const e = easeInOutCubic(t)
+          map.moveCamera({ center: { lat: from.lat + (to.lat - from.lat) * e, lng: from.lng + (to.lng - from.lng) * e }, zoom: from.zoom + (to.zoom - from.zoom) * e })
+          if (t < 1) requestAnimationFrame(frame)
+          else applyLimits()
+        }
+        requestAnimationFrame(frame)
+      }
       useUi.getState().set({ zoom: cam.zoom })
     }
     apply()
-    const idle = google.maps.event.addListenerOnce(map, 'idle', apply)
-    const ro = new ResizeObserver(apply)
+    const idle = google.maps.event.addListenerOnce(map, 'idle', () => apply(true))
+    const ro = new ResizeObserver(() => apply(true))
     ro.observe(div)
     const zl = map.addListener('zoom_changed', () => useUi.getState().set({ zoom: map.getZoom() ?? 4 }))
     return () => {

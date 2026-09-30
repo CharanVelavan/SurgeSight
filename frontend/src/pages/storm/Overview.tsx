@@ -103,9 +103,15 @@ export function Overview({ id }: { id: string }) {
     if (!data) return null
     const rows: number[] = []
     for (let i = 0; i < data.count; i++) if (inRole(role, data.type[i], data.quality[i])) rows.push(i)
-    rows.sort((a, b) => priorityRank(data.type[a], data.quality[a]) - priorityRank(data.type[b], data.quality[b]) || data.riskScore[b] - data.riskScore[a])
+    rows.sort((a, b) => {
+      if (levels) {
+        const diff = levels[b] - levels[a]
+        if (diff !== 0) return diff
+      }
+      return priorityRank(data.type[a], data.quality[a]) - priorityRank(data.type[b], data.quality[b]) || data.riskScore[b] - data.riskScore[a]
+    })
     return rows
-  }, [data, role])
+  }, [data, role, levels])
 
   const alerted = levels ? levels.reduce((n, l) => n + (l >= 2 ? 1 : 0), 0) : null
   const areas = useMemo(() => {
