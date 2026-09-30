@@ -3,6 +3,7 @@ import { ChevronDown } from 'lucide-react'
 import { RAIN_RAMP, RISK, WIND_RAMP, rampCss } from '@/lib/colors'
 import { formatCycle } from '@/lib/format'
 import { useTimeline } from '@/app/queries'
+import { INFRA_ZOOM } from '@/map/assetLayers'
 import { useUi } from '@/state/ui'
 import { useClock } from '@/timeline/clock'
 import { rainField, windField, type FieldPair } from '@/weather/field'
@@ -47,17 +48,18 @@ export function Legend() {
   const { data: timeline } = useTimeline()
   // Open by default from 640 px up; on phones it starts collapsed so it does not cover the storm.
   const [open, setOpen] = useState(() => matchMedia('(min-width: 640px)').matches)
-  const anyInfra = useUi(s => Object.values(s.infra).some(Boolean))
+  const anyInfra = useUi(s => Object.values(s.infra).some(Boolean) && s.zoom >= INFRA_ZOOM)
   if (!manifest || (!wind && !rain && !anyInfra)) return null
   const ms = time * 3_600_000
   const w = windField(manifest, ms, cutoff)
   const r = rainField(manifest, ms, cutoff, rainSource)
   return (
-    <section aria-label="Legend" className="panel pointer-events-auto absolute bottom-[132px] left-3 z-10 flex w-72 flex-col gap-2.5 p-3 max-sm:bottom-[140px] max-sm:w-[calc(100%-24px)]">
+    <section aria-label="What am I seeing?" className="panel pointer-events-auto absolute bottom-[132px] left-3 z-10 flex w-72 flex-col gap-2.5 p-3 max-sm:bottom-[140px] max-sm:w-[calc(100%-24px)]">
       <button type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} className="flex items-center justify-between text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase sm:hidden">
-        Legend
+        What am I seeing?
         <ChevronDown className={`size-4 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
+      <div className="hidden text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase sm:block">What am I seeing?</div>
       <div className={`flex flex-col gap-2.5 ${open ? '' : 'max-sm:hidden'}`}>
       {wind && (
         <Scale title="Wind" unit="m/s" stops={WIND_RAMP.map(([v]) => v)} gradient={rampCss(WIND_RAMP)} note={sourceLabel(w, 'wind')} warn={!w} />
@@ -75,7 +77,7 @@ export function Legend() {
       {anyInfra && (
         <div>
           <div className="flex items-baseline justify-between text-[11px]">
-            <span className="font-medium">Infrastructure risk</span>
+            <span className="font-medium">Hospitals, power, police… risk</span>
             <span className="text-muted-foreground">screening for the {timeline ? formatCycle(Date.parse(timeline.demo_cutoff.replace(' ', 'T') + 'Z')) : ''} bulletin</span>
           </div>
           <div className="mt-1 flex gap-3 text-[11px]">

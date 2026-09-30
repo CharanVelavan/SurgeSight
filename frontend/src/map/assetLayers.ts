@@ -8,6 +8,8 @@ import { useUi } from '@/state/ui'
 
 /** Above this zoom the markers become glyphs; below it they are small dots so the coast reads as a patch. */
 export const MARKER_ZOOM = 7
+/** Below this zoom the infrastructure is hidden, so the national view shows weather only. */
+export const INFRA_ZOOM = 6
 
 const hover = (group: AssetGroup) => (info: { index: number }) => {
   const i = info.index >= 0 ? group.indices[info.index] : -1
@@ -42,6 +44,7 @@ export function buildAssetLayers(): Layer[] {
   const { data } = assetsStore.getState()
   if (!data) return []
   const { infra, zoom } = useUi.getState()
+  if (zoom < INFRA_ZOOM) return []
   const icons = zoom >= MARKER_ZOOM
   const atlas = icons ? assetIconAtlas() : null
   const layers: Layer[] = []

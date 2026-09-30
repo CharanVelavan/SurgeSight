@@ -68,6 +68,7 @@ export function LayerCard() {
 
       <div className="my-3 h-px bg-[var(--hairline)]" />
       <Heading>Infrastructure</Heading>
+      <p className="mb-1 text-[11px] text-muted-foreground">Appears when you zoom into the coast.</p>
       {ASSET_ORDER.map(t => (
         <Row key={t} label={ASSET_TYPES[t].label} checked={infra[t]} onChange={v => set({ infra: { ...infra, [t]: v } })} />
       ))}

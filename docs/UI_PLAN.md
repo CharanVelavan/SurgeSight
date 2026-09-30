@@ -290,4 +290,4 @@ The dashboard is a read-only tool for **officials and responders** during a real
 
 ### 11.4 Order
 
-W1 → W2 → W3 → W4 → W5 → W6 (Fani, then Biparjoy, then Amphan) → W7 → W8 → W9 → W10. The alert zones (W3) and the Why button (W4) are what make the app useful in an event, so they come before adding more storms.
+W1 → W2 → W3 → W4 → W5 → W7 → W8 → W9 → W10 → W6 (Fani, then Biparjoy, then Amphan). The alert zones (W3) and the Why button (W4) are what make the app useful in an event. By owner decision (2026-09-30) W6 moves after the first deploy: more storms are rolled out later as updates, and the landing page shows them as "coming soon" until then.

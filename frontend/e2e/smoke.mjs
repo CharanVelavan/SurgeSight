@@ -28,18 +28,30 @@ const layerIds = () => page.evaluate(() => window.__overlay._deck.layerManager.g
 
 // 1. interleaved vector map, weather and assets present
 const a = await mapState()
+void (JSON.stringify(await page.evaluate(() => { const m = window.__overlay._map; return { min: m.get('minZoom'), max: m.get('maxZoom'), z: m.getZoom(), w: m.getDiv().clientWidth, h: m.getDiv().clientHeight, r: m.get('restriction') } })))
 check(a.rt === 'vector-interleaved', `rendering type ${a.rt}`)
 const ids = await layerIds()
 for (const need of ['rain', 'wind', 'track-observed', 'forecast-wind']) check(ids.includes(need), `layer ${need} missing`)
-check(ids.some((i) => i.startsWith('assets-dot-hospital')), 'hospital markers missing')
+check(!ids.some((i) => i.startsWith('assets-')), 'infrastructure should be hidden in the national view')
 
-// 2. the national frame cannot be panned or zoomed
-check(a.gesture === 'none', `national gesture ${a.gesture}`)
+// 2. the national frame: free zoom and pan, but never outside the boundary or further out than the frame
+check(a.gesture === 'greedy', `national gesture ${a.gesture}`)
 await page.mouse.move(700, 400); await page.mouse.down(); await page.mouse.move(400, 250, { steps: 8 }); await page.mouse.up()
-await page.mouse.wheel(0, -600)
+await page.waitForTimeout(400)
+const b0 = await mapState()
+check(Math.abs(b0.zoom - a.zoom) < 1e-3 && b0.lng >= 46 && b0.lng <= 118 && b0.lat >= -2 && b0.lat <= 40.5, `panned outside the boundary at frame zoom: ${JSON.stringify(a)} -> ${JSON.stringify(b0)}`)
+for (let i = 0; i < 4; i++) { await page.mouse.move(700, 400); await page.mouse.wheel(0, -400); await page.waitForTimeout(150) }
 await page.waitForTimeout(600)
-const b = await mapState()
-check(Math.abs(b.lat - a.lat) < 1e-6 && Math.abs(b.lng - a.lng) < 1e-6 && Math.abs(b.zoom - a.zoom) < 1e-6, 'national view moved after drag and wheel')
+const b1 = await mapState()
+check(b1.zoom > a.zoom + 0.5, `wheel did not zoom the national view (${a.zoom} -> ${b1.zoom})`)
+await page.mouse.move(700, 400); await page.mouse.down(); await page.mouse.move(1300, 700, { steps: 10 }); await page.mouse.up()
+await page.mouse.move(700, 400); await page.mouse.down(); await page.mouse.move(1300, 700, { steps: 10 }); await page.mouse.up()
+await page.waitForTimeout(400)
+const b2 = await mapState()
+check(b2.lng >= 46 && b2.lng <= 118 && b2.lat >= -2 && b2.lat <= 40.5, `centre left the boundary: ${b2.lat}, ${b2.lng}`)
+for (let i = 0; i < 8; i++) { await page.mouse.wheel(0, 600); await page.waitForTimeout(100) }
+await page.waitForTimeout(600)
+check((await mapState()).zoom >= a.zoom - 1e-6, 'zoomed out past the national frame')
 
 // 3. impact area zooms in and allows panning
 await page.getByRole('radio', { name: 'Impact area' }).click()
@@ -49,7 +61,7 @@ check(c.zoom > a.zoom + 2 && c.gesture === 'greedy', `impact view zoom ${c.zoom}
 check((await layerIds()).some((i) => i.startsWith('assets-icon-')), 'glyph markers missing in impact view')
 await page.getByRole('radio', { name: 'India' }).click()
 await page.waitForTimeout(2500)
-check((await mapState()).gesture === 'none', 'india view did not relock')
+check(Math.abs((await mapState()).zoom - a.zoom) < 1e-3, `india view did not return to the national frame: ${JSON.stringify(await mapState())} vs ${a.zoom}`)
 
 // 4. moving the cutoff re-issues the forecast
 const t0 = Date.now()
@@ -67,7 +79,7 @@ check(forecastMs !== null && forecastMs < 1500, `forecast took ${forecastMs} ms`
 // 5. leakage: with the forecast rain source the legend names the cycle issued at the cutoff
 await page.evaluate(() => window.__clock.setState({ time: Date.UTC(2023, 11, 4, 6) }))
 await page.waitForTimeout(700)
-const legend = await page.locator('section[aria-label="Legend"]').innerText()
+const legend = await page.locator('section[aria-label="What am I seeing?"]').innerText()
 check(/GFS forecast issued 04 Dec 00Z/.test(legend), `legend: ${legend.replace(/\n/g, ' | ').slice(0, 160)}`)
 
 // 6. frame rate over 5 s of 8x playback across the cutoff

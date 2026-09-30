@@ -10,7 +10,7 @@ import { SurgeMapsOverlay } from './overlay'
 import { useUi, type Basemap } from '@/state/ui'
 import { onFrame } from '@/timeline/clock'
 import { buildLayers } from './layers'
-import { INTRO_MS, IMPACT, IMPACT_LIMIT, easeInOutCubic, fitCamera, introSeen, markIntroSeen, nationalBox } from './view'
+import { INTRO_MS, INDIA, IMPACT, IMPACT_LIMIT, easeInOutCubic, fitCamera, introSeen, markIntroSeen, nationalBox } from './view'
 import { recordFrame } from './quality'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined
@@ -19,7 +19,7 @@ const MAP_ID = (import.meta.env.VITE_GOOGLE_MAP_ID as string | undefined) || 'DE
 
 const MAP_TYPE: Record<Basemap, string> = { dark: 'roadmap', satellite: 'hybrid', terrain: 'terrain' }
 
-/** Holds the camera on a fixed frame: locked on India, pannable only inside the impact area. */
+/** Frames the view and lets the user zoom and pan freely, but only inside the national boundary (or the impact limit). */
 function ViewController() {
   const map = useMap()
   const view = useUi(s => s.view)
@@ -65,7 +65,7 @@ function ViewController() {
     }
   }, [map])
 
-  // Frame the view; locked on India, pannable only inside the impact area.
+  // Frame the view. The minimum zoom is the frame itself, so the map can never leave the boundary.
   useEffect(() => {
     if (!map) return
     const div = map.getDiv()
@@ -76,20 +76,21 @@ function ViewController() {
       const cam = fitCamera(view === 'india' ? nationalBox(w, h) : IMPACT, w, h)
       map.setOptions({ restriction: null, minZoom: 1, maxZoom: 21 })
       map.moveCamera({ center: cam.center, zoom: cam.zoom })
-      map.setOptions(
-        view === 'india'
-          ? { gestureHandling: 'none', keyboardShortcuts: false, minZoom: cam.zoom, maxZoom: cam.zoom }
-          : {
-              gestureHandling: 'greedy',
-              keyboardShortcuts: false,
-              minZoom: cam.zoom,
-              maxZoom: 15,
-              restriction: { latLngBounds: { north: IMPACT_LIMIT.north, south: IMPACT_LIMIT.south, west: IMPACT_LIMIT.west, east: IMPACT_LIMIT.east }, strictBounds: false },
-            },
-      )
+      // A strict limit made Google settle on a whole zoom (5 instead of the exact frame), so only the centre is kept inside.
+      const limit = view === 'india' ? INDIA : IMPACT_LIMIT
+      map.setOptions({
+        gestureHandling: 'greedy',
+        keyboardShortcuts: false,
+        minZoom: cam.zoom,
+        maxZoom: view === 'india' ? 12 : 15,
+        restriction: { latLngBounds: { north: limit.north, south: limit.south, west: limit.west, east: limit.east }, strictBounds: false },
+      })
+      // Google can settle on a whole zoom during the first pass; moving again puts the camera on the exact frame.
+      for (const ms of [0, 400, 1200]) setTimeout(() => !useUi.getState().intro && map.getZoom() !== cam.zoom && map.moveCamera({ center: cam.center, zoom: cam.zoom }), ms)
       useUi.getState().set({ zoom: cam.zoom })
     }
     apply()
+    const idle = google.maps.event.addListenerOnce(map, 'idle', apply)
     const ro = new ResizeObserver(apply)
     ro.observe(div)
     const zl = map.addListener('zoom_changed', () => {
@@ -100,6 +101,7 @@ function ViewController() {
     })
     return () => {
       ro.disconnect()
+      idle.remove()
       zl.remove()
       unsub()
     }
