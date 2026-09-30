@@ -88,7 +88,8 @@ Grounding rules:
 - Do not calculate, alter, reinterpret, or rescore any risk value.
 - Never invent infrastructure, place names, districts, roads, casualties, evacuation numbers, impacts, or forecasts.
 - Mention a named asset only when its exact name appears in the supplied assets.
-- Do not infer outages, damage, access conditions, dependencies, or relationships between assets.
+- Do not infer outages, damage, dependencies, or relationships between assets.
+- Road and access statements must come from road_facts only; name a road only if it appears there exactly.
 - Do not imply official authority or present this as an official warning.
 - Classes are absolute screening classes; when many assets share a class, the triage tier (1 is the top 10 percent) gives the relative order.
 - Risk values are screening indices for prioritisation, not probabilities of damage.
@@ -143,6 +144,31 @@ def _with_ensemble(frame: pd.DataFrame) -> pd.DataFrame:
         return frame
 
 
+def _road_facts(mine: pd.DataFrame) -> dict[str, Any] | None:
+    """Main-road km by level, the worst roads, and this department's facilities whose road access is at risk."""
+    from services.roads import load_summary, with_access
+
+    summary = load_summary()
+    if summary is None:
+        return None
+    access = with_access(mine).sort_values("combined_v2", ascending=False)
+
+    def names(status: str) -> list[str]:
+        return [str(n) for n in access.loc[access["road_access"] == status, "name"].dropna().head(6)]
+
+    return {
+        "main_road_km_assessed": summary["km_total"],
+        "km_by_level": summary["km_by_level"],
+        "level_meaning": {"watch": "watch relative to this storm's road network", "high_exposure": "high relative exposure",
+                          "most_exposed": "the most exposed five percent of assessed road kilometres"},
+        "worst_roads": summary["top_roads"][:6],
+        "department_facilities_cut_off_count": int((access["road_access"] == "cut_off").sum()),
+        "department_facilities_access_at_risk_count": int((access["road_access"] == "at_risk").sum()),
+        "cut_off_examples": names("cut_off"),
+        "access_at_risk_examples": names("at_risk"),
+    }
+
+
 def build_advisory_context(audience: str, frame: pd.DataFrame | None = None) -> tuple[dict[str, Any], list[AdvisoryAsset]]:
     dept = get_department(audience)
     frame = score_all_assets() if frame is None else frame
@@ -175,7 +201,9 @@ def build_advisory_context(audience: str, frame: pd.DataFrame | None = None) -> 
         "triage_tier_1_count": int((mine["triage_tier"] == 1).sum()),
         "dominant_hazard_counts": {str(k): int(v) for k, v in mine["dominant_hazard"].value_counts().items()},
         "relevant_top_risk_assets": [_asset_dict(row) for _, row in top.iterrows()],
-        "scope_note": "Roads are not scored, so no road access claim is permitted. OSM coverage of some asset types is partial.",
+        "road_facts": _road_facts(mine),
+        "scope_note": "Road facts are screening estimates on main roads only (no local streets, bridge heights or drainage). "
+                      "When road_facts is null, road assessment is unavailable and no road claim is permitted. OSM coverage of some asset types is partial.",
         "model_warning": "Screening indices for prioritisation, not damage probabilities. Not an official warning.",
     }
     exact = [AdvisoryAsset(**{k: v for k, v in a.items() if k in AdvisoryAsset.model_fields}) for a in context["relevant_top_risk_assets"]]
@@ -191,7 +219,7 @@ def generate_role_advisory(audience: str, language: str = "English", frame: pd.D
 Use required_severity exactly as the severity. Keep the response concise and actionable.
 Fields: headline (one short line for an alert title), situation_summary (2-4 sentences), instruction (one or two sentences telling the department what to do first),
 priority_actions (3-6 short imperative items), monitoring_priorities (2-5 items).
-Use the supplied assets only. Do not claim road access impacts because roads are not scored.
+Use the supplied assets only. Mention road exposure or cut-off facilities only as given in road_facts. Never call a road closed.
 
 <DETERMINISTIC_RISK_CONTEXT>
 {json.dumps(context, ensure_ascii=False, indent=2)}

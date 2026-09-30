@@ -13,9 +13,9 @@ from services.agent.tools import error_result, ok_result, tool
 from services.store import get_store, new_run_id
 
 ROUTE_LABEL = (
-    "Modelled exposure only: kilometres of each route inside the footprint of the highest-priority assets "
-    "(triage tiers 1 and 2, 3 km around each asset). 'Lower modelled exposure' does not mean safe or open; "
-    "roads are not scored and live traffic or closures are not considered for this ranking."
+    "Modelled exposure only: kilometres of each route on the most-exposed or high-exposure main-road sections, "
+    "then inside the footprint of the highest-priority assets (triage tiers 1 and 2, 3 km around each asset). "
+    "Lower modelled exposure does not establish road status; local streets and live traffic are not considered."
 )
 
 
@@ -74,9 +74,9 @@ class RouteAccessArgs(BaseModel):
 
 @tool("route_access", agent_scopes={"impact", "department"})
 def route_access_tool(args: RouteAccessArgs) -> Any:
-    """Compare driving routes (with alternatives) between two points by how many kilometres of each lie inside the
-    modelled high-risk footprint. Use it for questions such as fire station to hospital access or a depot to a
-    substation. Reports 'lower modelled exposure', never 'safe'; roads are not scored and live closures are unknown."""
+    """Compare driving routes (with alternatives) between two points by how many kilometres of each run on main roads
+    screened as most exposed or high exposure, and lie inside the modelled high-risk footprint. Use it for questions
+    such as fire station to hospital access or a depot to a substation. Reports relative exposure, never road status."""
     origin, destination = maps.resolve_point(args.origin), maps.resolve_point(args.destination)
     routes = maps.compute_routes(origin, destination, maps.high_risk_footprint())
     if not routes:

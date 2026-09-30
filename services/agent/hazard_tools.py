@@ -380,13 +380,33 @@ def department_priority_tool(args: DepartmentPriorityArgs) -> Any:
     """Rank one department's own assets (hospitals for Health, fire stations for Fire & Rescue, substations
     for Electricity, police stations, water facilities, fishing harbours, or all types for the Collector) by
     the v2 multi-hazard screening score. Returns class counts, triage tier 1 count, dominant hazards and the
-    top assets. Screening indices, not damage probabilities. Roads are not scored."""
+    top assets. Screening indices, not damage probabilities. For roads use road_status."""
     from services.departments import department_priority
 
     result = department_priority(args.department, n=args.top_n)
     run_id = new_run_id("dept")
     get_store().put(run_id, "department_priority", jsonable(result))
     return ok_result("department_priority", jsonable(result), source="departments:risk_v2", run_id=run_id, model_version="v2")
+
+
+class RoadStatusArgs(BaseModel):
+    district: str | None = Field(default=None, description="One district name, or omit for the whole corridor.")
+
+
+@tool("road_status", agent_scopes={"department", "impact"})
+def road_status_tool(args: RoadStatusArgs) -> Any:
+    """Main roads (motorway to tertiary) screened for flooding and fallen trees on the reference track: km that are
+    most exposed, highly exposed or on watch relative to this storm, the main cause, and the worst named roads, for
+    the corridor or one district. Screening estimates, not road status; local streets and bridge heights are not modelled."""
+    from services.roads import road_status
+
+    try:
+        result = road_status(args.district)
+    except KeyError:
+        return error_result("road_status", f"Unknown district '{args.district}'.")
+    if result is None:
+        return error_result("road_status", "No road layer has been built for this region.")
+    return ok_result("road_status", jsonable(result), source="roads:screening", model_version="roads-1.0")
 
 
 # ---------------------------------------------------------------- parametric

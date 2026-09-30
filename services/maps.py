@@ -150,17 +150,22 @@ def compute_routes(origin: dict[str, float], destination: dict[str, float], foot
     mask = "routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline,routes.description"
     data = _json(requests.post("https://routes.googleapis.com/directions/v2:computeRoutes", json=body, timeout=TIMEOUT,
                                headers={"X-Goog-Api-Key": _key(), "X-Goog-FieldMask": mask}))
+    from services.roads import route_exposure
+
     routes = []
     for i, route in enumerate(data.get("routes", []), start=1):
         points = decode_polyline(route["polyline"]["encodedPolyline"])
         distance_km = route["distanceMeters"] / 1000
         inside = km_inside(points, footprint)
+        roads = route_exposure(points) or {}
         routes.append({"route": i, "via": route.get("description"), "distance_km": round(distance_km, 2),
                        "duration_min": round(int(route["duration"].rstrip("s")) / 60, 1),
+                       **roads,
                        "km_in_modelled_high_risk_footprint": round(inside, 2),
                        "share_in_footprint_pct": round(100 * inside / distance_km, 1) if distance_km else 0.0,
                        "polyline": points})
-    routes.sort(key=lambda r: (r["km_in_modelled_high_risk_footprint"], r["duration_min"]))
+    routes.sort(key=lambda r: (r.get("km_most_exposed", 0.0), r.get("km_high_exposure", 0.0),
+                               r["km_in_modelled_high_risk_footprint"], r["duration_min"]))
     for rank, r in enumerate(routes, start=1):
         r["exposure_rank"] = rank
     return routes
