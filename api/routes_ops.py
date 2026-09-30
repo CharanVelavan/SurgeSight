@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import hmac
 import json
 from typing import Any, Literal
 
@@ -262,7 +263,8 @@ class LoginBody(BaseModel):
 def login(body: LoginBody) -> Response:
     import os
     expected = os.getenv("APPROVER_PASSCODE")
-    if not expected or body.passcode != expected:
+    # Constant-time comparison, so response timing does not reveal how much of the passcode was right.
+    if not expected or not hmac.compare_digest(body.passcode.encode(), expected.encode()):
         raise HTTPException(status_code=401, detail="Invalid passcode")
     token = _serializer().dumps("approver")
     response = JSONResponse(content={"status": "ok"})
