@@ -25,7 +25,7 @@ await page.getByRole('link', { name: /Cyclone Michaung/ }).waitFor({ timeout: 15
 check((await page.getByText('Coming soon').count()) >= 3, 'coming soon tiles missing on the landing page')
 check(await page.getByText(/not an official warning/).isVisible(), 'landing page lacks the not-official notice')
 {
-  const landing = await new AxeBuilder({ page }).disableRules(['color-contrast']).analyze()
+  const landing = await new AxeBuilder({ page }).analyze()
   const bad = landing.violations.filter((v) => ['serious', 'critical'].includes(v.impact))
   check(bad.length === 0, `axe (landing): ${bad.map((v) => v.id).join(', ')}`)
   if (shots) await page.screenshot({ path: `${shots}/landing-1440.png` })
@@ -127,7 +127,7 @@ if (!skipFps) {
 }
 
 // 7. accessibility: no serious or critical violations
-const axe = await new AxeBuilder({ page }).disableRules(['color-contrast']).analyze()
+const axe = await new AxeBuilder({ page }).analyze()
 const bad = axe.violations.filter((v) => ['serious', 'critical'].includes(v.impact))
 check(bad.length === 0, `axe: ${bad.map((v) => `${v.id}(${v.nodes.length})`).join(', ')}`)
 
@@ -139,6 +139,29 @@ if (shots) {
     await page.waitForTimeout(2500)
     await page.screenshot({ path: `${shots}/${name}-${w}.png` })
   }
+}
+
+// 8b. failure modes: API down on the landing page, and a failing explanation
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 860 } })
+  const bad = await ctx.newPage()
+  await bad.route('**/api/catalog', (r) => r.abort())
+  await bad.goto(base)
+  await bad.getByRole('alert').filter({ hasText: /could not be loaded/ }).waitFor({ timeout: 10000 })
+  check(await bad.getByRole('button', { name: 'Try again' }).isVisible(), 'landing error has no retry button')
+  await bad.unroute('**/api/catalog')
+  await bad.getByRole('button', { name: 'Try again' }).click()
+  await bad.getByRole('link', { name: /Cyclone Michaung/ }).waitFor({ timeout: 10000 })
+  await ctx.close()
+
+  await page.route('**/explain**', (r) => r.fulfill({ status: 500, body: 'boom' }))
+  await page.goto(`${base}/storm/michaung_2023`)
+  await page.getByRole('button', { name: /Chennai|NCPS|Hospital|Harbour|Unnamed/ }).first().click({ timeout: 30000 })
+  await page.getByRole('button', { name: /Why is this (not )?critical\?/ }).click()
+  await page.getByRole('alert').filter({ hasText: /numbers could not be loaded/ }).waitFor({ timeout: 10000 })
+  await page.unroute('**/explain**')
+  // the 500 above was injected on purpose
+  errors.splice(0, errors.length, ...errors.filter((e) => !/status of 500/.test(e)))
 }
 
 // 9. live weather (only when data/processed/live has been built)

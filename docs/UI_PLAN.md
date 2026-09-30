@@ -288,6 +288,21 @@ The dashboard is a read-only tool for **officials and responders** during a real
 | W9 | **Disaster-use hardening.** Timestamps and sources on every number; consistent "screening, not official; follow IMD and NDMA" notice; clear error and empty states; rate limits on the Gemini routes; restricted browser key. | Checklist review; axe clean; failure-mode tests (API down, stale data). | Walk-through with a real user if possible. |
 | W10 | **Deploy.** Firebase Hosting with the API on Cloud Run and the scheduled live refresh. | Public URL passes `test_web.py` against production. | Billing and project settings. |
 
+### 11.3a Status (2026-09-30)
+
+| Package | State |
+|---|---|
+| W1 map behaviour and key | Done |
+| W2 landing page and routes | Done |
+| W3 alert zones | Done (thresholds need expert review) |
+| W4 Why button | Done (Gemini text checked by the grounding guard; template fallback) |
+| W5 live weather | Done (`scripts/build_live_weather.py`; scheduled refresh comes with W10) |
+| W7 weak network | Done |
+| W8 languages | Done (five drafts to be reviewed by native speakers) |
+| W9 hardening | Done, see `docs/HARDENING.md` |
+| W10 deploy | Not started |
+| W6 more storms | After W10 |
+
 ### 11.4 Order
 
 W1 → W2 → W3 → W4 → W5 → W7 → W8 → W9 → W10 → W6 (Fani, then Biparjoy, then Amphan). The alert zones (W3) and the Why button (W4) are what make the app useful in an event. By owner decision (2026-09-30) W6 moves after the first deploy: more storms are rolled out later as updates, and the landing page shows them as "coming soon" until then.

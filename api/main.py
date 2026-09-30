@@ -7,6 +7,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.ratelimit import RateLimitMiddleware
 from api.routes_analysis import router as analysis_router
 from api.routes_ops import router as ops_router
 from api.routes_push import router as push_router
@@ -20,6 +21,7 @@ def create_app() -> FastAPI:
     app = FastAPI(title="SurgeSight API", version="0.1.0",
                   description="Cyclone impact screening for disaster-management officers. Screening indices, not damage probabilities; not an official warning service.")
     origins = [o.strip() for o in os.getenv("FRONTEND_ORIGINS", DEFAULT_ORIGINS).split(",") if o.strip()]
+    app.add_middleware(RateLimitMiddleware)
     app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["*"], allow_headers=["*"])
     app.include_router(analysis_router)
     app.include_router(ops_router)

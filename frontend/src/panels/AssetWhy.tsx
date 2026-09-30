@@ -136,7 +136,8 @@ export function AssetWhy() {
                   </p>
                 </div>
               )}
-              <p className="mt-2 text-[10px] leading-snug text-muted-foreground">{t('why.disclaimer')}</p>
+              <p className="mt-2 text-[10px] leading-snug text-muted-foreground">{t('why.source', { version: facts.data.facts.model_version })}</p>
+              <p className="mt-1 text-[10px] leading-snug text-muted-foreground">{t('why.disclaimer')}</p>
             </>
           )}
         </div>

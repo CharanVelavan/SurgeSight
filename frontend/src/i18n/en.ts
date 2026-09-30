@@ -214,6 +214,11 @@ export const en = {
   'readout.rain': 'rain',
   'readout.validation': 'validation',
 
+  'key.official': 'Screening tool, not an official warning. Follow IMD and NDMA.',
+  'why.source': 'Screening model {version}. Track: IBTrACS observed best track. Rain: GFS forecast. Wind and surge: SurgeSight models.',
+  'atrisk.error': 'Infrastructure data could not be loaded.',
+  'atrisk.note': 'Screening for the reference bulletin, not a live warning.',
+
   // intro
   'intro.line': 'Cyclone Michaung · 30 Nov – 6 Dec 2023',
   'intro.skip': 'Click or press any key to skip',

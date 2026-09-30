@@ -13,6 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse
 import numpy as np
 import pandas as pd
 
+from api import ratelimit
 from api.auth import Principal, auth_mode, get_principal
 from api.deps import require_region
 from api.routes_ops import Language
@@ -79,19 +80,9 @@ def explain_asset(element: Literal["node", "way", "relation"], osm_id: int, requ
     return jsonable(body)
 
 
-_hits: dict[str, list[float]] = {}
-
-
 def limit_narrative(request: Request, per_minute: int = 20) -> None:
-    """A small in-process limit on the routes that call Gemini, per client address."""
-    import time as _time
-
-    now = _time.monotonic()
-    who = request.client.host if request.client else "?"
-    recent = [t for t in _hits.get(who, []) if now - t < 60]
-    if len(recent) >= per_minute:
-        raise HTTPException(status_code=429, detail="Too many explanation requests; wait a minute")
-    _hits[who] = [*recent, now]
+    """Calls to Gemini from the Why button are limited per client."""
+    ratelimit.check(request, "explain", per_minute)
 
 
 LIVE_STALE_HOURS = 12

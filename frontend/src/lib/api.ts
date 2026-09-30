@@ -45,6 +45,7 @@ export interface AssetFacts {
   surge_score: number | null
   hazard_contributions: Record<string, number | null>
   distance: { closest_approach_km: number; closest_approach_time_utc: string; distance_at_time_km: number | null; distance_at_time_note: string }
+  model_version: string
   disclaimer: string
 }
 

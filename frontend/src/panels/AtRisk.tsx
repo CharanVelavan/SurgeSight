@@ -33,6 +33,13 @@ export function AtRisk() {
     return { counts, total: rows.length, top: rows.slice(0, TOP) }
   }, [data, infra])
 
+  const error = useStore(assetsStore, s => s.error)
+  if (error && !data)
+    return (
+      <section aria-label={t('atrisk.aria')} role="alert" className="panel pointer-events-auto absolute top-28 right-3 z-10 w-64 p-3 text-[12px] text-[#E0B34A] max-md:hidden">
+        {t('atrisk.error')}
+      </section>
+    )
   if (!summary || !data || selected !== null) return null
   const max = Math.max(1, ...CLASSES.map(c => summary.counts[c] ?? 0))
 
@@ -62,6 +69,7 @@ export function AtRisk() {
             ))}
           </div>
 
+          <p className="mt-2 text-[10px] leading-snug text-muted-foreground">{t('atrisk.note')}</p>
           <div className="mt-3 mb-1 text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">{t('atrisk.top')}</div>
           <ul className="-mx-1">
             {summary.top.map(i => {

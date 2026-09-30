@@ -116,6 +116,7 @@ export function Legend() {
           </div>
         </div>
       )}
+      <p className="border-t border-white/10 pt-2 text-[10px] leading-snug text-muted-foreground">{t('key.official')}</p>
       </div>
     </section>
   )

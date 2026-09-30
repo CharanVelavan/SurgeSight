@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from services.agent import grounding_guard
 from services.config import load_region
 from services.hazards.coast import haversine_matrix_km
+from services.risk_model_v2 import MODEL_VERSION
 
 HAZARD_LABEL = {"wind": "wind", "surge": "storm surge", "rain_flood": "rain flooding", "none": "none"}
 HAZARD_WEIGHTS = {"wind": 0.8, "surge": 0.9, "rain_flood": 0.8}
@@ -103,6 +104,7 @@ def build_facts(row: pd.Series, track: pd.DataFrame, time: pd.Timestamp | None =
         "surge_score": _num(surge_score, 2),
         "hazard_contributions": {HAZARD_LABEL[k]: _num(v, 2) for k, v in contributions.items()},
         "distance": _distance_facts(track, float(row["lat"]), float(row["lon"]), time, cutoff),
+        "model_version": MODEL_VERSION,
         "disclaimer": DISCLAIMER,
     }
     return facts

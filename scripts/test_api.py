@@ -67,6 +67,20 @@ def test_assets() -> None:
     print("assets ok")
 
 
+def test_rate_limit() -> None:
+    from api import ratelimit
+
+    assert ratelimit.allow("a", "x", 2, now=0.0) and ratelimit.allow("a", "x", 2, now=1.0) and not ratelimit.allow("a", "x", 2, now=2.0)
+    assert ratelimit.allow("b", "x", 2, now=2.0), "another client has its own count"
+    assert ratelimit.allow("a", "x", 2, now=61.5), "the window slides"
+    ratelimit._hits.clear()
+    codes = [client.post("/api/advisory", json={}, headers={"x-forwarded-for": "9.9.9.9"}).status_code for _ in range(12)]
+    assert codes[:10] == [422] * 10 and codes[10:] == [429, 429], f"model routes must be limited to 10 a minute: {codes}"
+    assert client.post("/api/advisory", json={}, headers={"x-forwarded-for": "8.8.8.8"}).status_code == 422, "limits are per client"
+    ratelimit._hits.clear()
+    print("rate limit ok")
+
+
 def test_live_routes() -> None:
     import json as _json
     import tempfile
@@ -322,6 +336,7 @@ def test_tasks() -> None:
 if __name__ == "__main__":
     test_routes_and_basics()
     test_assets()
+    test_rate_limit()
     test_live_routes()
     test_web_routes()
     test_voice_ask_mocked()
