@@ -7,6 +7,7 @@ import { weatherStore } from '@/weather/atlas'
 import { rainField, tileRect, windField } from '@/weather/field'
 import { RainLayer } from '@/layers/rain/RainLayer'
 import { WindParticleLayer } from '@/layers/wind/WindParticleLayer'
+import { buildAssetLayers } from './assetLayers'
 import { quality } from './quality'
 
 type Vec4 = [number, number, number, number]
@@ -75,5 +76,6 @@ export function buildLayers(now: number): Layer[] {
       }),
     )
   }
+  layers.push(...buildAssetLayers())
   return layers
 }

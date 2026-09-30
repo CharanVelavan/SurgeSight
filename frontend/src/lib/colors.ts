@@ -64,3 +64,13 @@ export function rampCss(stops: readonly Stop[]): string {
   })
   return `linear-gradient(90deg, ${parts.join(', ')})`
 }
+
+/** Risk classes (docs/UI_PLAN.md §3). Each also has a shape cue so colour is never the only signal. */
+export const RISK = {
+  LOW: { color: '#9AA5B1', symbol: '○', label: 'Low' },
+  MODERATE: { color: '#E0B34A', symbol: '□', label: 'Moderate' },
+  HIGH: { color: '#E07B39', symbol: '△', label: 'High' },
+  CRITICAL: { color: '#B8322A', symbol: '◆', label: 'Critical' },
+} as const
+
+export type RiskClass = keyof typeof RISK

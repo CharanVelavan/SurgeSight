@@ -1,5 +1,6 @@
-import { RAIN_RAMP, WIND_RAMP, rampCss } from '@/lib/colors'
+import { RAIN_RAMP, RISK, WIND_RAMP, rampCss } from '@/lib/colors'
 import { formatCycle } from '@/lib/format'
+import { useTimeline } from '@/app/queries'
 import { useUi } from '@/state/ui'
 import { useClock } from '@/timeline/clock'
 import { rainField, windField, type FieldPair } from '@/weather/field'
@@ -41,7 +42,9 @@ export function Legend() {
   const { wind, rain, rainSource } = useUi()
   const manifest = useWeather(s => s.manifest)
   const { time, cutoff } = useClock(s => ({ time: Math.floor(s.time / 3_600_000), cutoff: s.cutoff }), 250)
-  if (!manifest || (!wind && !rain)) return null
+  const { data: timeline } = useTimeline()
+  const anyInfra = useUi(s => Object.values(s.infra).some(Boolean))
+  if (!manifest || (!wind && !rain && !anyInfra)) return null
   const ms = time * 3_600_000
   const w = windField(manifest, ms, cutoff)
   const r = rainField(manifest, ms, cutoff, rainSource)
@@ -59,6 +62,22 @@ export function Legend() {
           note={sourceLabel(r, 'rain')}
           warn={r?.kind === 'validation' || !r}
         />
+      )}
+      {anyInfra && (
+        <div>
+          <div className="flex items-baseline justify-between text-[11px]">
+            <span className="font-medium">Infrastructure risk</span>
+            <span className="text-muted-foreground">screening for the {timeline ? formatCycle(Date.parse(timeline.demo_cutoff.replace(' ', 'T') + 'Z')) : ''} bulletin</span>
+          </div>
+          <div className="mt-1 flex gap-3 text-[11px]">
+            {(['MODERATE', 'HIGH', 'CRITICAL'] as const).map(c => (
+              <span key={c} className="flex items-center gap-1">
+                <span style={{ color: RISK[c].color }} aria-hidden>{RISK[c].symbol}</span>
+                {RISK[c].label}
+              </span>
+            ))}
+          </div>
+        </div>
       )}
     </section>
   )

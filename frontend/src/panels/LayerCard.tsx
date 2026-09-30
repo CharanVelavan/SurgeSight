@@ -1,5 +1,6 @@
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { ASSET_ORDER, ASSET_TYPES } from '@/data/assets'
 import { useUi, type Basemap } from '@/state/ui'
 import type { RainSource } from '@/weather/field'
 
@@ -21,7 +22,7 @@ const Heading = ({ children }: { children: string }) => (
 )
 
 export function LayerCard() {
-  const { wind, rain, rainSource, basemap, set } = useUi()
+  const { wind, rain, rainSource, basemap, infra, set } = useUi()
   return (
     <section aria-label="Layers" className="panel pointer-events-auto absolute top-16 left-3 z-10 w-60 p-3 max-sm:hidden">
       <Heading>Weather</Heading>
@@ -45,6 +46,12 @@ export function LayerCard() {
           Observed · validation
         </ToggleGroupItem>
       </ToggleGroup>
+
+      <div className="my-3 h-px bg-[var(--hairline)]" />
+      <Heading>Infrastructure</Heading>
+      {ASSET_ORDER.map(t => (
+        <Row key={t} label={ASSET_TYPES[t].label} checked={infra[t]} onChange={v => set({ infra: { ...infra, [t]: v } })} />
+      ))}
 
       <div className="my-3 h-px bg-[var(--hairline)]" />
       <Heading>Map</Heading>

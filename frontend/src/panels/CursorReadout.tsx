@@ -8,11 +8,12 @@ import { useWeather } from '@/weather/useWeather'
 /** Wind and rain under the pointer for the frame on screen (bilinear sample of the CPU copy). */
 export function CursorReadout() {
   const cursor = useUi(s => s.cursor)
+  const overAsset = useUi(s => s.hoverAsset !== null)
   const { wind: showWind, rain: showRain, rainSource } = useUi()
   const manifest = useWeather(s => s.manifest)
   const loaded = useWeather(s => s.loaded)
   const { time, cutoff } = useClock(s => ({ time: s.time, cutoff: s.cutoff }), 100)
-  if (!cursor || !manifest || !loaded) return null
+  if (!cursor || overAsset || !manifest || !loaded) return null
 
   const wp = showWind ? windField(manifest, time, cutoff) : null
   const rp = showRain ? rainField(manifest, time, cutoff, rainSource) : null

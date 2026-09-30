@@ -1,6 +1,6 @@
-# SurgeSight command UI
+# SurgeSight dashboard
 
-React front end for SurgeSight (plan: `../docs/UI_PLAN.md`). Vite + React 19 + TypeScript, Tailwind v4,
+Read-only weather and impact dashboard for SurgeSight (plan: `../docs/UI_PLAN.md`). Vite + React 19 + TypeScript, Tailwind v4,
 shadcn/ui (registry `@react-bits` in `components.json`), Google Maps JS vector map with deck.gl 9 interleaved.
 
 ```bash

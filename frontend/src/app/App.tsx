@@ -8,6 +8,9 @@ import { Legend } from '@/panels/Legend'
 import { PerfOverlay } from '@/panels/PerfOverlay'
 import { TopBar } from '@/panels/TopBar'
 import { Timeline } from '@/timeline/Timeline'
+import { loadAssets } from '@/data/assets'
+import { AssetPopover } from '@/panels/AssetPopover'
+import { ViewSwitch } from '@/panels/ViewSwitch'
 import { loadWeather } from '@/weather/atlas'
 import { useWeather } from '@/weather/useWeather'
 
@@ -30,6 +33,7 @@ function LoadingNote() {
 export default function App() {
   useEffect(() => {
     void loadWeather()
+    void loadAssets()
   }, [])
   return (
     <QueryClientProvider client={queryClient}>
@@ -37,10 +41,12 @@ export default function App() {
         <main className="relative h-full w-full overflow-hidden bg-background">
           <MapCanvas />
           <TopBar />
+          <ViewSwitch />
           <LayerCard />
           <Legend />
           <Timeline />
           <CursorReadout />
+          <AssetPopover />
           <LoadingNote />
           {showPerf && <PerfOverlay />}
         </main>

@@ -1,4 +1,4 @@
-# SurgeSight Command UI — implementation plan (WP10, revised)
+# SurgeSight dashboard — implementation plan (WP10, revised)
 
 Replaces the WP10 outline in `IMPLEMENTATION_PLAN.md`. Decisions were agreed with the owner on 2026-09-30. Streamlit stays as an internal dev harness; this React app becomes the product and the demo.
 
@@ -189,6 +189,13 @@ The owner switches models between phases. Each phase ends with a commit and a me
 | (any time) | Opus 5.5 | Any frame-rate regression below 55 fps | Profiling and GPU debugging |
 
 Phase A stop condition: `SURGESIGHT_WEATHER_FRAMES_OK` and `SURGESIGHT_API_OK` pass offline, committed; then tell the owner "Phase A done, switch to Opus 5.5 for Phase B".
+
+### 7.1a Owner direction after Phase B (2026-09-30)
+
+- **Dashboard, not a command centre.** The UI is for viewing. It has no dispatch buttons: the Alerts drawer (S6) shows the approval queue, CAP text and sent log read-only, and approval stays on the API and the Streamlit harness. Role gating (S4) then only decides what the read-only views show.
+- **Weather domain widened** to 50–100°E, 0–38°N: Gujarat, Jammu & Kashmir, the Arabian Sea from Oman and the whole subcontinent.
+- **Frozen national frame.** The India view (46–118°E, 2°S–40°N) cannot be panned or zoomed. An **Impact area** button flies to the affected coast, where panning is limited to that region, and **India** returns and relocks. The frame is fitted per viewport, so it is the same geography on every screen.
+- **Infrastructure on the map, Windy-style:** hospitals, power substations, police and fire stations, shelters, schools, water facilities and fishing harbours as glyph markers coloured by risk class (with a shape cue), small risk-coloured dots from far away, a hover card with name, class and main hazard, and per-type toggles.
 
 ### 7.2 Phase B outcome (S0 + S2, 2026-09-30)
 
