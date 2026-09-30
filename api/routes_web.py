@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import hashlib
 import json
 from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 import numpy as np
 import pandas as pd
 
@@ -21,22 +22,34 @@ from services.config import load_region
 
 router = APIRouter()
 IMMUTABLE = {"Cache-Control": "public, max-age=31536000, immutable"}
+NO_CACHE = {"Cache-Control": "no-cache"}
+
+
+def atlas_version() -> str:
+    """Short hash of the atlas files (name, size, mtime). It goes in the image URLs, so a rebuild changes
+    them and a browser can never keep drawing old images on a new grid."""
+    h = hashlib.sha1()
+    for f in sorted(wf.WEATHER_DIR.glob("*")):
+        st = f.stat()
+        h.update(f"{f.name}:{st.st_size}:{st.st_mtime_ns}".encode())
+    return h.hexdigest()[:10]
 
 
 @router.get("/api/weather/manifest")
 def weather_manifest(cutoff: str | None = Query(None, description="UTC time; limits frames to what was knowable then"),
-                     validation: bool = Query(False, description="Also list observed rain after the cutoff (validation only)")) -> dict[str, Any]:
+                     validation: bool = Query(False, description="Also list observed rain after the cutoff (validation only)")) -> JSONResponse:
     try:
         manifest = wf.load_manifest()
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from None
+    version = atlas_version()
     if cutoff is None:
-        return manifest
+        return JSONResponse({**manifest, "version": version}, headers=NO_CACHE)
     try:
         selected = wf.frames_for_cutoff(manifest, cutoff, validation)
     except (ValueError, TypeError):
         raise HTTPException(status_code=422, detail=f"Unreadable cutoff '{cutoff}'") from None
-    return {**{k: manifest[k] for k in ("bounds", "tile", "encoding", "window")}, **selected}
+    return JSONResponse({**{k: manifest[k] for k in ("bounds", "tile", "encoding", "window")}, **selected, "version": version}, headers=NO_CACHE)
 
 
 @router.get("/api/weather/{file}")

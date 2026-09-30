@@ -20,6 +20,8 @@ export interface ForecastEntry extends AtlasEntry {
 }
 
 export interface Manifest {
+  /** Hash of the atlas files; part of every image URL so rebuilt images are never served from a stale cache. */
+  version?: string
   bounds: Bounds
   tile: { width: number; height: number }
   encoding: {

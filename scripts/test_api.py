@@ -70,6 +70,7 @@ def test_assets() -> None:
 def test_web_routes() -> None:
     manifest = ok(client.get("/api/weather/manifest")).json()
     assert manifest["analysis_wind"]["frames"] and len(manifest["forecast"]) == 15
+    assert len(manifest["version"]) == 10 and client.get("/api/weather/manifest").headers["cache-control"] == "no-cache", "the manifest must carry a version and never be cached"
     cut = ok(client.get("/api/weather/manifest", params={"cutoff": "2023-12-03 12:00"})).json()
     assert cut["forecast"]["cycle"] == "2023-12-03T12:00:00Z" and cut["observed_rain"]["frames"][-1] <= "2023-12-03T12:00:00Z"
     assert len(ok(client.get("/api/weather/manifest", params={"cutoff": "2023-12-03 12:00", "validation": "true"})).json()["observed_rain"]["frames"]) == 169

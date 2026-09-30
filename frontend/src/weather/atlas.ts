@@ -32,8 +32,8 @@ export const weatherStore = createStore<WeatherState>(() => ({
   error: null,
 }))
 
-async function loadAtlas(file: string): Promise<Atlas> {
-  const res = await fetch(`/api/weather/${file}`)
+async function loadAtlas(file: string, version?: string): Promise<Atlas> {
+  const res = await fetch(`/api/weather/${file}${version ? `?v=${version}` : ''}`)
   if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`)
   const bitmap = await createImageBitmap(await res.blob(), { premultiplyAlpha: 'none', colorSpaceConversion: 'none' })
   const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
@@ -49,7 +49,7 @@ export async function loadWeather(): Promise<void> {
   if (started) return
   started = true
   try {
-    const res = await fetch('/api/weather/manifest')
+    const res = await fetch('/api/weather/manifest', { cache: 'no-cache' })
     if (!res.ok) throw new Error(`manifest: HTTP ${res.status}`)
     const manifest = (await res.json()) as Manifest
     const files = atlasFiles(manifest)
@@ -57,7 +57,7 @@ export async function loadWeather(): Promise<void> {
     // Hourly past fields first, so the opening frame appears as early as possible.
     await Promise.all(
       files.map(async file => {
-        const atlas = await loadAtlas(file)
+        const atlas = await loadAtlas(file, manifest.version)
         const atlases = new Map(weatherStore.getState().atlases).set(file, atlas)
         weatherStore.setState(s => ({ atlases, loaded: s.loaded + 1 }))
       }),
