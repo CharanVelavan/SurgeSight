@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "public": "frontend/dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "surgesight",
+          "region": "asia-south1"
+        }
+      }
+    ]
+  }
+}

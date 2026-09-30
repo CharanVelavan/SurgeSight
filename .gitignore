@@ -27,3 +27,11 @@ frontend/dist/
 node_modules/
 data/processed/live/
 data/processed/roads/road_sections.csv
+
+# Firebase CLI cache
+.firebase/
+
+# demo video: rendered files and intermediate clips stay local (the video is shared by link, see docs/pitch)
+docs/pitch/video*/work/
+docs/pitch/video*/own/
+docs/pitch/video*/*.mp4
