@@ -100,11 +100,22 @@ def surge_scores(
         coast, on=["osm_element", "osm_id"], how="left"
     )
     out = pd.DataFrame({"osm_element": merged["osm_element"], "osm_id": merged["osm_id"]})
+    points = surge_at_points(info, merged)
+    out["surge_m"], out["surge_score"], out["coast_side"] = points["surge_m"], points["surge_score"], points["coast_side"]
+    return out, info
+
+
+def surge_at_points(info: dict, merged: pd.DataFrame) -> pd.DataFrame:
+    """Surge and surge score for any places with ``coast_lat, coast_lon, coast_dist_km, on_land, elevation_m``.
+
+    ``info`` is a ``peak_surge`` result. Used for assets and for road sections alike.
+    """
+    out = pd.DataFrame(index=merged.index)
     out["surge_m"] = 0.0
     out["surge_score"] = 0.0
     out["coast_side"] = "n/a"
     if info["landfall"] is None or info["peak_surge_m"] <= 0:
-        return out, info
+        return out
     c = SURGE_CONSTANTS
     lf = info["landfall"]
     lat0, lon0 = lf["lat"], lf["lon"]
@@ -131,4 +142,4 @@ def surge_scores(
     out["surge_m"] = np.round(np.where(eligible, surge_m, 0.0), 3)
     out["surge_score"] = np.round(np.nan_to_num(score), 4)
     out["coast_side"] = np.where(eligible, np.where(right, "right_of_track", "left_of_track"), "n/a")
-    return out, info
+    return out

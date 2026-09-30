@@ -26,3 +26,4 @@ frontend/dist/
 .claude/settings.local.json
 node_modules/
 data/processed/live/
+data/processed/roads/road_sections.csv

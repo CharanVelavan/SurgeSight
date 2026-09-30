@@ -1,0 +1,200 @@
+{
+  "model_version": "roads-1.0",
+  "label": "Relative road exposure screening for this storm, not a traffic, operational-status or hydraulic model.",
+  "sections": 69260,
+  "km_total": 33929.7,
+  "km_by_level": {
+    "open": 5375.9,
+    "watch": 14362.3,
+    "high_exposure": 12494.8,
+    "most_exposed": 1696.7
+  },
+  "km_by_cause_level2plus": {
+    "flood": 6748.3,
+    "surge": 37.5,
+    "wind": 7405.7
+  },
+  "km_level2plus_by_district": {
+    "Potti Sriramulu Nellore": 3587.2,
+    "Prakasam": 3169.3,
+    "Guntur": 2361.0,
+    "Tiruvallur": 1741.3,
+    "Chennai": 1259.2,
+    "Chengalpattu": 1128.8,
+    "Krishna": 633.0,
+    "Kanchipuram": 295.3,
+    "Chittoor": 7.8
+  },
+  "top_roads": [
+    {
+      "road": "SH234 · Outer Ring Road",
+      "km": 109.6,
+      "level": 3,
+      "highway": "motorway"
+    },
+    {
+      "road": "NH16",
+      "km": 545.9,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "Service Road",
+      "km": 220.7,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "ORR Service Road",
+      "km": 100.5,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "NH16 · Grand Northern Trunk Road",
+      "km": 48.2,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "Chennai Bypass Expressway",
+      "km": 45.6,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "NH332A · East Coast Road",
+      "km": 35.3,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "NH716A · Puttur - Uthukottai - Janappanchatram Road",
+      "km": 20.0,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "SHU88 · Grand Southern Trunk Road",
+      "km": 19.9,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "Chennai Bypass",
+      "km": 15.4,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "SHU87 · Grand Northern Trunk Road",
+      "km": 10.7,
+      "level": 3,
+      "highway": "trunk"
+    },
+    {
+      "road": "NH32 · Grand Southern Trunk Road",
+      "km": 9.6,
+      "level": 3,
+      "highway": "trunk"
+    }
+  ],
+  "access_counts": {
+    "fire_station": {
+      "at_risk": 11,
+      "cut_off": 8,
+      "open": 2
+    },
+    "fishing_harbour": {
+      "at_risk": 5,
+      "cut_off": 4
+    },
+    "hospital": {
+      "at_risk": 1331,
+      "open": 761,
+      "cut_off": 108
+    },
+    "police_station": {
+      "at_risk": 116,
+      "open": 46,
+      "cut_off": 21
+    },
+    "school": {
+      "at_risk": 684,
+      "open": 361,
+      "cut_off": 166
+    },
+    "shelter": {
+      "at_risk": 130,
+      "cut_off": 43,
+      "open": 21,
+      "not_assessed": 1
+    },
+    "substation": {
+      "open": 168,
+      "at_risk": 142,
+      "cut_off": 61
+    },
+    "water_facility": {
+      "at_risk": 17,
+      "cut_off": 7
+    }
+  },
+  "hospital_detour": {
+    "facilities_with_longer_trip": 64,
+    "facilities_without_hospital_after": 319
+  },
+  "cuts": {
+    "flood_km_percentiles": [
+      0.5,
+      0.8,
+      0.95
+    ],
+    "flood_score_values": [
+      0.605,
+      0.7763,
+      1.0
+    ],
+    "wind_kmh": [
+      62.0,
+      89.0,
+      118.0
+    ]
+  },
+  "validation": {
+    "sensor": "sentinel2",
+    "sections_observed": 45278,
+    "km_observed": 25481.1,
+    "observed_flooded_share": 0.111,
+    "auc_water_on_road": 0.5491178774619013,
+    "auc_wet_ground": 0.5901304041717156,
+    "auc_rain_only": 0.5233026614026812,
+    "by_flood_level": {
+      "open": {
+        "sections": 22135,
+        "observed_flooded_share": 0.101
+      },
+      "watch": {
+        "sections": 15130,
+        "observed_flooded_share": 0.116
+      },
+      "high_exposure": {
+        "sections": 6819,
+        "observed_flooded_share": 0.119
+      },
+      "most_exposed": {
+        "sections": 1194,
+        "observed_flooded_share": 0.204
+      }
+    },
+    "note": "Sentinel-2 standing water after the storm (see data/processed/satellite/observation_meta.json). A proxy: clouds and urban flooding are under-detected; unobserved sections are left out."
+  },
+  "sources": {
+    "roads": "OpenStreetMap contributors (motorway to tertiary and link roads)",
+    "terrain": "USGS SRTM (lowest point), MERIT Hydro height above drainage (lowest), JRC surface water (highest)",
+    "rain": "NOAA GFS forecast issued 2023-12-03 12:00:00 UTC, 72 h, via Earth Engine",
+    "wind": "Holland (1980) profile along the track",
+    "surge": "SurgeSight screening surge index",
+    "validation": "Sentinel-2 flood map (validation only, never a forecast input)"
+  }
+}
