@@ -24,6 +24,8 @@ interface UiState {
   infra: Record<AssetType, boolean>
   /** Index into the columnar asset arrays of the marker under the pointer. */
   hoverAsset: number | null
+  /** Index of the marker the user clicked; opens the details panel. */
+  selectedAsset: number | null
   /** True while the opening fly-in plays. */
   intro: boolean
   /** One-shot request to fly the camera to a point (used by the summary list). */
@@ -43,6 +45,7 @@ export const useUi = create<UiState>(set => ({
   zoom: 4,
   infra: infraDefault,
   hoverAsset: null,
+  selectedAsset: null,
   intro: false,
   focus: null,
   cursor: null,

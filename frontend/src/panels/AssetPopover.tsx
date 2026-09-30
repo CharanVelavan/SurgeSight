@@ -27,6 +27,7 @@ export function AssetPopover() {
       <div className="text-muted-foreground">
         Main hazard: {HAZARD[data.hazard[i]] ?? data.hazard[i]} · Tier {data.tier[i]}
       </div>
+      <div className="mt-0.5 text-[11px] text-primary">Click to see why</div>
     </div>
   )
 }

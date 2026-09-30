@@ -7,7 +7,7 @@ import type { TrackPoint } from '@/lib/api'
 const cols = {
   count: 4, run_id: null,
   lon: [80.1, 80.2, 80.3, 80.4], lat: [13.1, 13.2, 13.3, 13.4],
-  name: ['A', 'B', 'C', 'D'],
+  name: ['A', 'B', 'C', 'D'], osm_element: ['node', 'way', 'node', 'node'], osm_id: [1, 2, 3, 4],
   asset_type: ['hospital', 'substation', 'hospital', 'unknown_type'],
   risk_class: ['CRITICAL', 'HIGH', 'MODERATE', 'HIGH'],
   risk_score: [0.9, 0.7, 0.5, 0.6], triage_tier: [1, 2, 3, 2], dominant_hazard: ['wind', 'rain_flood', 'wind', 'wind'],

@@ -8,7 +8,7 @@ import hashlib
 import json
 from typing import Any, Literal
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 import numpy as np
 import pandas as pd
@@ -48,6 +48,49 @@ def regions() -> dict[str, Any]:
         ready = live_ready if tile["kind"] == "live" else tile.get("region") in known
         tiles.append({**tile, "status": "available" if ready else "soon"})
     return {"tiles": tiles}
+
+
+@router.post("/api/assets/{element}/{osm_id}/explain")
+def explain_asset(element: Literal["node", "way", "relation"], osm_id: int, request: Request, region: str | None = None,
+                  time: str | None = Query(None, description="UTC valid time for the distance to the storm"),
+                  cutoff: str | None = Query(None, description="UTC bulletin cutoff"),
+                  narrative: bool = Query(False, description="Also write the short text (uses Gemini unless offline)")) -> dict[str, Any]:
+    """Facts behind an asset's ranking, and optionally a short text written from those facts only."""
+    from services import asset_explain as ax
+    from services.departments import score_all_assets
+
+    rid = require_region(region)
+    frame = score_all_assets(region_id=rid)
+    rows = frame[(frame["osm_element"] == element) & (frame["osm_id"] == osm_id)]
+    if rows.empty:
+        raise HTTPException(status_code=404, detail="Unknown asset")
+    try:
+        t = pd.Timestamp(time).tz_localize(None) if time else None
+        c = pd.Timestamp(cutoff).tz_localize(None) if cutoff else None
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=422, detail="Unreadable time") from None
+    facts = ax.build_facts(rows.iloc[0], ax.reference_track(rid), t, c)
+    body: dict[str, Any] = {"facts": facts, "text": None, "text_source": None}
+    if narrative:
+        limit_narrative(request)
+        text, source = ax.cached_narrative(facts)
+        body.update(text=text.model_dump(), text_source=source)
+    return jsonable(body)
+
+
+_hits: dict[str, list[float]] = {}
+
+
+def limit_narrative(request: Request, per_minute: int = 20) -> None:
+    """A small in-process limit on the routes that call Gemini, per client address."""
+    import time as _time
+
+    now = _time.monotonic()
+    who = request.client.host if request.client else "?"
+    recent = [t for t in _hits.get(who, []) if now - t < 60]
+    if len(recent) >= per_minute:
+        raise HTTPException(status_code=429, detail="Too many explanation requests; wait a minute")
+    _hits[who] = [*recent, now]
 
 
 @router.get("/api/weather/manifest")

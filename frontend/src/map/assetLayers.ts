@@ -17,6 +17,10 @@ const hover = (group: AssetGroup) => (info: { index: number }) => {
   if (i !== (cur ?? -1)) useUi.getState().set({ hoverAsset: i >= 0 ? i : null })
 }
 
+const select = (group: AssetGroup) => (info: { index: number }) => {
+  if (info.index >= 0) useUi.getState().set({ selectedAsset: group.indices[info.index] })
+}
+
 type BinaryData = { length: number; attributes: Record<string, { value: Float32Array | Uint8Array; size: number }> }
 type Cached = { icon: BinaryData; dot: BinaryData; halo: BinaryData }
 
@@ -72,6 +76,7 @@ export function buildAssetLayers(): Layer[] {
             sizeMinPixels: 7,
             pickable: true,
             onHover: hover(g),
+            onClick: select(g),
             parameters: { depthCompare: 'always' },
           })
         : new ScatterplotLayer({

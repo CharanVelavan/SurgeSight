@@ -36,6 +36,8 @@ export interface AssetData {
   runId: string | null
   count: number
   name: string[]
+  osmElement: string[]
+  osmId: number[]
   type: string[]
   riskClass: string[]
   riskScore: number[]
@@ -78,7 +80,7 @@ export function groupAssets(cols: Awaited<ReturnType<typeof api.assets>>): Asset
     groups.set(type, { type, count: idx.length, indices: Int32Array.from(idx), positions, colors })
   }
   return {
-    runId: cols.run_id, count: cols.count, name: cols.name, type: cols.asset_type, riskClass: cols.risk_class,
+    runId: cols.run_id, count: cols.count, name: cols.name, osmElement: cols.osm_element, osmId: cols.osm_id, type: cols.asset_type, riskClass: cols.risk_class,
     riskScore: cols.risk_score, lon: cols.lon, lat: cols.lat, tier: cols.triage_tier, hazard: cols.dominant_hazard, groups,
   }
 }

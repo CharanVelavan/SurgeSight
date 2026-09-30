@@ -21,10 +21,36 @@ export interface AssetColumns {
   lat: number[]
   name: string[]
   asset_type: string[]
+  osm_element: string[]
+  osm_id: number[]
   risk_class: string[]
   risk_score: number[]
   triage_tier: number[]
   dominant_hazard: string[]
+}
+
+export interface AssetFacts {
+  name: string
+  asset_type: string
+  class: string
+  score: number
+  triage_tier: number
+  rank_percentile: number
+  driving_hazard: string
+  elevation_m: number | null
+  waterlogging: { terrain_flood_score: number | null; level: string; rain_forecast_mm: number | null; rain_flood_score: number | null }
+  wind_peak_kmh: number | null
+  surge_m: number | null
+  surge_score: number | null
+  hazard_contributions: Record<string, number | null>
+  distance: { closest_approach_km: number; closest_approach_time_utc: string; distance_at_time_km: number | null; distance_at_time_note: string }
+  disclaimer: string
+}
+
+export interface AssetExplanation {
+  facts: AssetFacts
+  text: { summary: string; reasons: string[] } | null
+  text_source: 'gemini' | 'template' | null
 }
 
 export interface ForecastPoint {
@@ -54,6 +80,12 @@ async function get<T>(path: string): Promise<T> {
   return (await res.json()) as T
 }
 
+async function post<T>(path: string): Promise<T> {
+  const res = await fetch(path, { method: 'POST' })
+  if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`)
+  return (await res.json()) as T
+}
+
 export interface CatalogTile {
   id: string
   kind: 'live' | 'storm'
@@ -67,5 +99,7 @@ export const api = {
   catalog: () => get<{ tiles: CatalogTile[] }>('/api/catalog'),
   timeline: () => get<Timeline>('/api/timeline'),
   forecast: (cutoff: string) => get<ExperimentalForecast>(`/api/forecast/experimental?cutoff=${encodeURIComponent(cutoff)}`),
+  explain: (element: string, id: number, time: string, cutoff: string, narrative: boolean) =>
+    post<AssetExplanation>(`/api/assets/${element}/${id}/explain?time=${encodeURIComponent(time)}&cutoff=${encodeURIComponent(cutoff)}&narrative=${narrative}`),
   assets: () => get<AssetColumns>('/api/assets?format=columnar'),
 }

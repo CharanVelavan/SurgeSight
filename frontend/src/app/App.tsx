@@ -13,6 +13,7 @@ import { api } from '@/lib/api'
 import { loadAssets } from '@/data/assets'
 import { AtRisk } from '@/panels/AtRisk'
 import { AssetPopover } from '@/panels/AssetPopover'
+import { AssetWhy } from '@/panels/AssetWhy'
 import { Intro } from '@/panels/Intro'
 import { Landing } from './Landing'
 import { onLinkClick, useRoute } from './router'
@@ -54,6 +55,7 @@ function Dashboard() {
         <Timeline />
         <CursorReadout />
         <AssetPopover />
+        <AssetWhy />
         <LoadingNote />
         <Intro />
         {showPerf && <PerfOverlay />}

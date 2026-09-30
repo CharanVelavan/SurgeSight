@@ -63,6 +63,15 @@ export function Legend() {
       </button>
       <div className="hidden text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase sm:block">What am I seeing?</div>
       <div className={`flex flex-col gap-2.5 ${open ? '' : 'max-sm:hidden'}`}>
+      <div>
+        <div className="flex items-baseline justify-between text-[11px]">
+          <span className="font-medium">Storm</span>
+          <span className="text-muted-foreground">{timeline?.cyclone ?? ''}</span>
+        </div>
+        <p className="mt-1 text-[10px] leading-snug text-muted-foreground">
+          Blue line: where the storm has been (observed best track). Amber dashes: SurgeSight's own experimental forecast from the cutoff, and the circles show how uncertain it is. Not an IMD forecast.
+        </p>
+      </div>
       {zones && (
         <div>
           <div className="flex items-baseline justify-between text-[11px]">

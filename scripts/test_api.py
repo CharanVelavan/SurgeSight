@@ -32,7 +32,7 @@ EXPECTED = {
     "/api/ensemble", "/api/forecast/experimental", "/api/hazards/{run_id}", "/api/exposure/{run_id}", "/api/validation/satellite/{run_id}",
     "/api/advisory", "/api/tts", "/api/cap/{item_id}", "/api/parametric/{run_id}", "/api/dispatch", "/api/dispatch/{dispatch_id}/approve",
     "/api/dispatch/{dispatch_id}/reject", "/api/agent", "/tasks/poll", "/tasks/process", "/runs/{run_id}", "/healthz",
-    "/api/catalog", "/api/weather/manifest", "/api/weather/{file}", "/api/timeline", "/api/layers/{name}", "/api/me", "/api/voice/ask",
+    "/api/catalog", "/api/assets/{element}/{osm_id}/explain", "/api/weather/manifest", "/api/weather/{file}", "/api/timeline", "/api/layers/{name}", "/api/me", "/api/voice/ask",
 }
 
 
@@ -68,6 +68,14 @@ def test_assets() -> None:
 
 
 def test_web_routes() -> None:
+    cols = ok(client.get("/api/assets", params={"format": "columnar"})).json()
+    j = cols["risk_score"].index(max(cols["risk_score"]))
+    path = f"/api/assets/{cols['osm_element'][j]}/{cols['osm_id'][j]}/explain"
+    why = ok(client.post(path, params={"time": "2023-12-04 00:00", "cutoff": "2023-12-04 12:00"})).json()
+    assert why["text"] is None and why["facts"]["class"] and why["facts"]["distance"]["closest_approach_km"] > 0
+    told = ok(client.post(path, params={"narrative": "true"})).json()
+    assert told["text_source"] in ("template", "gemini") and told["text"]["summary"], "narrative must always come back, from the template when Gemini is off"
+    assert client.post("/api/assets/node/1/explain").status_code == 404 and client.post("/api/assets/road/1/explain").status_code == 422
     tiles = {t["id"]: t for t in ok(client.get("/api/catalog")).json()["tiles"]}
     assert tiles["michaung_2023"]["status"] == "available" and tiles["fani_2019"]["status"] == "soon" and tiles["live"]["kind"] == "live"
     manifest = ok(client.get("/api/weather/manifest")).json()

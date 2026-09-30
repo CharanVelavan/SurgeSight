@@ -15,6 +15,7 @@ export function AtRisk() {
   const data = useStore(assetsStore, s => s.data)
   const infra = useUi(s => s.infra)
   const set = useUi(s => s.set)
+  const selected = useUi(s => s.selectedAsset)
   const [open, setOpen] = useState(true)
 
   const summary = useMemo(() => {
@@ -30,7 +31,7 @@ export function AtRisk() {
     return { counts, total: rows.length, top: rows.slice(0, TOP) }
   }, [data, infra])
 
-  if (!summary || !data) return null
+  if (!summary || !data || selected !== null) return null
   const max = Math.max(1, ...CLASSES.map(c => summary.counts[c] ?? 0))
 
   return (
@@ -68,7 +69,7 @@ export function AtRisk() {
                   <button
                     type="button"
                     onClick={() => {
-                      set({ view: 'impact' })
+                      set({ view: 'impact', selectedAsset: i })
                       // the impact view re-frames first; the request then flies to the asset
                       setTimeout(() => set({ focus: { lon: data.lon[i], lat: data.lat[i], zoom: 12.5 } }), 60)
                     }}

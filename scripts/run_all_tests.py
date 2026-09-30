@@ -26,6 +26,7 @@ TESTS: list[tuple[str, list[str], bool]] = [
     ("scripts/test_config.py", ["SURGESIGHT_CONFIG_OK"], False),
     ("scripts/test_weather_frames.py", ["SURGESIGHT_WEATHER_FRAMES_OK"], False),
     ("scripts/test_alert_zones.py", ["SURGESIGHT_ALERT_ZONES_OK"], False),
+    ("scripts/test_asset_explain.py", ["SURGESIGHT_ASSET_EXPLAIN_OK"], False),
     ("scripts/test_gemini_fallback.py", ["SURGESIGHT_GEMINI_FALLBACK_OK"], False),
     ("scripts/test_scenario_engine.py", ["SURGESIGHT_SCENARIO_BASELINE_MATCH_OK", "SURGESIGHT_SCENARIO_30KM_OK"], False),
     ("scripts/test_track_forecaster.py", ["SURGESIGHT_TRACK_FORECASTER_OK"], False),
