@@ -1,6 +1,6 @@
 # SurgeSight architecture
 
-This describes what is **built and running today**. The cloud deployment is described at the end as the planned target and is not built.
+This describes what is **built and running today**. Deployment, built and planned, is at the end.
 
 ## 1. Layers
 
@@ -96,6 +96,8 @@ On the free Gemini tier each model has a small daily quota, so the client falls 
 
 `advisory` (per department, per language) → `cap.build_cap_alert` (CAP 1.2, validated against the OASIS schema, polygon from the department's exposure footprint) → `dispatch.queue_dispatch` (status `pending_approval`) → a person approves → `send` (dry run, or live to the allow-list by Gmail and by web push through FCM). The monitor (`services/monitor.py`) automates the first half: poll for a new bulletin, dedupe by content hash, score, draft every department's advisory and CAP, and queue them. SACHET, India's CAP-based alert platform, is the real-world integration target.
 
-## 7. Planned deployment (not built)
+## 7. Deployment
 
-Cloud Run for the API and dashboard, Pub/Sub and Cloud Scheduler to trigger `/tasks/poll` and `/tasks/process` (the endpoints already verify Google OIDC tokens in cloud mode), Secret Manager for keys and tokens, Firebase Hosting for a React front end, Looker Studio over BigQuery views, and optionally Agent Engine for the ADK team.
+**Built:** one Cloud Run service (asia-south1) serves the API and the React web app from the same container. A Cloud Run job, started by Cloud Scheduler every 3 hours, rebuilds the live weather from the newest GFS run in Earth Engine and publishes it to Cloud Storage. Gemini runs through Vertex AI under a dedicated service account, and the Maps server key is in Secret Manager. `firebase.json` configures Firebase Hosting to forward to the service.
+
+**Planned:** Pub/Sub and Cloud Scheduler to trigger `/tasks/poll` and `/tasks/process` (the endpoints already verify Google OIDC tokens in cloud mode), Looker Studio over BigQuery views, and optionally Agent Engine for the ADK team.

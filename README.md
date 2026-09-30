@@ -7,7 +7,9 @@
 
 > **Screening, not forecasting.** SurgeSight does not replace IMD. Every score is a screening index for prioritising attention, not a probability of damage. Experimental tracks are not official forecasts. Every alert is a CAP `Exercise` message and needs a human to approve it.
 
-**Status:** working prototype, run locally. Not deployed yet (no live URL). See [Limitations](#limitations).
+**Status:** working prototype, live on Cloud Run at https://surgesight-221627601364.asia-south1.run.app. See [Limitations](#responsible-use-and-limitations).
+
+**Team Echo:** Charan and Vishal. The pitch deck (light, dark and original editions, PPTX and PDF) is in [`docs/pitch/`](docs/pitch/); the demo video is linked from the deck, and the scripts that record it from the running app are in [`docs/pitch/video_v2/`](docs/pitch/video_v2/).
 
 ## What it does
 
@@ -59,7 +61,10 @@ A fuller description, with design decisions, is in [`docs/ARCHITECTURE.md`](docs
 | **BigQuery GIS** | Parameterised spatial asset queries | Built |
 | **Gmail API** | Approved email dispatch with CAP attachment | Built, sent live |
 | **Firebase Cloud Messaging** | Approved web push | Built, delivered live |
-| Cloud Run, Pub/Sub, Scheduler, Secret Manager, Firebase Hosting, Looker Studio | Deployment and automation | **Not built yet** |
+| **Cloud Run** (service and job), **Cloud Scheduler**, **Cloud Storage**, **Secret Manager** | Serves the API and web app; refreshes live weather every 3 hours | Built, deployed |
+| **Firebase Hosting** | Front door that forwards to the Cloud Run service (`firebase.json`) | Configured |
+| **Firebase Authentication** | Approver and viewer roles per department (`AUTH_MODE=firebase`) | Built |
+| Pub/Sub, Looker Studio, Agent Engine | Event automation, dashboards, hosted ADK team | **Not built yet** |
 
 Google Chat webhooks are coded but could not be tested: they are unavailable on personal accounts.
 
@@ -152,7 +157,7 @@ docs/       architecture, the implementation plan and the original vision docume
 - **Data gaps.** OSM coverage of fire stations, water works and fishing harbours is thin. Live Google Weather shows today's conditions, not the 2023 event.
 - **Parametric outputs are illustrative.** Portfolios, sums insured and payouts are invented.
 - **Human in the loop.** Agents can queue a dispatch but never approve or send it. The default mode is a dry run.
-- **Not built yet:** cloud deployment and automation, the React command UI, Agent Engine, Looker Studio.
+- **Not built yet:** Pub/Sub event automation, Agent Engine, Looker Studio, and the storms after Michaung (Fani, Amphan, Biparjoy are listed in the app as coming).
 
 ## Data sources
 
