@@ -12,6 +12,7 @@ pyproj==3.8.0
 pydeck==0.9.3
 pydantic==2.13.5
 python-dotenv==1.2.3
+itsdangerous==2.2.0
 requests==2.34.2
 tenacity==9.1.4
 httpx==0.28.1
