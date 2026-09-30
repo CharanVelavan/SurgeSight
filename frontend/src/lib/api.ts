@@ -1,3 +1,4 @@
+import { netFetch } from '@/lib/net'
 /** Typed client for the FastAPI routes the command UI uses. */
 
 export interface TrackPoint { time: string; lat: number; lon: number; wind_kt: number; pressure_hpa: number }
@@ -75,7 +76,7 @@ export interface ExperimentalForecast {
 }
 
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(path)
+  const res = await netFetch(path)
   if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`)
   return (await res.json()) as T
 }

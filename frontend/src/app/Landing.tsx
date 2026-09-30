@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { CloudSun, History } from 'lucide-react'
 import { api, type CatalogTile } from '@/lib/api'
+import { SavedNotice } from '@/panels/SavedNotice'
 import { onLinkClick, pathFor } from './router'
 
 function Tile({ tile }: { tile: CatalogTile }) {
@@ -49,6 +50,7 @@ export function Landing() {
           </svg>
           <span className="text-base font-semibold tracking-tight">SurgeSight</span>
         </div>
+        <SavedNotice className="mt-6 w-fit" />
         <h1 className="mt-10 text-3xl font-semibold tracking-tight max-sm:text-2xl">Cyclone impact, before it lands</h1>
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
           A read-only view for officials and responders: weather across India, the storm track, and which hospitals, power stations and shelters are most exposed. No sign-in needed.

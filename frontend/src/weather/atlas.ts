@@ -4,6 +4,7 @@
  * encoded bytes survive exactly.
  */
 
+import { netFetch } from '@/lib/net'
 import { createStore } from 'zustand/vanilla'
 import { WIND_MAX, RAIN_MAX, atlasFiles, type Manifest } from './manifest'
 import type { FieldPair, FrameRef } from './field'
@@ -33,7 +34,7 @@ export const weatherStore = createStore<WeatherState>(() => ({
 }))
 
 async function loadAtlas(file: string, base: string, version?: string): Promise<Atlas> {
-  const res = await fetch(`${base}/${file}${version ? `?v=${version}` : ''}`)
+  const res = await netFetch(`${base}/${file}${version ? `?v=${version}` : ''}`)
   if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`)
   const bitmap = await createImageBitmap(await res.blob(), { premultiplyAlpha: 'none', colorSpaceConversion: 'none' })
   const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
@@ -54,7 +55,7 @@ export async function loadWeather(next: WeatherSource = 'replay'): Promise<void>
   weatherStore.getState().atlases.forEach(a => a.bitmap.close())
   weatherStore.setState({ manifest: null, atlases: new Map(), loaded: 0, total: 0, error: null })
   try {
-    const res = await fetch(MANIFEST_URL[next], { cache: 'no-cache' })
+    const res = await netFetch(MANIFEST_URL[next], { cache: 'no-cache' })
     if (!res.ok) throw new Error(next === 'live' ? 'live weather has not been built yet' : `manifest: HTTP ${res.status}`)
     const manifest = (await res.json()) as Manifest
     if (source !== next) return

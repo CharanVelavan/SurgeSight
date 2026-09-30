@@ -16,6 +16,7 @@ import { AssetPopover } from '@/panels/AssetPopover'
 import { AssetWhy } from '@/panels/AssetWhy'
 import { Intro } from '@/panels/Intro'
 import { Landing } from './Landing'
+import { SavedNotice } from '@/panels/SavedNotice'
 import { LiveBanner } from '@/panels/LiveBanner'
 import { clockActions } from '@/timeline/clock'
 import { trackStore } from '@/data/track'
@@ -64,6 +65,7 @@ function Dashboard({ mode }: { mode: 'replay' | 'live' }) {
         <MapCanvas />
         <TopBar />
         {mode === 'live' && <LiveBanner />}
+        <SavedNotice className={`absolute left-1/2 -translate-x-1/2 ${mode === 'live' ? 'top-28' : 'top-16'}`} />
         {mode === 'replay' && <ViewSwitch />}
         {mode === 'replay' && <AtRisk />}
         <LayerCard />

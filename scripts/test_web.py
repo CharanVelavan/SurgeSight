@@ -74,6 +74,14 @@ def main() -> int:
             cmd += ["--screenshots", str(PROJECT_ROOT / "docs" / "screenshots")]
         if "--no-fps" in sys.argv:
             cmd.append("--no-fps")
+        preview = subprocess.Popen(["npx", "vite", "preview", "--port", "5198", "--strictPort", "--host", "127.0.0.1"],
+                                   cwd=FRONTEND, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        started.append(preview)
+        wait_for("http://127.0.0.1:5198")
+        off = subprocess.run(["node", "e2e/offline.mjs", "http://127.0.0.1:5198"], cwd=FRONTEND, capture_output=True, text=True, timeout=300)
+        off_lines = [ln for ln in off.stdout.splitlines() if ln.startswith("{")]
+        assert off_lines and json.loads(off_lines[-1])["ok"], f"offline e2e failed:\n{(off.stdout + off.stderr)[-2000:]}"
+        print("offline e2e ok")
         proc = subprocess.run(cmd, cwd=FRONTEND, capture_output=True, text=True, timeout=300)
         lines = [ln for ln in proc.stdout.splitlines() if ln.startswith("{")]
         if not lines:

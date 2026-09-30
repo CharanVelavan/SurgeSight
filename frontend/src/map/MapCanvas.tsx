@@ -11,6 +11,7 @@ import { useUi, type Basemap } from '@/state/ui'
 import { onFrame } from '@/timeline/clock'
 import { buildLayers } from './layers'
 import { INTRO_MS, INDIA, IMPACT, IMPACT_LIMIT, easeInOutCubic, fitCamera, introSeen, markIntroSeen, nationalBox } from './view'
+import { setMapFailed } from '@/lib/net'
 import { recordFrame } from './quality'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined
@@ -207,7 +208,7 @@ export function MapCanvas() {
     )
   }
   return (
-    <APIProvider apiKey={API_KEY}>
+    <APIProvider apiKey={API_KEY} onError={() => setMapFailed()}>
       <Map
         className="absolute inset-0"
         mapId={MAP_ID}
