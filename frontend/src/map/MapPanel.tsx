@@ -3,7 +3,7 @@
  * So the panel always answers "what am I seeing?" for exactly what is on the map.
  */
 
-import { CloudRain, Layers3, MapPinned, Palette, Route as RouteIcon, ShieldAlert, Waves, Wind } from 'lucide-react'
+import { CloudRain, Layers3, MapPinned, Palette, Road, Route as RouteIcon, ShieldAlert, Waves, Wind } from 'lucide-react'
 import { SURGE_STOPS } from '@/data/surge'
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -83,6 +83,23 @@ function TrackKey() {
       <li className="flex items-center gap-2.5"><span className="size-4 rounded-full border border-[#D99A1E] bg-[#D99A1E]/15" aria-hidden />{t('map.trackCircles')}</li>
       <li className="text-[11.5px] leading-snug text-muted-foreground">{t('map.trackNote')}</li>
     </ul>
+  )
+}
+
+function RoadsKey() {
+  const t = useT()
+  return (
+    <>
+      <ul className="flex flex-col gap-1.5 text-[12.5px]">
+        {[1, 2, 3].map(level => (
+          <li key={level} className="flex items-center gap-2.5">
+            <span className="h-1 w-6 rounded-full" style={{ background: ZONE_HEX[level] }} aria-hidden />
+            {t(`road.level.${level}` as Key)}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-2 text-[11.5px] leading-snug text-muted-foreground">{t('map.roadsNote')}</p>
+    </>
   )
 }
 
@@ -176,6 +193,12 @@ export function MapPanel() {
       )}
 
       {!live && (
+        <Section id="roads" icon={Road} title={t('map.roads')} checked={ui.roads} onChange={v => set({ roads: v })}>
+          <RoadsKey />
+        </Section>
+      )}
+
+      {!live && (
         <Section id="facilities" icon={MapPinned} title={t('tab.facilities')}>
           <FacilitiesKey />
         </Section>
@@ -228,4 +251,3 @@ export function MapPanel() {
     </div>
   )
 }
-

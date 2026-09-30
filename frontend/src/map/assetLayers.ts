@@ -18,7 +18,7 @@ const hover = (group: AssetGroup) => (info: { index: number }) => {
 }
 
 const select = (group: AssetGroup) => (info: { index: number }) => {
-  if (info.index >= 0) useUi.getState().set({ selectedAsset: group.indices[info.index] })
+  if (info.index >= 0) useUi.getState().set({ selectedAsset: group.indices[info.index], selectedRoad: null })
 }
 
 type BinaryData = { length: number; attributes: Record<string, { value: Float32Array | Uint8Array; size: number }> }

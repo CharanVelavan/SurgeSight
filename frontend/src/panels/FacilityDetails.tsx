@@ -3,13 +3,13 @@ import { useQuery } from '@tanstack/react-query'
 import { Loader2, MapPinned, Sparkles, X } from 'lucide-react'
 import { useStore } from 'zustand'
 import { Button } from '@/components/ui/button'
-import { FacilityIcon, LevelBadge, RiskBadge, riskClass } from '@/components/badges'
+import { AccessBadge, FacilityIcon, LevelBadge, RiskBadge, riskClass } from '@/components/badges'
 import { useAssetLevels } from '@/alerts/levels'
 import { cutoffParam } from '@/app/queries'
 import { assetsStore } from '@/data/assets'
 import { currentApiLanguage, t as tt, useT, type Key } from '@/i18n'
 import { api, type AssetFacts } from '@/lib/api'
-import { formatIST } from '@/lib/format'
+import { formatIST, formatNumber } from '@/lib/format'
 import { clock, useClock } from '@/timeline/clock'
 
 const fmt = (v: number | null | undefined, unit: string) => (v === null || v === undefined ? tt('why.notAvailable') : `${v} ${unit}`)
@@ -123,6 +123,17 @@ export function FacilityDetails({ index, onClose, onShowOnMap }: { index: number
       <p className="mt-2 text-[12px] text-muted-foreground">
         {t('asset.mainHazard', { hazard: t(`hazard.${data.hazard[index]}` as Key), tier: data.tier[index] })}
       </p>
+
+      {(data.roadAccess[index] === 'at_risk' || data.roadAccess[index] === 'cut_off') && (
+        <div className="mt-3 rounded-lg border border-border bg-background/50 p-3">
+          <AccessBadge access={data.roadAccess[index]} />
+          <p className="mt-1.5 text-[12px] text-muted-foreground">
+            {data.hospitalKmBefore[index] === null || data.hospitalKmAfter[index] === null
+              ? t('access.noHospital')
+              : t('access.hospitalTrip', { before: formatNumber(data.hospitalKmBefore[index]!, 1), after: formatNumber(data.hospitalKmAfter[index]!, 1) })}
+          </p>
+        </div>
+      )}
 
       <div className="mt-4 flex flex-wrap gap-2">
         {!asked && (

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { Splash } from '@/components/Splash'
 import { assetsStore } from '@/data/assets'
+import { roadsStore } from '@/data/roads'
 import { useMediaQuery } from '@/lib/useMediaQuery'
 import { useT } from '@/i18n'
 import { MapCanvas } from '@/map/MapCanvas'
@@ -12,6 +13,7 @@ import { MapPanel } from '@/map/MapPanel'
 import { AssetPopover } from '@/panels/AssetPopover'
 import { CursorReadout } from '@/panels/CursorReadout'
 import { FacilityDetails } from '@/panels/FacilityDetails'
+import { RoadDetails } from '@/panels/RoadDetails'
 import { LiveBanner } from '@/panels/LiveBanner'
 import { PerfOverlay } from '@/panels/PerfOverlay'
 import { ViewSwitch } from '@/panels/ViewSwitch'
@@ -44,11 +46,14 @@ export function MapView({ mode }: { mode: 'replay' | 'live' }) {
   const t = useT()
   const wide = useMediaQuery('(min-width: 1024px)')
   const selected = useUi(s => s.selectedAsset)
+  const selectedRoad = useUi(s => s.selectedRoad)
   const set = useUi(s => s.set)
   const hasAssets = useStore(assetsStore, s => !!s.data)
+  const hasRoads = useStore(roadsStore, s => !!s.data)
   const [panel, setPanel] = useState(false)
-  const details = selected !== null && hasAssets && mode === 'replay'
-  const close = () => set({ selectedAsset: null })
+  const details = selected !== null && selectedRoad === null && hasAssets && mode === 'replay'
+  const roadDetails = selectedRoad !== null && selected === null && hasRoads && mode === 'replay'
+  const close = () => set({ selectedAsset: null, selectedRoad: null })
   return (
     <div className="relative h-full overflow-hidden" data-map-root>
       <MapCanvas />
@@ -65,12 +70,16 @@ export function MapView({ mode }: { mode: 'replay' | 'live' }) {
 
       {wide && (
         <aside
-          aria-label={details ? t('why.aria') : t('map.layers')}
+          aria-label={details ? t('why.aria') : roadDetails ? t('road.aria') : t('map.layers')}
           className="panel pointer-events-auto absolute top-3 right-3 bottom-8 z-20 w-[340px] overflow-y-auto"
         >
           {details ? (
             <div className="p-4">
               <FacilityDetails index={selected} onClose={close} />
+            </div>
+          ) : roadDetails ? (
+            <div className="p-4">
+              <RoadDetails index={selectedRoad} onClose={close} />
             </div>
           ) : (
             <MapPanel />
@@ -89,6 +98,12 @@ export function MapView({ mode }: { mode: 'replay' | 'live' }) {
             <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-xl p-4" showCloseButton={false} aria-describedby={undefined}>
               <SheetTitle className="sr-only">{t('why.aria')}</SheetTitle>
               {details && <FacilityDetails index={selected} onClose={close} />}
+            </SheetContent>
+          </Sheet>
+          <Sheet open={roadDetails} onOpenChange={o => !o && close()}>
+            <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-xl p-4" showCloseButton={false} aria-describedby={undefined}>
+              <SheetTitle className="sr-only">{t('road.aria')}</SheetTitle>
+              {roadDetails && <RoadDetails index={selectedRoad} onClose={close} />}
             </SheetContent>
           </Sheet>
         </>

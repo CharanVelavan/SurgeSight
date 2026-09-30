@@ -13,8 +13,9 @@ import { ZoneLayer } from '@/layers/zones/ZoneLayer'
 import { stormAt } from '@/alerts/storm'
 import { zoneImage } from '@/alerts/store'
 import { trackStore } from '@/data/track'
-import { ScatterplotLayer } from '@deck.gl/layers'
+import { PathLayer, ScatterplotLayer } from '@deck.gl/layers'
 import { surgeStore, type SurgeData } from '@/data/surge'
+import { roadsStore, sectionPath, type RoadData } from '@/data/roads'
 import { INFRA_ZOOM, buildAssetLayers } from './assetLayers'
 import { buildTrackLayers } from './trackLayers'
 import { quality } from './quality'
@@ -47,6 +48,54 @@ function surgeBinary(d: SurgeData) {
     surgeCache.set(d, b)
   }
   return b
+}
+
+type RoadBinary = { length: number; startIndices: Uint32Array; attributes: Record<string, { value: Float32Array | Uint8Array; size: number }> }
+const roadCache = new WeakMap<RoadData, { main: RoadBinary; casing: RoadBinary }>()
+function roadBinary(d: RoadData) {
+  let b = roadCache.get(d)
+  if (!b) {
+    const getPath = { value: d.positions, size: 2 }
+    const getWidth = { value: d.widths, size: 1 }
+    b = {
+      main: { length: d.count, startIndices: d.startIndices, attributes: { getPath, getWidth, getColor: { value: d.colors, size: 4 } } },
+      casing: { length: d.count, startIndices: d.startIndices, attributes: { getPath, getWidth } },
+    }
+    roadCache.set(d, b)
+  }
+  return b
+}
+let selectedPath: { data: RoadData; index: number; path: [number, number][][] } | null = null
+function selectedRoadPath(d: RoadData, index: number) {
+  if (!selectedPath || selectedPath.data !== d || selectedPath.index !== index) selectedPath = { data: d, index, path: [sectionPath(d, index)] }
+  return selectedPath.path
+}
+
+/** Main roads coloured by level over a thin casing so they read on any basemap; a clicked section is outlined. */
+function buildRoadLayers(zoom: number, selected: number | null): Layer[] {
+  const d = roadsStore.getState().data
+  if (!d) return []
+  const b = roadBinary(d)
+  const dark = document.documentElement.classList.contains('dark')
+  const scale = zoom < 8 ? 0.6 : zoom < 10 ? 0.85 : 1.2
+  const common = { _pathType: 'open' as const, widthUnits: 'pixels' as const, widthMinPixels: 1, capRounded: true, jointRounded: true, parameters: { depthCompare: 'always' as const } }
+  const layers: Layer[] = [
+    new PathLayer({ ...common, id: 'roads-casing', data: b.casing as never, getColor: dark ? [10, 12, 16, 210] : [255, 255, 255, 235], widthScale: scale * 1.9, pickable: false }),
+    new PathLayer({
+      ...common, id: 'roads', data: b.main as never, widthScale: scale, pickable: true, autoHighlight: true, highlightColor: [255, 255, 255, 110],
+      onClick: (info: { index: number }) => {
+        if (info.index >= 0) useUi.getState().set({ selectedRoad: info.index, selectedAsset: null })
+      },
+    }),
+  ]
+  if (selected !== null && selected < d.count)
+    layers.push(
+      new PathLayer({
+        ...common, id: 'road-selected', data: selectedRoadPath(d, selected), getPath: (p: [number, number][]) => p,
+        getColor: dark ? [255, 255, 255, 255] : [20, 24, 30, 255], getWidth: 3, widthScale: 1, widthMinPixels: 3, pickable: false,
+      }),
+    )
+  return layers
 }
 
 export function buildLayers(now: number): Layer[] {
@@ -140,6 +189,7 @@ export function buildLayers(now: number): Layer[] {
           pickable: false, parameters: { depthCompare: 'always' },
         }),
       )
+    if (ui.roads && ui.zoom >= INFRA_ZOOM) layers.push(...buildRoadLayers(ui.zoom, ui.selectedRoad))
     layers.push(...(ui.track ? buildTrackLayers() : []), ...buildAssetLayers())
   }
   return layers

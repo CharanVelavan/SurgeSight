@@ -71,7 +71,7 @@ export function Guide() {
         <section aria-labelledby="screens" className="mt-12">
           <H2 id="screens">{t('guide.screens')}</H2>
           <ol className="mt-4 flex flex-col gap-3">
-            {(['home', 'overview', 'map', 'facilities', 'areas', 'advisories'] as const).map((s, i) => (
+            {(['home', 'overview', 'map', 'facilities', 'areas', 'roads', 'advisories'] as const).map((s, i) => (
               <li key={s} className="flex gap-3 text-[14px] leading-relaxed">
                 <span className="num grid size-6 shrink-0 place-items-center rounded-full bg-primary text-[12px] font-semibold text-primary-foreground">{i + 1}</span>
                 {t(`guide.s.${s}` as Key)}

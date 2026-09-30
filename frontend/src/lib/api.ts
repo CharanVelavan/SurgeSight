@@ -30,6 +30,51 @@ export interface AssetColumns {
   dominant_hazard: string[]
   /** 'hospital' for real hospitals, otherwise clinics and other health facilities (hospital rows only). */
   facility_quality?: (string | null)[]
+  /** Road access after the most-exposed sections are removed in the screening (absent without a road layer). */
+  road_access?: (RoadAccess | null)[]
+  hospital_km_before?: (number | null)[]
+  hospital_km_after?: (number | null)[]
+}
+
+export type RoadAccess = 'open' | 'at_risk' | 'cut_off' | 'not_assessed'
+
+/** Main-road sections at watch level or above, as parallel columns (/api/roads). */
+export interface RoadColumns {
+  model_version: string
+  count: number
+  names: string[]
+  /** Flat lon, lat pairs; section i runs from starts[i] to starts[i + 1] (in points). */
+  path: number[]
+  starts: number[]
+  id: string[]
+  name: number[]
+  /** 0 motorway, 1 trunk, 2 primary, 3 secondary, 4 tertiary. */
+  highway: number[]
+  level: number[]
+  cause: ('flood' | 'surge' | 'wind')[]
+  km: number[]
+  rain_mm: (number | null)[]
+  wind_kmh: (number | null)[]
+  surge_m: (number | null)[]
+  elevation_min_m: (number | null)[]
+  hand_min_m: (number | null)[]
+  district: (string | null)[]
+}
+
+export interface RoadSummary {
+  km_total: number
+  km_by_level: Record<'open' | 'watch' | 'high_exposure' | 'most_exposed', number>
+  km_level2plus_by_district: Record<string, number>
+  top_roads: { road: string; km: number; level: number; highway: string }[]
+  access_counts: Record<string, Partial<Record<RoadAccess, number>>>
+  hospital_detour: { facilities_with_longer_trip: number; facilities_without_hospital_after: number }
+  validation: {
+    sections_observed: number
+    km_observed: number
+    observed_flooded_share: number | null
+    auc_water_on_road: number | null
+    by_flood_level: Record<string, { sections: number; observed_flooded_share: number | null }>
+  }
 }
 
 export interface AssetFacts {
@@ -120,6 +165,7 @@ export interface DispatchItem {
   sent_at_utc: string | null
   mode: string | null
   attachment_names: string[]
+  detail?: any
 }
 
 export interface ParametricTrigger { id: string; label: string; index_value: number; breached: boolean; payout_pct: number; probability?: number }
@@ -178,4 +224,15 @@ export const api = {
   explain: (element: string, id: number, time: string, cutoff: string, narrative: boolean, language: string) =>
     post<AssetExplanation>(`/api/assets/${element}/${id}/explain?time=${encodeURIComponent(time)}&cutoff=${encodeURIComponent(cutoff)}&narrative=${narrative}&language=${language}`),
   assets: () => get<AssetColumns>('/api/assets?format=columnar'),
+  roads: () => get<RoadColumns>('/api/roads'),
+  roadSummary: () => get<RoadSummary>('/api/roads/summary'),
+  recipients: (department: string) => get<string[]>(`/api/recipients?department=${encodeURIComponent(department)}`),
+  addRecipient: (department: string, email: string) => postJson<string[]>('/api/recipients', { department, email }),
+  removeRecipient: (department: string, email: string) => fetch(`/api/recipients?department=${encodeURIComponent(department)}&email=${encodeURIComponent(email)}`, { method: 'DELETE' }).then(r => { if (!r.ok) throw new Error(); return r.json() as Promise<string[]> }),
+  dispatchMode: () => get<{ mode: string; provider_configured: string }>('/api/dispatch/mode'),
+  queueDispatch: (advisory_run_id: string, channel: string = 'email') => postJson<{ data: { dispatch_id: string } }>('/api/dispatch', { advisory_run_id, channel, include_cap: true }),
+  approveDispatch: (id: string) => postJson<DispatchItem>(`/api/dispatch/${encodeURIComponent(id)}/approve`, {}),
+  rejectDispatch: (id: string) => postJson<DispatchItem>(`/api/dispatch/${encodeURIComponent(id)}/reject`, {}),
+  sendDispatch: (id: string) => postJson<DispatchItem>(`/api/dispatch/${encodeURIComponent(id)}/send`, {}),
+  me: () => get<{ uid: string; email: string; role: string; department: string | null; auth_mode?: string }>('/api/me'),
 }

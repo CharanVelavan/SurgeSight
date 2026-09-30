@@ -40,6 +40,33 @@ export function LevelBadge({ level, className }: { level: number | null | undefi
   )
 }
 
+const ROAD_LEVEL_KEY: Key[] = ['road.level.0', 'road.level.1', 'road.level.2', 'road.level.3']
+
+/** A road section's level as a short line in its map colour and a word. */
+export function RoadLevelBadge({ level, className }: { level: number; className?: string }) {
+  const t = useT()
+  return (
+    <span className={cn('inline-flex items-center gap-1.5 text-[12.5px] font-medium whitespace-nowrap', className)}>
+      <span aria-hidden className="inline-block h-1 w-4 rounded-full" style={{ background: level ? ZONE_HEX[level] : 'var(--muted-foreground)' }} />
+      {t(ROAD_LEVEL_KEY[level] ?? ROAD_LEVEL_KEY[0])}
+    </span>
+  )
+}
+
+const ACCESS_TONE: Record<string, string> = { cut_off: ZONE_HEX[3], at_risk: ZONE_HEX[2] }
+
+/** A facility's screened road access: only shown when it is at risk or cut off. */
+export function AccessBadge({ access, className }: { access: string | null | undefined; className?: string }) {
+  const t = useT()
+  if (access !== 'cut_off' && access !== 'at_risk') return null
+  return (
+    <span className={cn('inline-flex items-center gap-1.5 rounded-md border px-1.5 py-0.5 text-[11.5px] font-medium whitespace-nowrap', className)} style={{ borderColor: ACCESS_TONE[access] }}>
+      <span aria-hidden className="inline-block size-2 rotate-45" style={{ background: ACCESS_TONE[access] }} />
+      {t(`access.${access}` as Key)}
+    </span>
+  )
+}
+
 /** The facility's type icon on a disc in its risk colour, like its map marker. */
 export function FacilityIcon({ type, cls, size = 'md' }: { type: string; cls: string; size?: 'sm' | 'md' | 'lg' }) {
   const Icon = ASSET_ICON[type as AssetType]

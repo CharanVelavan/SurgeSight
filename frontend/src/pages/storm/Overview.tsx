@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowRight, Compass, Landmark, Gauge, MapPinned, Navigation, ShieldAlert, Waves } from 'lucide-react'
+import { ArrowRight, Compass, Landmark, Gauge, MapPinned, Navigation, ShieldAlert, TrafficCone, Waves } from 'lucide-react'
 import { useStore } from 'zustand'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -15,7 +15,7 @@ import { assetsStore } from '@/data/assets'
 import { inRole, priorityRank, roleById } from '@/data/roles'
 import { useT, type Key } from '@/i18n'
 import { api } from '@/lib/api'
-import { compass, formatInt, formatIST, formatLatLon } from '@/lib/format'
+import { compass, formatInt, formatIST, formatLatLon, formatNumber } from '@/lib/format'
 import { stormStatus } from '@/lib/storm'
 import { useUi } from '@/state/ui'
 import { useClock } from '@/timeline/clock'
@@ -97,6 +97,7 @@ export function Overview({ id }: { id: string }) {
   const { data: districts } = useDistricts()
   const set = useUi(s => s.set)
   const status = tl ? stormStatus(tl, cutoff) : null
+  const roads = useQuery({ queryKey: ['roads-summary'], queryFn: api.roadSummary, staleTime: Infinity, retry: 0 })
 
   const mine = useMemo(() => {
     if (!data) return null
@@ -232,6 +233,35 @@ export function Overview({ id }: { id: string }) {
           </Button>
         </div>
       </div>
+      <section aria-labelledby="overview-roads" className="mt-5 rounded-xl border border-border bg-card">
+        <div className="flex items-start justify-between gap-3 border-b border-border p-4">
+          <div>
+            <h2 id="overview-roads" className="flex items-center gap-2 text-[15px] font-semibold"><TrafficCone className="size-4 text-primary" aria-hidden />{t('roads.title')}</h2>
+            <p className="mt-0.5 text-[13px] text-muted-foreground">{t('roads.worstLead')}</p>
+          </div>
+          <Link to={pathFor({ name: 'storm', id, tab: 'roads' })} className="shrink-0 text-[13px] font-medium text-primary hover:underline">{t('overview.seeAll')}</Link>
+        </div>
+        {roads.isPending ? (
+          <div className="grid gap-3 p-4 sm:grid-cols-2"><Skeleton className="h-16" /><Skeleton className="h-16" /></div>
+        ) : roads.data ? (
+          <div className="grid gap-px bg-border lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+            <dl className="grid grid-cols-2 gap-3 bg-card p-4">
+              <div><dt className="text-[12px] text-muted-foreground">{t('road.level.3')}</dt><dd className="num mt-1 text-[20px] font-semibold">{formatNumber(roads.data.km_by_level.most_exposed, 1)} km</dd></div>
+              <div><dt className="text-[12px] text-muted-foreground">{t('road.level.2')}</dt><dd className="num mt-1 text-[20px] font-semibold">{formatNumber(roads.data.km_by_level.high_exposure, 1)} km</dd></div>
+            </dl>
+            <ol className="divide-y divide-border bg-card">
+              {roads.data.top_roads.slice(0, 3).map(r => (
+                <li key={r.road} className="flex items-center justify-between gap-3 px-4 py-2.5 text-[13px]">
+                  <span className="truncate font-medium">{r.road}</span>
+                  <span className="num shrink-0 text-muted-foreground">{t('roads.kmAffected', { km: formatNumber(r.km, 1) })}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ) : (
+          <p className="p-4 text-[13px] text-muted-foreground">{t('roads.missing')}</p>
+        )}
+      </section>
       <Parametric />
       <p className="mt-6 text-[12px] text-muted-foreground">{t('overview.asOf', { time: formatIST(cutoff) })}</p>
     </Page>

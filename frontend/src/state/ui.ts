@@ -23,6 +23,8 @@ interface UiState {
   zones: boolean
   track: boolean
   surge: boolean
+  /** Main roads screened for flooding and fallen trees (storm replays only). */
+  roads: boolean
   rain: boolean
   rainSource: RainSource
   basemap: Basemap
@@ -34,6 +36,8 @@ interface UiState {
   hoverAsset: number | null
   /** Index of the marker the user clicked; opens the details panel. */
   selectedAsset: number | null
+  /** Index of the road section the user clicked; opens the road panel. */
+  selectedRoad: number | null
   /** True while the opening fly-in plays. */
   intro: boolean
   /** One-shot request to fly the camera to a point (used by the summary list). */
@@ -50,6 +54,7 @@ export const useUi = create<UiState>(set => ({
   zones: true,
   track: true,
   surge: true,
+  roads: true,
   rain: true,
   rainSource: 'forecast',
   basemap: 'dark',
@@ -58,6 +63,7 @@ export const useUi = create<UiState>(set => ({
   infra: infraDefault,
   hoverAsset: null,
   selectedAsset: null,
+  selectedRoad: null,
   intro: false,
   focus: null,
   cursor: null,

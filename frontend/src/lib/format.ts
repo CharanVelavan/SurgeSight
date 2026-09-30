@@ -34,6 +34,8 @@ export function formatCycle(ms: number): string {
 export const utcHour = (ms: number) => utcFmt().format(ms)
 
 export const formatInt = (n: number) => new Intl.NumberFormat(`${currentLocale()}-u-nu-latn`).format(Math.round(n))
+export const formatNumber = (n: number, digits = 1) =>
+  new Intl.NumberFormat(`${currentLocale()}-u-nu-latn`, { minimumFractionDigits: 0, maximumFractionDigits: digits }).format(n)
 
 const COMPASS = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
 

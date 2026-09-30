@@ -5,7 +5,7 @@
  */
 
 import { createStore } from 'zustand/vanilla'
-import { api } from '@/lib/api'
+import { api, type RoadAccess } from '@/lib/api'
 import { RISK, hexToRgb, type RiskClass } from '@/lib/colors'
 
 /** Facility types in display order. Icons live in data/assetIcon.tsx (lists) and layers/assetIcons.ts (map). */
@@ -49,6 +49,11 @@ export interface AssetData {
   tier: number[]
   hazard: string[]
   quality: (string | null)[]
+  /** Road access after removing the most-exposed main-road sections in the screening; null without a road layer. */
+  roadAccess: (RoadAccess | null)[]
+  /** Road distance to the nearest hospital before and after that screening removal (km). */
+  hospitalKmBefore: (number | null)[]
+  hospitalKmAfter: (number | null)[]
   groups: Map<AssetType, AssetGroup>
 }
 
@@ -85,7 +90,9 @@ export function groupAssets(cols: Awaited<ReturnType<typeof api.assets>>): Asset
   }
   return {
     runId: cols.run_id, count: cols.count, name: cols.name, osmElement: cols.osm_element, osmId: cols.osm_id, type: cols.asset_type, riskClass: cols.risk_class,
-    riskScore: cols.risk_score, lon: cols.lon, lat: cols.lat, tier: cols.triage_tier, hazard: cols.dominant_hazard, quality: cols.facility_quality ?? cols.name.map(() => null), groups,
+    riskScore: cols.risk_score, lon: cols.lon, lat: cols.lat, tier: cols.triage_tier, hazard: cols.dominant_hazard, quality: cols.facility_quality ?? cols.name.map(() => null),
+    roadAccess: cols.road_access ?? cols.name.map(() => null), hospitalKmBefore: cols.hospital_km_before ?? cols.name.map(() => null),
+    hospitalKmAfter: cols.hospital_km_after ?? cols.name.map(() => null), groups,
   }
 }
 
