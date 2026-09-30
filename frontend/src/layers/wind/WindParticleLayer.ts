@@ -10,7 +10,7 @@
 import { Layer, project32, type DefaultProps, type LayerContext, type UpdateParameters } from '@deck.gl/core'
 import type { Buffer, Device } from '@luma.gl/core'
 import { BufferTransform, Model } from '@luma.gl/engine'
-import { atlasTexture } from '../textures'
+import { atlasTexture, warmOne } from '../textures'
 import { drawFs, drawVs, simVs, windDrawModule, windSimModule, type WindDrawProps, type WindSimProps } from './shaders'
 
 type Vec4 = [number, number, number, number]
@@ -37,6 +37,8 @@ export interface WindParticleLayerProps {
   clockMs: number
   /** False freezes the particles in place (reduced motion or paused rendering). */
   animate: boolean
+  /** Every atlas the replay can reach; uploaded to the GPU one per frame ahead of first use. */
+  preload: readonly ImageBitmap[]
 }
 
 const STEP_MS = 1000 / 60
@@ -58,6 +60,7 @@ const defaultProps: DefaultProps<WindParticleLayerProps> = {
   pixelsPerMs: { type: 'number', value: 5 },
   clockMs: { type: 'number', value: 0 },
   animate: true,
+  preload: { type: 'array', value: [], compare: false },
 }
 
 interface State {
@@ -198,6 +201,7 @@ export class WindParticleLayer extends Layer<WindParticleLayerProps> {
     const device = this.context.device as Device
     const texA = atlasTexture(device, imageA)
     const texB = atlasTexture(device, imageB)
+    warmOne(device, this.props.preload)
 
     if (animate) {
       if (!this.state.lastStepMs || clockMs - this.state.lastStepMs > 250) this.state.lastStepMs = clockMs - STEP_MS
@@ -216,7 +220,7 @@ export class WindParticleLayer extends Layer<WindParticleLayerProps> {
       const newer = ring[(this.state.head - age + len * 2) % len]
       const older = ring[(this.state.head - age - 1 + len * 2) % len]
       model.setAttributes({ newer, older })
-      const drawProps: WindDrawProps = { age, numAges: trail, width, opacity: 0.85, maxLife: MAX_LIFE, domain }
+      const drawProps: WindDrawProps = { age, numAges: trail, width, opacity: 0.7, maxLife: MAX_LIFE, domain }
       model.shaderInputs.setProps({ windDraw: drawProps })
       model.draw(this.context.renderPass!)
     }

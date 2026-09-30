@@ -32,3 +32,10 @@ vec2 weather_tileUV(vec2 lnglat, vec4 grid, vec2 gridSize, vec4 tile) {
   return tile.xy + px / gridSize * tile.zw;
 }
 `
+
+/** Upload at most one not-yet-cached bitmap; called every frame so first use never stalls playback. */
+export function warmOne(device: Device, bitmaps: readonly ImageBitmap[]): void {
+  const perDevice = cache.get(device)
+  const next = bitmaps.find(b => !perDevice?.has(b))
+  if (next) atlasTexture(device, next)
+}

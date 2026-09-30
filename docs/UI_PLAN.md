@@ -190,6 +190,16 @@ The owner switches models between phases. Each phase ends with a commit and a me
 
 Phase A stop condition: `SURGESIGHT_WEATHER_FRAMES_OK` and `SURGESIGHT_API_OK` pass offline, committed; then tell the owner "Phase A done, switch to Opus 5.5 for Phase B".
 
+### 7.2 Phase B outcome (S0 + S2, 2026-09-30)
+
+- **Satellite decision (S0):** the hybrid satellite basemap keeps vector rendering, so deck.gl stays interleaved on dark, satellite and terrain. The non-interleaved overlay is still wired in and switches automatically if the map ever reports raster rendering.
+- **deck.gl 9.4 workaround:** `GoogleMapsOverlay` could create a canvas-backed Deck before Google's GL context arrived, and then nothing drew. `frontend/src/map/overlay.ts` skips that path in interleaved mode.
+- **Trails:** particle trails are a ring of past positions drawn as tapered quads, not the fade-previous-frame technique in §4.2. Fading breaks when the map redraws itself or the camera moves.
+- **Budget:** 22k particles on desktop, 12k on tablet and 6k on phone, with trail 20/14. 65k reached 75 fps but looked like a solid carpet.
+- **Measured on the dev Mac (headed Chrome, 1200×897 CSS px):** 113–120 fps mean over 5 s of 8× playback across the cutoff, worst frame 17 ms after atlases are pre-uploaded (one per frame).
+- **Measurement method:** these numbers come from the Chrome DevTools harness. The Playwright version of this check belongs to S8.
+- **Byte-exact check:** the browser decodes the atlases byte-for-byte as `services/weather_frames.py` does (same checksum).
+
 **Total ≈ 23 h** (the original WP10 estimate of 5 h did not include animated weather, auth or full i18n).
 
 ## 8. Tests

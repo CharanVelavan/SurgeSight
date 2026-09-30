@@ -11,6 +11,16 @@ import { quality } from './quality'
 
 type Vec4 = [number, number, number, number]
 
+let bitmapList: ImageBitmap[] = []
+let bitmapSource: unknown = null
+function bitmaps(atlases: Map<string, { bitmap: ImageBitmap }>): ImageBitmap[] {
+  if (atlases !== bitmapSource) {
+    bitmapSource = atlases
+    bitmapList = [...atlases.values()].map(a => a.bitmap)
+  }
+  return bitmapList
+}
+
 export function buildLayers(now: number): Layer[] {
   const { manifest, atlases } = weatherStore.getState()
   if (!manifest) return []
@@ -61,6 +71,7 @@ export function buildLayers(now: number): Layer[] {
         pixelsPerMs: 8,
         clockMs: now,
         animate: !quality.reducedMotion,
+        preload: bitmaps(atlases),
       }),
     )
   }
