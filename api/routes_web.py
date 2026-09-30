@@ -42,7 +42,7 @@ def regions() -> dict[str, Any]:
 
     catalog = tomllib.loads((PROJECT_ROOT / "config" / "catalog.toml").read_text(encoding="utf-8"))
     known = set(list_regions())
-    live_ready = (PROJECT_ROOT / "data" / "processed" / "live" / "manifest.json").is_file()
+    live_ready = (live_dir() / "manifest.json").is_file()
     tiles = []
     for tile in catalog["tile"]:
         ready = live_ready if tile["kind"] == "live" else tile.get("region") in known
@@ -91,6 +91,38 @@ def limit_narrative(request: Request, per_minute: int = 20) -> None:
     if len(recent) >= per_minute:
         raise HTTPException(status_code=429, detail="Too many explanation requests; wait a minute")
     _hits[who] = [*recent, now]
+
+
+LIVE_STALE_HOURS = 12
+
+
+def live_dir():
+    return PROJECT_ROOT / "data" / "processed" / "live"
+
+
+@router.get("/api/live/manifest")
+def live_manifest() -> JSONResponse:
+    """Live weather atlases (newest GFS cycle) with the cycle's age, so the UI can warn when they are old."""
+    path = live_dir() / "manifest.json"
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Live weather has not been built yet (scripts/build_live_weather.py)")
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    cycle = pd.Timestamp(manifest["live"]["cycle"])
+    age = (pd.Timestamp.now("UTC") - cycle).total_seconds() / 3600
+    h = hashlib.sha1()
+    for f in sorted(live_dir().glob("*")):
+        st = f.stat()
+        h.update(f"{f.name}:{st.st_size}:{st.st_mtime_ns}".encode())
+    live = {**manifest["live"], "age_hours": round(age, 1), "stale": age > LIVE_STALE_HOURS, "stale_after_hours": LIVE_STALE_HOURS}
+    return JSONResponse({**manifest, "live": live, "version": h.hexdigest()[:10]}, headers=NO_CACHE)
+
+
+@router.get("/api/live/{file}")
+def live_file(file: str) -> FileResponse:
+    path = live_dir() / file
+    if not file.endswith(".png") or path.parent != live_dir() or not path.is_file():
+        raise HTTPException(status_code=404, detail="Unknown live weather file")
+    return FileResponse(path, media_type="image/png", headers=IMMUTABLE)
 
 
 @router.get("/api/weather/manifest")

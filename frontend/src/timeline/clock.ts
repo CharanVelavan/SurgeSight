@@ -22,14 +22,16 @@ export interface ClockState {
   speed: (typeof SPEEDS)[number]
 }
 
-export const clock = createStore<ClockState>(() => ({
+const REPLAY_START: ClockState = {
   start: Date.UTC(2023, 10, 30),
   end: Date.UTC(2023, 11, 7),
   time: Date.UTC(2023, 11, 3, 12),
   cutoff: Date.UTC(2023, 11, 3, 12),
   playing: false,
   speed: 1,
-}))
+}
+
+export const clock = createStore<ClockState>(() => ({ ...REPLAY_START }))
 
 if (import.meta.env.DEV && typeof window !== 'undefined') (window as unknown as { __clock: unknown }).__clock = clock
 
@@ -50,6 +52,10 @@ export const clockActions = {
   toggle: () =>
     clock.setState(s => ({ playing: !s.playing, time: !s.playing && s.time >= s.end ? s.start : s.time })),
   setSpeed: (speed: ClockState['speed']) => clock.setState({ speed }),
+  resetReplay: () => clock.setState({ ...REPLAY_START }),
+  /** Live mode: the newest model run is the cutoff and the clock starts at the current hour. */
+  startLive: (cycle: number, end: number, now: number) =>
+    clock.setState({ start: cycle, end, cutoff: cycle, time: clamp(Math.round(now / HOUR) * HOUR, cycle, end), playing: false }),
   setWindow: (start: number, end: number) => clock.setState(s => ({ start, end, time: clamp(s.time, start, end) })),
 }
 

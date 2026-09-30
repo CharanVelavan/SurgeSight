@@ -25,6 +25,32 @@ export const RAIN_RAMP: readonly Stop[] = [
   [50, '#F4D6E4', 0.95],
 ]
 
+/** Cloud cover, %; clear sky is transparent. */
+export const CLOUD_RAMP: readonly Stop[] = [
+  [15, '#DDE6F0', 0],
+  [40, '#C9D6E6', 0.22],
+  [70, '#E3EAF3', 0.42],
+  [100, '#F5F8FC', 0.62],
+]
+
+/** 2 m air temperature, deg C. */
+export const TEMP_RAMP: readonly Stop[] = [
+  [-10, '#4A6FD0', 0.6],
+  [5, '#5DA6D8', 0.55],
+  [18, '#7FCB9E', 0.5],
+  [28, '#E8D36A', 0.55],
+  [36, '#E8853A', 0.6],
+  [44, '#C2323F', 0.65],
+]
+
+/** Relative humidity, %. */
+export const HUMIDITY_RAMP: readonly Stop[] = [
+  [20, '#C9A45B', 0.4],
+  [50, '#8CBF8A', 0.42],
+  [80, '#3F9AA6', 0.5],
+  [100, '#2B5FA6', 0.6],
+]
+
 export function hexToRgb(hex: string): [number, number, number] {
   const n = parseInt(hex.slice(1), 16)
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255]

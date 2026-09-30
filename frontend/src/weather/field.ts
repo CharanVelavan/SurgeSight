@@ -78,3 +78,12 @@ export function tileRect(f: FrameRef): [number, number, number, number] {
   const r = Math.floor(f.index / f.cols)
   return [c / f.cols, r / f.rows, 1 / f.cols, 1 / f.rows]
 }
+
+/** Frame pair from the live extra atlas (cloud R, temperature G, humidity B), following the cycle issued at the cutoff. */
+export function extField(m: Manifest, timeMs: number, cutoffMs: number): FieldPair | null {
+  const cycle = cycleForCutoff(m, cutoffMs)
+  if (!cycle?.ext_file) return null
+  const p = pairIn(cycle, toMs(cycle.cycle), cycle.step_hours * HOUR, cycle.frames.length, timeMs)
+  if (!p) return null
+  return { a: { ...p.a, file: cycle.ext_file }, b: { ...p.b, file: cycle.ext_file }, t: p.t, channel: 0, kind: 'forecast', cycle: cycle.cycle }
+}

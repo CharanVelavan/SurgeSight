@@ -4,8 +4,10 @@ import type { Layer } from '@deck.gl/core'
 import { useUi } from '@/state/ui'
 import { clock } from '@/timeline/clock'
 import { weatherStore } from '@/weather/atlas'
-import { rainField, tileRect, windField } from '@/weather/field'
+import { extField, rainField, tileRect, windField } from '@/weather/field'
 import { RainLayer } from '@/layers/rain/RainLayer'
+import { CLOUD_RAMP, HUMIDITY_RAMP, TEMP_RAMP } from '@/lib/colors'
+import { makeScalarLayer } from '@/layers/scalar/ScalarLayer'
 import { WindParticleLayer } from '@/layers/wind/WindParticleLayer'
 import { BitmapLayer } from '@deck.gl/layers'
 import { stormAt } from '@/alerts/storm'
@@ -16,6 +18,12 @@ import { buildTrackLayers } from './trackLayers'
 import { quality } from './quality'
 
 type Vec4 = [number, number, number, number]
+
+const FIELD_LAYERS = {
+  cloud: makeScalarLayer({ name: 'cloud', channel: 0, min: 0, max: 100, ramp: CLOUD_RAMP }),
+  temperature: makeScalarLayer({ name: 'temperature', channel: 1, min: -30, max: 50, ramp: TEMP_RAMP }),
+  humidity: makeScalarLayer({ name: 'humidity', channel: 2, min: 0, max: 100, ramp: HUMIDITY_RAMP }),
+}
 
 let bitmapList: ImageBitmap[] = []
 let bitmapSource: unknown = null
@@ -35,6 +43,20 @@ export function buildLayers(now: number): Layer[] {
   const { west, east, south, north, step } = manifest.bounds
   const gridSize: [number, number] = [manifest.tile.width, manifest.tile.height]
   const layers: Layer[] = []
+
+  const ext = ui.field !== 'none' ? extField(manifest, time, cutoff) : null
+  const extA = ext && atlases.get(ext.a.file)
+  const extB = ext && atlases.get(ext.b.file)
+  if (ui.field !== 'none' && ext && extA && extB) {
+    const Field = FIELD_LAYERS[ui.field]
+    layers.push(
+      new Field({
+        id: ui.field,
+        bounds: [west - step / 2, south - step / 2, east + step / 2, north + step / 2],
+        imageA: extA.bitmap, imageB: extB.bitmap, tileA: tileRect(ext.a), tileB: tileRect(ext.b), mixT: ext.t, gridSize, opacity: 0.9,
+      }),
+    )
+  }
 
   const rain = ui.rain ? rainField(manifest, time, cutoff, ui.rainSource) : null
   const rainA = rain && atlases.get(rain.a.file)
@@ -93,6 +115,6 @@ export function buildLayers(now: number): Layer[] {
       }),
     )
   }
-  layers.push(...buildTrackLayers(), ...buildAssetLayers())
+  if (ui.mode === 'replay') layers.push(...buildTrackLayers(), ...buildAssetLayers())
   return layers
 }

@@ -11,6 +11,7 @@ import { formatCycle, formatDay, formatIST } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { HOUR, cycleForCutoff, toMs } from '@/weather/manifest'
 import { useWeather } from '@/weather/useWeather'
+import { useUi } from '@/state/ui'
 import { SPEEDS, clock, clockActions, useClock } from './clock'
 
 const CUTOFF_STEP = 12 * HOUR
@@ -23,6 +24,7 @@ export function Timeline() {
   const manifest = useWeather(s => s.manifest)
   const { start, end, cutoff, playing, speed } = useClock(s => ({ start: s.start, end: s.end, cutoff: s.cutoff, playing: s.playing, speed: s.speed }), 100)
   const time = useClock(s => s.time, 200)
+  const live = useUi(s => s.mode === 'live')
   const barRef = useRef<HTMLDivElement>(null)
   const headRef = useRef<HTMLDivElement>(null)
 
@@ -59,9 +61,11 @@ export function Timeline() {
           clockActions.step(e.shiftKey ? 6 : 1)
           break
         case '[':
+          if (useUi.getState().mode === 'live') break
           clockActions.setCutoff(s.cutoff - CUTOFF_STEP)
           break
         case ']':
+          if (useUi.getState().mode === 'live') break
           clockActions.setCutoff(s.cutoff + CUTOFF_STEP)
           break
         case 'Home':
@@ -101,7 +105,7 @@ export function Timeline() {
     target.addEventListener('pointercancel', up)
   }
   const scrub = (t: number) => clockActions.setTime(Math.round(t / (HOUR / 4)) * (HOUR / 4))
-  const moveCutoff = (t: number) => clockActions.setCutoff(Math.round(t / CUTOFF_STEP) * CUTOFF_STEP)
+  const moveCutoff = (t: number) => !live && clockActions.setCutoff(Math.round(t / CUTOFF_STEP) * CUTOFF_STEP)
 
   const cycle = manifest ? cycleForCutoff(manifest, cutoff) : null
   const forecastEnd = cycle ? Math.min(end, toMs(cycle.frames[cycle.frames.length - 1])) : cutoff
@@ -109,7 +113,7 @@ export function Timeline() {
   // Day ticks at IST midnight.
   const days: number[] = []
   for (let t = Math.ceil((start + IST_OFFSET) / (24 * HOUR)) * 24 * HOUR - IST_OFFSET; t <= end - 12 * HOUR; t += 24 * HOUR) days.push(t)
-  const landfall = timeline?.first_over_land ? toMs(timeline.first_over_land.time) : null
+  const landfall = !live && timeline?.first_over_land ? toMs(timeline.first_over_land.time) : null
 
   return (
     <section aria-label="Timeline" className="panel pointer-events-auto absolute inset-x-3 bottom-8 z-20 px-3 pt-2 pb-2.5 select-none">
@@ -139,7 +143,7 @@ export function Timeline() {
         <div className="num ml-1 text-[13px]">{formatIST(time)}</div>
         <div className="ml-auto flex items-center gap-3 text-[11px] text-muted-foreground max-sm:hidden">
           <span>
-            Cutoff <span className="num text-foreground">{formatIST(cutoff)}</span>
+            {live ? 'Model run' : 'Cutoff'} <span className="num text-foreground">{formatIST(cutoff)}</span>
           </span>
           <span>{cycle ? `GFS ${formatCycle(toMs(cycle.cycle))}` : 'no forecast issued yet'}</span>
           <span className="max-lg:hidden" title="Space play · ←/→ 1 h (Shift 6 h) · [ / ] move cutoff 12 h">
@@ -194,12 +198,12 @@ export function Timeline() {
         <div
           role="slider"
           tabIndex={0}
-          aria-label="Bulletin cutoff"
+          aria-label={live ? 'Model run' : 'Bulletin cutoff'}
           aria-valuenow={cutoff}
           aria-valuetext={formatIST(cutoff)}
-          onPointerDown={e => drag(e, moveCutoff)}
+          onPointerDown={e => !live && drag(e, moveCutoff)}
           onKeyDown={e => {
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            if (!live && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
               e.stopPropagation()
               e.preventDefault()
               clockActions.setCutoff(cutoff + (e.key === 'ArrowLeft' ? -CUTOFF_STEP : CUTOFF_STEP))
@@ -210,9 +214,16 @@ export function Timeline() {
         >
           <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-foreground/80" />
           <div className="num absolute -top-0.5 left-1/2 -translate-x-1/2 rounded-sm bg-foreground px-1 text-[9px] leading-3 font-semibold tracking-wider text-background group-focus-visible:ring-2 group-focus-visible:ring-ring">
-            NOW
+            {live ? 'RUN' : 'NOW'}
           </div>
         </div>
+
+        {live && Date.now() > start && Date.now() < end && (
+          <div className="absolute top-[3px] z-10 h-5 w-0" style={{ left: pct(Date.now(), start, end) }} title="Current time">
+            <div className="absolute inset-y-0 w-px -translate-x-1/2 bg-[#3FB27F]" />
+            <div className="num absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-[#3FB27F] px-1 text-[9px] leading-3 font-semibold tracking-wider text-background">NOW</div>
+          </div>
+        )}
 
         {/* playhead */}
         <div ref={headRef} className="pointer-events-none absolute top-1 bottom-2 z-20 w-0">

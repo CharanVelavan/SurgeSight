@@ -134,8 +134,32 @@ if (shots) {
   }
 }
 
+// 9. live weather (only when data/processed/live has been built)
+const catalog = await (await fetch(`${base}/api/catalog`)).json()
+let liveInfo = null
+if (catalog.tiles.find((t) => t.id === 'live')?.status === 'available') {
+  await page.setViewportSize({ width: 1440, height: 860 })
+  await page.goto(`${base}/live`)
+  await page.waitForFunction(() => window.__overlay?._deck?.layerManager?.getLayers().some((l) => l.id === 'wind'), null, { timeout: 30000 })
+  await page.getByRole('status').first().waitFor({ timeout: 10000 })
+  await page.waitForTimeout(2500)
+  const liveIds = await layerIds()
+  for (const need of ['cloud', 'wind', 'alert-zones']) check(liveIds.includes(need), `live layer ${need} missing`)
+  check(!liveIds.some((i) => i.startsWith('track-') || i.startsWith('assets-')), 'live view must not draw storm or infrastructure layers')
+  const banner = await page.getByRole('status').first().innerText()
+  check(/GFS model run|old/.test(banner), `live banner: ${banner}`)
+  await page.getByRole('radio', { name: 'Temp' }).click()
+  await page.waitForTimeout(800)
+  check((await layerIds()).includes('temperature') && !(await layerIds()).includes('cloud'), 'temperature layer did not replace cloud')
+  await page.mouse.move(700, 450)
+  await page.waitForTimeout(400)
+  check(/°C/.test(await page.locator('body').innerText()), 'live cursor readout lacks temperature')
+  if (shots) await page.screenshot({ path: `${shots}/live-1440.png` })
+  liveInfo = banner.slice(0, 80)
+}
+
 check(errors.length === 0, `console errors: ${errors.slice(0, 3).join(' || ')}`)
 const zoneMs = await page.evaluate(() => window.__zoneMs ?? null)
-console.log(JSON.stringify({ ok: failures.length === 0, failures, fps, forecastMs, zoneMs, zoom: { india: +a.zoom.toFixed(2), impact: +c.zoom.toFixed(2) } }))
+console.log(JSON.stringify({ ok: failures.length === 0, failures, fps, forecastMs, zoneMs, live: liveInfo, zoom: { india: +a.zoom.toFixed(2), impact: +c.zoom.toFixed(2) } }))
 await browser.close()
 process.exit(failures.length ? 1 : 0)

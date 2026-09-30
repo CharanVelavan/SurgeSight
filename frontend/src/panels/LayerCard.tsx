@@ -3,7 +3,7 @@ import { Layers, X } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ASSET_ORDER, ASSET_TYPES } from '@/data/assets'
-import { useUi, type Basemap } from '@/state/ui'
+import { useUi, type Basemap, type SurfaceField } from '@/state/ui'
 import type { RainSource } from '@/weather/field'
 
 function Row({ label, hint, checked, onChange }: { label: string; hint?: string; checked: boolean; onChange: (v: boolean) => void }) {
@@ -24,7 +24,8 @@ const Heading = ({ children }: { children: string }) => (
 )
 
 export function LayerCard() {
-  const { zones, wind, rain, rainSource, basemap, infra, set } = useUi()
+  const { zones, wind, rain, rainSource, basemap, infra, mode, field, set } = useUi()
+  const live = mode === 'live'
   // On phones the card is a bottom sheet opened from a button; from 640 px up it floats top-left.
   const [sheet, setSheet] = useState(false)
   return (
@@ -48,6 +49,20 @@ export function LayerCard() {
       <Row label="Alert zones" hint="screening" checked={zones} onChange={v => set({ zones: v })} />
       <Row label="Wind" hint="10 m" checked={wind} onChange={v => set({ wind: v })} />
       <Row label="Rain" hint="mm/h" checked={rain} onChange={v => set({ rain: v })} />
+      {live ? (
+        <>
+          <div className="my-3 h-px bg-[var(--hairline)]" />
+          <Heading>Colour the map by</Heading>
+          <ToggleGroup type="single" size="sm" variant="outline" spacing={0} className="w-full flex-wrap" value={field} onValueChange={v => set({ field: (v || 'none') as SurfaceField })} aria-label="Surface field">
+            {(['none', 'cloud', 'temperature', 'humidity'] as const).map(f => (
+              <ToggleGroupItem key={f} value={f} className="flex-1 text-[11px] capitalize data-[state=on]:bg-accent data-[state=on]:text-foreground">
+                {f === 'temperature' ? 'Temp' : f === 'humidity' ? 'Humid.' : f}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </>
+      ) : (
+        <>
       <ToggleGroup
         type="single"
         size="sm"
@@ -66,13 +81,19 @@ export function LayerCard() {
           Observed · validation
         </ToggleGroupItem>
       </ToggleGroup>
+        </>
+      )}
 
+      {!live && (
+        <>
       <div className="my-3 h-px bg-[var(--hairline)]" />
       <Heading>Infrastructure</Heading>
       <p className="mb-1 text-[11px] text-muted-foreground">Appears when you zoom into the coast.</p>
       {ASSET_ORDER.map(t => (
         <Row key={t} label={ASSET_TYPES[t].label} checked={infra[t]} onChange={v => set({ infra: { ...infra, [t]: v } })} />
       ))}
+        </>
+      )}
 
       <div className="my-3 h-px bg-[var(--hairline)]" />
       <Heading>Map</Heading>

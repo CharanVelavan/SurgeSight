@@ -17,11 +17,25 @@ export interface AtlasEntry {
 export interface ForecastEntry extends AtlasEntry {
   cycle: string
   step_hours: number
+  /** Live mode only: second atlas with cloud cover (R), 2 m temperature (G) and humidity (B). */
+  ext_file?: string
+}
+
+export interface LiveInfo {
+  cycle: string
+  built_at: string
+  age_hours: number
+  stale: boolean
+  stale_after_hours: number
+  source: string
 }
 
 export interface Manifest {
   /** Hash of the atlas files; part of every image URL so rebuilt images are never served from a stale cache. */
   version?: string
+  /** URL prefix of the image files; the storm replays use /api/weather, live uses /api/live. */
+  base?: string
+  live?: LiveInfo
   bounds: Bounds
   tile: { width: number; height: number }
   encoding: {
@@ -58,5 +72,5 @@ export function framesUpTo(entry: AtlasEntry, cutoffMs: number): number {
 }
 
 export function atlasFiles(manifest: Manifest): string[] {
-  return [manifest.analysis_wind.file, manifest.observed_rain.file, ...manifest.forecast.map(c => c.file)]
+  return [manifest.analysis_wind.file, manifest.observed_rain.file, ...manifest.forecast.flatMap(c => (c.ext_file ? [c.file, c.ext_file] : [c.file]))]
 }

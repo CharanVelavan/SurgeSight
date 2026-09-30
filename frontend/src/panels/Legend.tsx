@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { RAIN_RAMP, RISK, WIND_RAMP, rampCss } from '@/lib/colors'
 import { formatCycle } from '@/lib/format'
+import { SURFACE } from '@/weather/surface'
 import { useTimeline } from '@/app/queries'
 import { INFRA_ZOOM } from '@/map/assetLayers'
 import { ZONE_HEX } from '@/alerts/field'
@@ -44,14 +45,15 @@ function Scale({ title, unit, stops, gradient, note, warn }: { title: string; un
 }
 
 export function Legend() {
-  const { wind, rain, rainSource, zones } = useUi()
+  const { wind, rain, rainSource, zones, mode, field } = useUi()
+  const live = mode === 'live'
   const manifest = useWeather(s => s.manifest)
   const { time, cutoff } = useClock(s => ({ time: Math.floor(s.time / 3_600_000), cutoff: s.cutoff }), 250)
   const { data: timeline } = useTimeline()
   // Open by default from 640 px up; on phones it starts collapsed so it does not cover the storm.
   const [open, setOpen] = useState(() => matchMedia('(min-width: 640px)').matches)
-  const anyInfra = useUi(s => Object.values(s.infra).some(Boolean) && s.zoom >= INFRA_ZOOM)
-  if (!manifest || (!zones && !wind && !rain && !anyInfra)) return null
+  const anyInfra = useUi(s => s.mode === 'replay' && Object.values(s.infra).some(Boolean) && s.zoom >= INFRA_ZOOM)
+  if (!manifest || (!zones && !wind && !rain && !anyInfra && field === 'none')) return null
   const ms = time * 3_600_000
   const w = windField(manifest, ms, cutoff)
   const r = rainField(manifest, ms, cutoff, rainSource)
@@ -63,7 +65,7 @@ export function Legend() {
       </button>
       <div className="hidden text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase sm:block">What am I seeing?</div>
       <div className={`flex flex-col gap-2.5 ${open ? '' : 'max-sm:hidden'}`}>
-      <div>
+      {!live && <div>
         <div className="flex items-baseline justify-between text-[11px]">
           <span className="font-medium">Storm</span>
           <span className="text-muted-foreground">{timeline?.cyclone ?? ''}</span>
@@ -71,7 +73,7 @@ export function Legend() {
         <p className="mt-1 text-[10px] leading-snug text-muted-foreground">
           Blue line: where the storm has been (observed best track). Amber dashes: SurgeSight's own experimental forecast from the cutoff, and the circles show how uncertain it is. Not an IMD forecast.
         </p>
-      </div>
+      </div>}
       {zones && (
         <div>
           <div className="flex items-baseline justify-between text-[11px]">
@@ -88,6 +90,9 @@ export function Legend() {
           </div>
           <p className="mt-1 text-[10px] leading-snug text-muted-foreground">{ZONE_LABEL}</p>
         </div>
+      )}
+      {field !== 'none' && (
+        <Scale title={SURFACE[field].label} unit={SURFACE[field].unit} stops={SURFACE[field].stops} gradient={rampCss(SURFACE[field].ramp.map(([v, h, a]) => [v, h, Math.max(a ?? 1, 0.6)] as const))} note={`GFS forecast issued ${live && manifest.live ? formatCycle(Date.parse(manifest.live.cycle)) : ''}`} />
       )}
       {wind && (
         <Scale title="Wind" unit="m/s" stops={WIND_RAMP.map(([v]) => v)} gradient={rampCss(WIND_RAMP)} note={sourceLabel(w, 'wind')} warn={!w} />

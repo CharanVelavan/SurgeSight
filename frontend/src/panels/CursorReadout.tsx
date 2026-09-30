@@ -1,15 +1,16 @@
 import { formatLatLon, windFrom } from '@/lib/format'
 import { useUi } from '@/state/ui'
 import { useClock } from '@/timeline/clock'
-import { sampleRain, sampleWind } from '@/weather/atlas'
-import { rainField, windField } from '@/weather/field'
+import { sampleRain, sampleScalar, sampleWind } from '@/weather/atlas'
+import { extField, rainField, windField } from '@/weather/field'
+import { SURFACE } from '@/weather/surface'
 import { useWeather } from '@/weather/useWeather'
 
 /** Wind and rain under the pointer for the frame on screen (bilinear sample of the CPU copy). */
 export function CursorReadout() {
   const cursor = useUi(s => s.cursor)
   const overAsset = useUi(s => s.hoverAsset !== null)
-  const { wind: showWind, rain: showRain, rainSource } = useUi()
+  const { wind: showWind, rain: showRain, rainSource, field } = useUi()
   const manifest = useWeather(s => s.manifest)
   const loaded = useWeather(s => s.loaded)
   const { time, cutoff } = useClock(s => ({ time: s.time, cutoff: s.cutoff }), 100)
@@ -19,7 +20,10 @@ export function CursorReadout() {
   const rp = showRain ? rainField(manifest, time, cutoff, rainSource) : null
   const w = wp && sampleWind(wp, manifest, cursor.lon, cursor.lat)
   const r = rp && sampleRain(rp, manifest, cursor.lon, cursor.lat)
-  if (!w && r == null) return null
+  const ep = field !== 'none' ? extField(manifest, time, cutoff) : null
+  const surface = field !== 'none' ? SURFACE[field] : null
+  const sv = ep && surface ? sampleScalar(ep, manifest, cursor.lon, cursor.lat, surface.channel, surface.min, surface.max) : null
+  if (!w && r == null && sv == null) return null
   const speed = w ? Math.hypot(w.u, w.v) : 0
 
   const left = Math.min(cursor.x + 16, innerWidth - 190)
@@ -31,6 +35,12 @@ export function CursorReadout() {
         <div>
           <span className="text-foreground">{(speed * 3.6).toFixed(0)} km/h</span>
           <span className="text-muted-foreground"> {windFrom(w.u, w.v)} · {speed.toFixed(1)} m/s</span>
+        </div>
+      )}
+      {sv != null && surface && (
+        <div>
+          <span className="text-foreground">{sv.toFixed(surface.digits)} {surface.unit}</span>
+          <span className="text-muted-foreground"> {surface.label.toLowerCase()}</span>
         </div>
       )}
       {r != null && (

@@ -25,3 +25,4 @@ frontend/dist/
 .arena/
 .claude/settings.local.json
 node_modules/
+data/processed/live/

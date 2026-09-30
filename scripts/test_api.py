@@ -32,7 +32,7 @@ EXPECTED = {
     "/api/ensemble", "/api/forecast/experimental", "/api/hazards/{run_id}", "/api/exposure/{run_id}", "/api/validation/satellite/{run_id}",
     "/api/advisory", "/api/tts", "/api/cap/{item_id}", "/api/parametric/{run_id}", "/api/dispatch", "/api/dispatch/{dispatch_id}/approve",
     "/api/dispatch/{dispatch_id}/reject", "/api/agent", "/tasks/poll", "/tasks/process", "/runs/{run_id}", "/healthz",
-    "/api/catalog", "/api/assets/{element}/{osm_id}/explain", "/api/weather/manifest", "/api/weather/{file}", "/api/timeline", "/api/layers/{name}", "/api/me", "/api/voice/ask",
+    "/api/catalog", "/api/live/manifest", "/api/live/{file}", "/api/assets/{element}/{osm_id}/explain", "/api/weather/manifest", "/api/weather/{file}", "/api/timeline", "/api/layers/{name}", "/api/me", "/api/voice/ask",
 }
 
 
@@ -65,6 +65,34 @@ def test_assets() -> None:
     assert client.get("/api/assets", params={"run_id": "nope-000"}).status_code == 404
     assert client.get("/api/assets", params={"min_class": "SEVERE"}).status_code == 422
     print("assets ok")
+
+
+def test_live_routes() -> None:
+    import json as _json
+    import tempfile
+    from unittest import mock
+
+    import pandas as pd
+
+    from api import routes_web
+
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        with mock.patch.object(routes_web, "live_dir", lambda: d):
+            assert client.get("/api/live/manifest").status_code == 404, "no build yet: a clear 404"
+            fresh = (pd.Timestamp.now("UTC") - pd.Timedelta(hours=3)).floor("h").strftime("%Y-%m-%dT%H:%M:%SZ")
+            (d / "manifest.json").write_text(_json.dumps({"base": "/api/live", "live": {"cycle": fresh}}))
+            (d / "a.png").write_bytes(b"\x89PNG")
+            live = ok(client.get("/api/live/manifest")).json()
+            assert live["live"]["stale"] is False and 2.9 <= live["live"]["age_hours"] <= 4.1 and len(live["version"]) == 10
+            old = (pd.Timestamp.now("UTC") - pd.Timedelta(hours=20)).floor("h").strftime("%Y-%m-%dT%H:%M:%SZ")
+            (d / "manifest.json").write_text(_json.dumps({"base": "/api/live", "live": {"cycle": old}}))
+            assert ok(client.get("/api/live/manifest")).json()["live"]["stale"] is True, "a cycle older than 12 h must be flagged stale"
+            assert ok(client.get("/api/live/a.png")).content.startswith(b"\x89PNG")
+            assert client.get("/api/live/../manifest.json").status_code in (404, 422) and client.get("/api/live/manifest.json").status_code == 404
+            tiles = {t["id"]: t for t in ok(client.get("/api/catalog")).json()["tiles"]}
+            assert tiles["live"]["status"] == "available"
+    print("live routes ok")
 
 
 def test_web_routes() -> None:
@@ -294,6 +322,7 @@ def test_tasks() -> None:
 if __name__ == "__main__":
     test_routes_and_basics()
     test_assets()
+    test_live_routes()
     test_web_routes()
     test_voice_ask_mocked()
     test_auth_roles()

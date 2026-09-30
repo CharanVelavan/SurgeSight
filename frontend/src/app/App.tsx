@@ -16,6 +16,10 @@ import { AssetPopover } from '@/panels/AssetPopover'
 import { AssetWhy } from '@/panels/AssetWhy'
 import { Intro } from '@/panels/Intro'
 import { Landing } from './Landing'
+import { LiveBanner } from '@/panels/LiveBanner'
+import { clockActions } from '@/timeline/clock'
+import { trackStore } from '@/data/track'
+import { useUi } from '@/state/ui'
 import { onLinkClick, useRoute } from './router'
 import { ViewSwitch } from '@/panels/ViewSwitch'
 import { loadWeather } from '@/weather/atlas'
@@ -37,19 +41,31 @@ function LoadingNote() {
   )
 }
 
-function Dashboard() {
+function LiveSync() {
+  const manifest = useWeather(s => s.manifest)
   useEffect(() => {
-    void loadWeather()
-    void loadAssets()
-  }, [])
+    if (manifest?.live) clockActions.startLive(Date.parse(manifest.live.cycle), Date.parse(manifest.window.end), Date.now())
+  }, [manifest])
+  return null
+}
+
+function Dashboard({ mode }: { mode: 'replay' | 'live' }) {
+  useEffect(() => {
+    useUi.getState().set({ mode, field: mode === 'live' ? 'cloud' : 'none', view: 'india', hoverAsset: null, selectedAsset: null })
+    if (mode === 'live') trackStore.setState({ timeline: null, forecast: null })
+    else clockActions.resetReplay()
+    void loadWeather(mode)
+    if (mode === 'replay') void loadAssets()
+  }, [mode])
   return (
     <TooltipProvider delayDuration={300}>
       <main className="relative h-full w-full overflow-hidden bg-background">
-        <TrackSync />
+        {mode === 'replay' ? <TrackSync /> : <LiveSync />}
         <MapCanvas />
         <TopBar />
-        <ViewSwitch />
-        <AtRisk />
+        {mode === 'live' && <LiveBanner />}
+        {mode === 'replay' && <ViewSwitch />}
+        {mode === 'replay' && <AtRisk />}
         <LayerCard />
         <Legend />
         <Timeline />
@@ -64,32 +80,25 @@ function Dashboard() {
   )
 }
 
-function LiveSoon() {
+function NotAvailable({ what }: { what: string }) {
   return (
     <main className="grid h-full place-items-center bg-background px-6 text-center">
       <div>
-        <p className="text-lg font-semibold">Live weather is not connected yet</p>
+        <p className="text-lg font-semibold">{what} is not available yet</p>
         <a href="/" onClick={e => onLinkClick(e, '/')} className="mt-3 inline-block text-sm text-primary underline">Back to all views</a>
       </div>
     </main>
   )
 }
 
-/** Opens a storm only when the catalog says its data is ready; anything else goes back to the list. */
-function StormGate({ id }: { id: string }) {
+/** Opens a view only when the catalog says its data is ready; anything else says so and links back. */
+function Gate({ id, kind }: { id: string; kind: 'live' | 'storm' }) {
   const { data, isError } = useQuery({ queryKey: ['catalog'], queryFn: api.catalog, staleTime: 60_000 })
-  if (isError) return <Dashboard />
-  if (!data) return <main className="grid h-full place-items-center bg-background text-sm text-muted-foreground">Loading…</main>
-  if (!data.tiles.some(t => t.id === id && t.kind === 'storm' && t.status === 'available'))
-    return (
-      <main className="grid h-full place-items-center bg-background px-6 text-center">
-        <div>
-          <p className="text-lg font-semibold">This storm is not available yet</p>
-          <a href="/" onClick={e => onLinkClick(e, '/')} className="mt-3 inline-block text-sm text-primary underline">Back to all views</a>
-        </div>
-      </main>
-    )
-  return <Dashboard />
+  const mode = kind === 'live' ? 'live' : 'replay'
+  if (isError && kind === 'storm') return <Dashboard mode="replay" />
+  if (!data && !isError) return <main className="grid h-full place-items-center bg-background text-sm text-muted-foreground">Loading…</main>
+  if (!data?.tiles.some(t => t.id === id && t.kind === kind && t.status === 'available')) return <NotAvailable what={kind === 'live' ? 'Live weather' : 'This storm'} />
+  return <Dashboard mode={mode} />
 }
 
 export default function App() {
@@ -97,8 +106,8 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       {route.name === 'landing' && <Landing />}
-      {route.name === 'live' && <LiveSoon />}
-      {route.name === 'storm' && <StormGate id={route.id} />}
+      {route.name === 'live' && <Gate id="live" kind="live" />}
+      {route.name === 'storm' && <Gate id={route.id} kind="storm" />}
     </QueryClientProvider>
   )
 }

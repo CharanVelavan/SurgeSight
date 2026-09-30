@@ -6,6 +6,8 @@ import type { RainSource } from '@/weather/field'
 
 export type Basemap = 'dark' | 'satellite' | 'terrain'
 export type View = 'india' | 'impact'
+export type Mode = 'replay' | 'live'
+export type SurfaceField = 'none' | 'cloud' | 'temperature' | 'humidity'
 
 const infraDefault: Record<AssetType, boolean> = {
   hospital: true, substation: true, police_station: true, fire_station: true, shelter: true,
@@ -13,6 +15,10 @@ const infraDefault: Record<AssetType, boolean> = {
 }
 
 interface UiState {
+  /** 'replay' is a past storm; 'live' is the newest weather forecast over India. */
+  mode: Mode
+  /** Extra weather colour layer, live mode only. */
+  field: SurfaceField
   wind: boolean
   zones: boolean
   rain: boolean
@@ -36,6 +42,8 @@ interface UiState {
 }
 
 export const useUi = create<UiState>(set => ({
+  mode: 'replay',
+  field: 'none',
   wind: true,
   zones: true,
   rain: true,

@@ -32,8 +32,8 @@ export const weatherStore = createStore<WeatherState>(() => ({
   error: null,
 }))
 
-async function loadAtlas(file: string, version?: string): Promise<Atlas> {
-  const res = await fetch(`/api/weather/${file}${version ? `?v=${version}` : ''}`)
+async function loadAtlas(file: string, base: string, version?: string): Promise<Atlas> {
+  const res = await fetch(`${base}/${file}${version ? `?v=${version}` : ''}`)
   if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`)
   const bitmap = await createImageBitmap(await res.blob(), { premultiplyAlpha: 'none', colorSpaceConversion: 'none' })
   const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
@@ -43,27 +43,34 @@ async function loadAtlas(file: string, version?: string): Promise<Atlas> {
   return { file, bitmap, pixels, width: bitmap.width, height: bitmap.height }
 }
 
-let started = false
+export type WeatherSource = 'replay' | 'live'
+const MANIFEST_URL: Record<WeatherSource, string> = { replay: '/api/weather/manifest', live: '/api/live/manifest' }
+let source: WeatherSource | null = null
 
-export async function loadWeather(): Promise<void> {
-  if (started) return
-  started = true
+/** Loads the storm replay or the live atlases; switching source clears the previous frames. */
+export async function loadWeather(next: WeatherSource = 'replay'): Promise<void> {
+  if (source === next) return
+  source = next
+  weatherStore.getState().atlases.forEach(a => a.bitmap.close())
+  weatherStore.setState({ manifest: null, atlases: new Map(), loaded: 0, total: 0, error: null })
   try {
-    const res = await fetch('/api/weather/manifest', { cache: 'no-cache' })
-    if (!res.ok) throw new Error(`manifest: HTTP ${res.status}`)
+    const res = await fetch(MANIFEST_URL[next], { cache: 'no-cache' })
+    if (!res.ok) throw new Error(next === 'live' ? 'live weather has not been built yet' : `manifest: HTTP ${res.status}`)
     const manifest = (await res.json()) as Manifest
+    if (source !== next) return
     const files = atlasFiles(manifest)
+    const base = manifest.base ?? '/api/weather'
     weatherStore.setState({ manifest, total: files.length })
-    // Hourly past fields first, so the opening frame appears as early as possible.
     await Promise.all(
       files.map(async file => {
-        const atlas = await loadAtlas(file, manifest.version)
+        const atlas = await loadAtlas(file, base, manifest.version)
+        if (source !== next) return atlas.bitmap.close()
         const atlases = new Map(weatherStore.getState().atlases).set(file, atlas)
         weatherStore.setState(s => ({ atlases, loaded: s.loaded + 1 }))
       }),
     )
   } catch (err) {
-    weatherStore.setState({ error: err instanceof Error ? err.message : String(err) })
+    if (source === next) weatherStore.setState({ error: err instanceof Error ? err.message : String(err) })
   }
 }
 
@@ -108,4 +115,9 @@ export function sampleWind(p: FieldPair, m: Manifest, lon: number, lat: number):
 
 export function sampleRain(p: FieldPair, m: Manifest, lon: number, lat: number): number | null {
   return samplePair(p, m, lon, lat, p.channel, decodeRain)
+}
+
+/** A live scalar (cloud %, temperature deg C, humidity %) from channel 0/1/2 of the extra atlas, decoded linearly. */
+export function sampleScalar(p: FieldPair, m: Manifest, lon: number, lat: number, channel: 0 | 1 | 2, min: number, max: number): number | null {
+  return samplePair(p, m, lon, lat, channel, b => min + (b / 255) * (max - min))
 }
