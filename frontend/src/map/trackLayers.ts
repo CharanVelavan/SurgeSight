@@ -14,8 +14,8 @@ type Pt = [number, number]
 
 /** Track colours per theme: the light basemap needs darker lines to keep the same contrast. */
 const PALETTE = {
-  dark: { primary: hexToRgb('#7FA7D9'), amber: hexToRgb('#E0B34A'), grey: hexToRgb('#8B939D') },
-  light: { primary: hexToRgb('#1F4F8F'), amber: hexToRgb('#C07F00'), grey: hexToRgb('#6B7480') },
+  dark: { primary: hexToRgb('#8AB4F8'), amber: hexToRgb('#E0B34A'), grey: hexToRgb('#8B939D') },
+  light: { primary: hexToRgb('#1967D2'), amber: hexToRgb('#C07F00'), grey: hexToRgb('#6B7480') },
 }
 let PRIMARY = PALETTE.dark.primary
 let AMBER = PALETTE.dark.amber
@@ -59,7 +59,6 @@ function segment(t: Timeline, fromMs: number, toMs: number): Pt[] {
   return pts
 }
 
-const HOUR_BUCKET = 15 * 60_000
 
 export function buildTrackLayers(): Layer[] {
   const pal = document.documentElement.classList.contains('dark') ? PALETTE.dark : PALETTE.light
@@ -74,8 +73,7 @@ export function buildTrackLayers(): Layer[] {
 
   // Observed past: knowable, so limited to the cutoff.
   const until = Math.min(time, cutoff)
-  const bucket = Math.floor(until / HOUR_BUCKET)
-  const obs = memo(observedMemo, `${timeline.start}|${bucket}`, () => pathUntil(timeline, bucket * HOUR_BUCKET))
+  const obs = memo(observedMemo, `${timeline.start}|${until}`, () => pathUntil(timeline, until))
   if (obs.path.length > 1) {
     layers.push(
       new PathLayer({ id: 'track-observed', data: [{ path: obs.path }], getPath: d => d.path, getColor: [...PRIMARY, 235], getWidth: 2.5, widthUnits: 'pixels', capRounded: true, jointRounded: true }),
@@ -85,8 +83,7 @@ export function buildTrackLayers(): Layer[] {
 
   // What actually happened after the cutoff: only with the validation toggle, and drawn faint.
   if (ui.rainSource === 'observed' && time > cutoff) {
-    const gb = Math.floor(time / HOUR_BUCKET)
-    const ghost = memo(ghostMemo, `${timeline.start}|${cutoff}|${gb}`, () => segment(timeline, cutoff, gb * HOUR_BUCKET))
+    const ghost = memo(ghostMemo, `${timeline.start}|${cutoff}|${time}`, () => segment(timeline, cutoff, time))
     if (ghost.length > 1)
       layers.push(new PathLayer({ id: 'track-validation', data: [{ path: ghost }], getPath: d => d.path, getColor: [...PRIMARY, 110], getWidth: 2, widthUnits: 'pixels', getDashArray: [4, 3], dashJustified: true, extensions: [dash] }))
   }

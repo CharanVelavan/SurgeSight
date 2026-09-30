@@ -1,6 +1,7 @@
 /** A small path router: the app has a handful of screens and needs no routing library. */
 
 import { useSyncExternalStore } from 'react'
+import { flushSync } from 'react-dom'
 
 export type StormTab = 'overview' | 'map' | 'facilities' | 'areas' | 'roads' | 'advisories'
 export const STORM_TABS: StormTab[] = ['overview', 'map', 'facilities', 'areas', 'roads', 'advisories']
@@ -58,7 +59,11 @@ export function navigate(path: string, replace = false): void {
   if (path === location.pathname + location.search) return
   if (replace) history.replaceState(null, '', path)
   else history.pushState(null, '', path)
-  listeners.forEach(fn => fn())
+  const render = () => listeners.forEach(fn => fn())
+  // Animate the change (styles in index.css) unless the browser lacks view transitions or the user wants less motion.
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('lite')
+  if (document.startViewTransition && !calm) document.startViewTransition(() => flushSync(render))
+  else render()
 }
 
 const snapshot = () => location.pathname

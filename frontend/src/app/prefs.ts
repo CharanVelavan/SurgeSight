@@ -87,11 +87,15 @@ export function useResolvedTheme(): 'light' | 'dark' {
   return theme === 'system' ? (sys ? 'dark' : 'light') : theme
 }
 
-/** Keeps the <html> class and the browser chrome colour in step with the chosen theme. */
+/** Keeps the <html> classes (theme, and `lite`, which turns off page motion) and the browser chrome colour in step. */
 export function useApplyTheme(): void {
   const resolved = useResolvedTheme()
+  const lite = usePrefs(s => s.lite)
   useEffect(() => {
     document.documentElement.classList.toggle('dark', resolved === 'dark')
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolved === 'dark' ? '#0B0D10' : '#F5F6F8')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolved === 'dark' ? '#081226' : '#F8FAFD')
   }, [resolved])
+  useEffect(() => {
+    document.documentElement.classList.toggle('lite', lite)
+  }, [lite])
 }

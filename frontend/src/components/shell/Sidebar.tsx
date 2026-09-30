@@ -16,10 +16,12 @@ function NavItem({ to, icon: Icon, label, active, sub, onNavigate, collapsed }: 
       title={collapsed ? label : undefined}
       className={cn(
         collapsed && 'justify-center px-0',
-        'flex items-center gap-3 rounded-md px-2.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground',
-        active && 'bg-sidebar-accent text-foreground',
+        'relative isolate flex items-center gap-3 rounded-md px-2.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground',
+        active && 'text-foreground',
       )}
     >
+      {/* The active highlight is its own element so a page change can glide it to the new item (see .vt-nav). */}
+      {active && <span className="vt-nav absolute inset-0 -z-10 rounded-md bg-sidebar-accent" aria-hidden />}
       <Icon className={cn('size-[18px] shrink-0', active && 'text-primary')} aria-hidden />
       <span className={collapsed ? 'sr-only' : 'min-w-0 flex-1 truncate'}>{label}</span>
       {sub && !collapsed && <span className="num text-[11px] font-normal text-muted-foreground">{sub}</span>}

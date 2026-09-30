@@ -16,11 +16,13 @@ function StormTabs({ id, tab }: { id: string; tab: StormTab }) {
           to={pathFor({ name: 'storm', id, tab: s })}
           aria-current={s === tab ? 'page' : undefined}
           className={cn(
-            'shrink-0 border-b-2 border-transparent px-3 py-2.5 text-[13px] font-medium whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground',
-            s === tab && 'border-primary text-foreground',
+            'relative shrink-0 border-b-2 border-transparent px-3 py-2.5 text-[13px] font-medium whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground',
+            s === tab && 'text-foreground',
           )}
         >
           {t(`tab.${s}` as Key)}
+          {/* The underline is its own element so a page change can slide it to the new tab (see .vt-tab). */}
+          {s === tab && <span className="vt-tab absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-primary" aria-hidden />}
         </Link>
       ))}
     </nav>

@@ -40,5 +40,5 @@ export function AppShell({ title, badge, fill = false, children }: { title: stri
 
 /** Width and padding shared by the reading pages. */
 export function Page({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-6xl px-4 py-6 lg:px-8 lg:py-8 ${className}`}>{children}</div>
+  return <div className={`motion-stagger mx-auto w-full max-w-6xl px-4 py-6 lg:px-8 lg:py-8 ${className}`}>{children}</div>
 }
