@@ -46,7 +46,11 @@ def assets(region: str | None = None, dept: str | None = None, min_class: Litera
             raise HTTPException(status_code=404, detail=str(exc).strip("'\"")) from None
     frame = frame[frame["risk_class"].map(CLASS_RANK).fillna(0) >= CLASS_RANK[min_class]]
     if format == "columnar":
-        cols = [c for c in ("name", "asset_type", "osm_element", "osm_id", "risk_class", "risk_score", "triage_tier", "dominant_hazard", "facility_quality") if c in frame.columns]
+        from services.roads import with_access
+
+        frame = with_access(frame, region)
+        cols = [c for c in ("name", "asset_type", "osm_element", "osm_id", "risk_class", "risk_score", "triage_tier", "dominant_hazard", "facility_quality",
+                            "road_access", "hospital_km_before", "hospital_km_after") if c in frame.columns]
         out = {"count": len(frame), "run_id": run_id, "class_order": list(CLASS_RANK),
                "lon": [round(float(v), 5) for v in frame["lon"]], "lat": [round(float(v), 5) for v in frame["lat"]],
                "risk_class_rank": [int(v) for v in frame["risk_class"].map(CLASS_RANK).fillna(0)]}

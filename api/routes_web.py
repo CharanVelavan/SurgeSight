@@ -181,6 +181,27 @@ def _points(frame: pd.DataFrame, value_cols: list[str]) -> dict[str, Any]:
     return {"type": "FeatureCollection", "features": features}
 
 
+@router.get("/api/roads", responses={200: {"content": {"application/json": {}}}})
+def roads_layer(region: str | None = None) -> FileResponse:
+    """Road sections at watch level or above, as compact columns (pre-built by scripts/build_roads.py, gzip)."""
+    reg = load_region(require_region(region))
+    path = reg.paths.get("roads_web")
+    if path is None or not path.is_file():
+        raise HTTPException(status_code=404, detail=f"No road layer for {reg.id}")
+    return FileResponse(path, media_type="application/json", headers={"Content-Encoding": "gzip", **NO_CACHE})
+
+
+@router.get("/api/roads/summary")
+def roads_summary(region: str | None = None) -> dict[str, Any]:
+    """Road km by level, the worst roads, facility access counts and the satellite check."""
+    from services.roads import load_summary
+
+    summary = load_summary(require_region(region))
+    if summary is None:
+        raise HTTPException(status_code=404, detail="No road layer for this region")
+    return summary
+
+
 @router.get("/api/layers/{name}")
 def layer(name: Literal["surge", "river", "districts"], region: str | None = None) -> dict[str, Any]:
     """Compact GeoJSON for a map layer: surge and river-flood points, or districts with exposure."""
